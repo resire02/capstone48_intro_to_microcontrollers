@@ -65,12 +65,12 @@
         c. delay()
             - Takes an argument in milliseconds.
 
-4. General (29:00 - 31:00)
+4. General Purpose of Document 1 (29:00 - 31:00)
 
     1. If you can get someone to get an LED to blink in 5 minutes, they will stick with that development system.
     2. First Introduction: Getting IDE and DXCore installed with what a sketch looks like, setup(), loop(), basic descriptors. (30:00) 
 
-5. Summary of AVR64DD32 (31:00 - 44:47)
+5. Overview of AVR64DD32 (31:00 - 44:47)
 
     1. The Curiosity Nano Board is a common form factor on low cost eval tools.
     2. Diamond shaped square is the microcontroller and it has 64 bytes of flash.
