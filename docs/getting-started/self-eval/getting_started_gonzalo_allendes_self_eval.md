@@ -9,7 +9,7 @@
 
 ### Document your research in this section
 
-#### Most Important Topics Covered in Meeting #2
+- This is an outline of the most important knowledge gathered from meeting #2:
 
 ```
 1. Installation Walkthrough as Documented in Sponsor (0:00 - 14:00)
