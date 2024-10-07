@@ -2,6 +2,16 @@
 
 ### 
 
+## Required Materials
+
+This lab requires the following materials:
+
+* Computer (Windows is highly recommended)  
+* Web browser (Chrome, Edge, Firefox)  
+* Access to the internet
+
+This lab was designed to work with Windows operating systems. For other operating systems, steps may differ from what is listed in this lab manual.
+
 ### Installation Walkthrough
 
 1. Go to the Arduino Software page ([https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)).  
