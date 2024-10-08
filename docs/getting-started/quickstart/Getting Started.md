@@ -12,6 +12,14 @@ This lab requires the following materials:
 
 This lab was designed to work with Windows operating systems. For other operating systems, steps may differ from what is listed in this lab manual.
 
+## Learning Adjective
+This Guide is designed to equip you with the fundamental skills that you will need while working with arduino and Curiosity Nano. By completing this Quick Start Guide you will be able to: 
+1. Set up the Arduino development environment. This will include how to download and install the Arduino IDE software.
+2. Be able to navigate through the Arduino environment. This will include installing the needed board support package for AVR boards.
+3. Understand Arduino code structure. This will include the core concepts of arduino programming such as setup(), loop(), pinMode(), digitalWrite() and delay().
+This guide will provide you with a foundation for learning electrical circuits and preparing you for the rest of the labs that you will take.
+
+
 ## Installation Walkthrough
 
 1. Go to the Arduino Software page ([https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)).  
