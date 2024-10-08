@@ -18,15 +18,19 @@ This lab was designed to work with Windows operating systems. For other operatin
 2. Download and run the MSI Installer (Windows).  
 3. The IDE should be immediately installed. Run it and allow it some time to install dependencies.
 
+![image info](./images/Download.png)
+
 4. Go to File \-\> Preferences and under the Settings tab, check **'compile'** and **'upload'** to enable verbose output.  
 5. Under the same tab, click on the icon next to 'Additional Board Manager URLs'  
 6. Copy and paste the following URL into the text box and click OK.  
    * [http://drazzy.com/package\_drazzy.com\_index.json](http://drazzy.com/package_drazzy.com_index.json) [^1]
 
+![image info](./images/Preferences.png)
+
 7. Go to the Board Manager by clicking on the second icon from top to bottom on the left panel.  
 8. Type 'DxCore' and click INSTALL. This installs the primary support package.[^2]
 
-![image info](./images/Download.png)
+![image info](./images/DxCorev3.png)
 
 ## Tour of the Source Files
 
@@ -37,8 +41,6 @@ This lab was designed to work with Windows operating systems. For other operatin
 5. Open wiring.c with the IDE of your preference.  
 6. In ***wiring.c*** you will find an implementation of the Wiring API specifically designed for the AVR Dx microcontrollers.  
 7. Check out the millis() function\!
-
-![image info](./images/Preferences.png)
 
 ## Sample Code and Basic Functions
 
@@ -58,8 +60,6 @@ This lab was designed to work with Windows operating systems. For other operatin
      1. Sets target to either HIGH or LOW.  
    * delay()  
      1. Takes an argument in milliseconds.
-
-![image info](./images/DxCorev3.png)
 
 ## Appendix
 
