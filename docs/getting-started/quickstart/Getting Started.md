@@ -17,6 +17,7 @@ This Guide is designed to equip you with the fundamental skills that you will ne
 1. Set up the Arduino development environment. This will include how to download and install the Arduino IDE software.
 2. Be able to navigate through the Arduino environment. This will include installing the needed board support package for AVR boards.
 3. Understand Arduino code structure. This will include the core concepts of arduino programming such as setup(), loop(), pinMode(), digitalWrite() and delay().
+
 This guide will provide you with a foundation for learning electrical circuits and preparing you for the rest of the labs that you will take.
 
 
