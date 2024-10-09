@@ -1,3 +1,9 @@
+# **Quick Start Guide**
+
+## Required Materials
+
+## Learning Objectives
+
 ## Sample Code and Basic Functions
 
 1. Go to File \-\> Examples \-\> 01.Basics \-\> Blink  
