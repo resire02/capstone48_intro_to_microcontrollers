@@ -4,6 +4,14 @@
 
 ## Learning Objectives
 
+This lab is intended to give you an understanding of how to deploy a basic program to your Curiosity Nano board. Along the way, we will learn:
+
+1. How to identify pins on the Curiosity Nano board (and their associated number in code)   
+2. A few basic methods common to almost all programs run on the board  
+3. How to blink an on board LED.
+
+Through this lab, you will gain a greater understanding of how to interact with the board through code, deploy code to the board, and identify pins and peripherals on the board.  
+
 ## Sample Code and Basic Functions
 
 1. Go to File \-\> Examples \-\> 01.Basics \-\> Blink  
