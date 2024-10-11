@@ -16,7 +16,7 @@ It was hard to understand how the defined constant mapped to the LED on the boar
 I was not able to load the blink program directly onto the Curiosity nano.
 
 **If you encountered any issues while working with Arduino, were you able to fix them? If so, what steps did you take to fix the issues you encountered?**  
-I fixed not being able to load the blink program by changing the cable I was using.
+I fixed not being able to load the blink program by changing the cable I was using. Originally, I tried to install MPLABX because the installation guide said it came with drivers but it did not work.
 
 **Anything important to note for development of the lab manual? This includes research, unusual problems, and external knowledge.**
 
