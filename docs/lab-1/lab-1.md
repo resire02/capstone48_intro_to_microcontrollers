@@ -2,6 +2,16 @@
 
 ## Required Materials
 
+This lab requires the following materials:
+
+* A desktop or laptop computer  
+* Arduino IDE (Go to [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software) if not installed already)  
+* DXCore support library  
+* AVR64DD32 Curiosity Nano evaluation kit  
+* A Standard-A to Micro-B cable (or a Micro-AB cable) with data transfer support
+
+Most USB cables support data transfer capabilities; however, if Arduino IDE is unable to locate the board, this usually indicates that the cable does not support data transfer.
+
 ## Learning Objectives
 
 This lab is intended to give you an understanding of how to deploy a basic program to your Curiosity Nano board. Along the way, we will learn:
