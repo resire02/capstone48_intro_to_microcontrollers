@@ -4,6 +4,7 @@ Felix:      [Blink LED Lab Video](https://drive.google.com/file/d/1ypw5-YPOWhPaF
 
 Gonzalo:    [Blink LED Lab Video](https://youtu.be/MuInQwQ2_UM)
 
-Tyler:      
+Tyler:      [Blink LED Lab Video](https://drive.google.com/file/d/1tLe6PNO_MD7ZsFI2x59BfCH8RyxBTWDz/view?usp=sharing)
+
 
 Kaleb:      
