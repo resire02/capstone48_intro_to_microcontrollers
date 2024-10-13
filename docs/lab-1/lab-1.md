@@ -54,15 +54,15 @@ Through this lab, you will gain a greater understanding of how to interact with 
 4. Search for and select AVR DD-series (no bootloader) from the list.
 5. Choose the appropriate port for your device, typically labeled as COM# Serial Port (USB), where the number sign represents the specific number assigned by your computer. If multiple ports are listed, you can identify the correct one by opening your computer's Device Manager and checking under the Ports section. Refer to the image below for guidance.
 
-  ![](docs/lab-1/images/lab1(5).png)
+  ![image info](docs/lab-1/images/lab1(5).png)
    
 6. Once you’ve selected the correct board and port, click OK.
 7. Navigate to the Tools tab and verify that the Chip is set to AVR64DD32 and the Programmer is set to Curiosity Nano (nEDBG, debug chip: ATSAMD21E18). If these settings are incorrect, click on each section to select the appropriate chip and programmer. See the image below for reference.
 
-  ![](docs/lab-1/images/lab1(7).png)
+  ![image info](docs/lab-1/images/lab1(7).png)
    
 8.Next, click the Verify button (the one with the checkmark) located at the top left corner of the screen. Refer to the image below for visual assistance.
 
-  ![](docs/lab-1/images/lab1(8).png)
+  ![image info](docs/lab-1/images/lab1(8).png)
   
 9. Finally, click on Sketch in the toolbar and select Upload Using Programmer. This action will download the code to the microcontroller.
