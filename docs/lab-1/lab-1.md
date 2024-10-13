@@ -48,7 +48,7 @@ Through this lab, you will gain a greater understanding of how to interact with 
 1. Ensure your board is connected to a USB port on your computer.
 2. In the top left corner of the Arduino IDE, click the dropdown menu next to the three buttons shown in the image below.
 
-   ![](docs/lab-1/images/lab1(1).jpg)
+   ![image info](docs/lab-1/images/lab1(1).jpg)
    
 3. Select “Other Boards and Ports.”
 4. Search for and select AVR DD-series (no bootloader) from the list.
