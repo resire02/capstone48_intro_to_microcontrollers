@@ -113,23 +113,18 @@ digitalWrite(pinName, LOW);
 
 Below is an example code to make pin PF5 blink an LED:
 
-#define LED_Pin 25
 
-// The setup function runs once when you press reset or power the board
-void setup() {
-  pinMode(LED_Pin, OUTPUT);  // Initialize pin PF5 as an output
-}
+      #define LED_Pin 25
 
-// The loop function runs over and over again
+      // The setup function runs once when you press reset or power the board
+      void setup() {
+        pinMode(LED_Pin, OUTPUT);  // Initialize pin PF5 as an output
+      }
 
-void loop() {
-
-      digitalWrite(LED_Pin, HIGH);  // Turn the LED on
-  
-      delay(1000);                  // Wait for a second
-  
-      digitalWrite(LED_Pin, LOW);   // Turn the LED off
-  
-      delay(1000);                  // Wait for a second
-  
-}
+      // The loop function runs over and over again
+      void loop() {
+        digitalWrite(LED_Pin, HIGH);  // Turn the LED on
+        delay(1000);                  // Wait for a second
+        digitalWrite(LED_Pin, LOW);   // Turn the LED off
+        delay(1000);                  // Wait for a second
+      }
