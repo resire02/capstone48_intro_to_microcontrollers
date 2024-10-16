@@ -78,3 +78,52 @@ The **setup** and **loop** functions need to be defined with a function body, wh
 ![deploying sketch to board](./images/deploy-code_upload.jpg)
   
 9. Finally, click on Sketch in the toolbar and select Upload Using Programmer. This action will download the code to the microcontroller.
+
+## Pin Basics
+The Curiosity Nano board we are using for this lab has 28 pins that can be controlled by the Arduino. Each pin serves different functions. In Lab 1, we will focus on GPIO pins. GPIO stands for General-Purpose Input/Output. These pins can either send or read binary values (1's and 0's), which allows them to control devices like LEDs, read button states, or communicate with external devices.
+
+Of the 28 pins, 25 can function as GPIO pins, with pin PF5 tied to an onboard LED, making it usable only as an output pin. The GPIO pins are shown in gray in the pinout image below.
+
+When using GPIO pins in Arduino, we need to define each pin before using it. Since Arduino can program various boards, each pin is assigned a number. For our board, the pins are numbered 0 to 27. The corresponding pin numbers can be seen in the image below.
+
+To define a pin in Arduino, you will use the following syntax:
+
+#define nameUsedForPin number
+
+In the setup method, you initialize the pin with:
+
+pinMode(nameUsedForPin, OUTPUT);
+
+For example, to define pin PF5 (pin 25), you would write:
+
+#define LEDPin 25
+pinMode(LEDPin, OUTPUT);
+
+This sets up pin 25 (PF5) as an output pin.
+
+To change the pin's output, you can use the following commands:
+
+To set the output to 1 (HIGH):
+
+digitalWrite(pinName, HIGH);
+
+To set the output to 0 (LOW):
+
+digitalWrite(pinName, LOW);
+
+Below is an example code to make pin PF5 blink an LED:
+
+#define LED_Pin 25
+
+// The setup function runs once when you press reset or power the board
+void setup() {
+  pinMode(LED_Pin, OUTPUT);  // Initialize pin PF5 as an output
+}
+
+// The loop function runs over and over again
+void loop() {
+  digitalWrite(LED_Pin, HIGH);  // Turn the LED on
+  delay(1000);                  // Wait for a second
+  digitalWrite(LED_Pin, LOW);   // Turn the LED off
+  delay(1000);                  // Wait for a second
+}
