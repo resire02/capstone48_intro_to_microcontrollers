@@ -85,6 +85,7 @@ The Curiosity Nano board we are using for this lab has 28 pins that can be contr
 Of the 28 pins, 25 can function as GPIO pins, with pin PF5 tied to an onboard LED, making it usable only as an output pin. The GPIO pins are shown in gray in the pinout image below.
 ![Pinout](./images/pinout.png)
 When using GPIO pins in Arduino, we need to define each pin before using it. Since Arduino can program various boards, each pin is assigned a number. For our board, the pins are numbered 0 to 27. The corresponding pin numbers can be seen in the image below.
+![arduino_pins](./images/arduino_pins.png)
 
 To define a pin in Arduino, you will use the following syntax:
 
