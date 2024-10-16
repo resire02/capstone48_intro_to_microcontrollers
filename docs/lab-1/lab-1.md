@@ -88,16 +88,16 @@ When using GPIO pins in Arduino, we need to define each pin before using it. Sin
 
 To define a pin in Arduino, you will use the following syntax:
 
-#define nameUsedForPin number
+      #define nameUsedForPin number
 
 In the setup method, you initialize the pin with:
 
-pinMode(nameUsedForPin, OUTPUT);
+      pinMode(nameUsedForPin, OUTPUT);
 
 For example, to define pin PF5 (pin 25), you would write:
 
-#define LEDPin 25
-pinMode(LEDPin, OUTPUT);
+      #define LEDPin 25
+      pinMode(LEDPin, OUTPUT);
 
 This sets up pin 25 (PF5) as an output pin.
 
@@ -105,11 +105,11 @@ To change the pin's output, you can use the following commands:
 
 To set the output to 1 (HIGH):
 
-digitalWrite(pinName, HIGH);
+      digitalWrite(pinName, HIGH);
 
 To set the output to 0 (LOW):
 
-digitalWrite(pinName, LOW);
+      digitalWrite(pinName, LOW);
 
 Below is an example code to make pin PF5 blink an LED:
 
