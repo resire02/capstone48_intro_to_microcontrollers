@@ -8,9 +8,9 @@ This lab requires the following materials:
 * Arduino IDE (Go to [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software) if not installed already)  
 * DXCore support library  
 * AVR64DD32 Curiosity Nano evaluation kit  
-* Standard-A to Micro-B cable (or a Micro-AB cable) with data transfer support
+* Standard USB A to Micro USB cable (or a Micro-AB cable) with data transfer support [^1]
 
-Most USB cables support data transfer capabilities; however, if Arduino IDE is unable to locate the board, this usually indicates that the cable does not support data transfer.
+[^1] Most USB cables support data transfer capabilities; however, if Arduino IDE is unable to locate the board, this usually indicates that the cable does not support data transfer.
 
 ## Learning Objectives
 
@@ -18,7 +18,7 @@ This lab is intended to give you an understanding of how to deploy a basic progr
 
 1. How to identify pins on the Curiosity Nano board (and their associated number in code)   
 2. A few basic methods common to almost all programs run on the board  
-3. How to blink an on board LED.
+3. How to blink an on-board LED.
 
 Throughout this lab, you will gain a greater understanding of how to work with the board through Arduino IDE, deploy code to the Curiosity Nano board, and identify features on the board.  
 
@@ -28,12 +28,12 @@ A “sketch” file is a **program** that is uploaded onto an Arduino board by A
 
 ![sketch functions explanation](./images/sketch-functions-visual-explanation.png)
 
-There are 5 functions that are built into all Arduino sketches:
+The basic functionality of a microcontroller includes:
 
 * **setup** – runs once during program execution  
 * **loop** – runs infinitely during program execution  
 * **pinMode** – labels a specific pin as a source to read from (input) or as a source to write to (output)  
-* **digitalWrite** – tells a pin to use either LOW or HIGH voltage  
+* **digitalWrite** – sets a pin’s voltage to either LOW (0V) or HIGH (5V or 3.3V).  
 * **delay** – tells the sketch to wait a specified number of milliseconds before running the next line
 
 The **setup** and **loop** functions need to be defined with a function body, while the **pinMode**, **digitalWrite**, and **delay** functions can be called without defining a function body. This is because setup and loop are **special functions** that are called by the Arduino program and contain the main functionality of the sketch.
@@ -41,17 +41,8 @@ The **setup** and **loop** functions need to be defined with a function body, wh
 ## Lab Setup
 
 1. Go to File \-\> Examples \-\> 01.Basics \-\> Blink  
-2. Arduino is based on a language called Wiring. It's basically C++.  
-3. The basic functionality of a Microcontroller includes  
-   - pinMode()  
-     * In Microcontroller space, GPIO pins can be input or output.  
-     * In modern ones, they can be both at the same time, which is important for fault tolerance or error checking.  
-     * In a general sense, pinMode() sets pin as either input or output  
-     * The macro LED\_BUILTIN matches the pin number.  
-   - digitalWrite()  
-     * This function sets the target to either HIGH or LOW.  
-   - delay()  
-     * This function takes an argument in milliseconds and waits for that amount of time.
+2. Add the line ```#define CNANO_LED 25``` before the setup function.
+3. Replace all instances of ```LED_BUILTIN``` with ```CNANO_LED```.
 
 ![image info](./images/samplecode.png)
 
