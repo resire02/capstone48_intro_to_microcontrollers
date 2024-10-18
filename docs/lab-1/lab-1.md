@@ -41,7 +41,7 @@ The **setup** and **loop** functions need to be defined with a function body, wh
 2. Add the line ```#define CNANO_LED 25``` before the setup function.
 3. Replace all instances of ```LED_BUILTIN``` with ```CNANO_LED```.
 
-![image info](./images/samplecode.png)
+![image info](./images/sketch-functions-visual-explanation.png)
 
 ## Pin Basics
 The Curiosity Nano board we are using for this lab has 28 pins that can be controlled by the Arduino. Each pin serves different functions. In Lab 1, we will focus on GPIO pins. GPIO stands for General-Purpose Input/Output. These pins can either send or read binary values (1's and 0's), which allows them to control devices like LEDs, read button states, or communicate with external devices.
