@@ -33,12 +33,12 @@ This guide will provide you with a foundation for learning electrical circuits a
 6. Copy and paste the following URL into the text box and click OK.  
    * [http://drazzy.com/package\_drazzy.com\_index.json](http://drazzy.com/package_drazzy.com_index.json) [^1]
 
-![image info](./images/Preferences.png)
+![image info](./images/preferences.png)
 
 7. Go to the Board Manager by clicking on the second icon from top to bottom on the left panel.  
 8. Type 'DxCore' and click INSTALL. This installs the primary support package.[^2]
 
-![image info](./images/DxCorev3.png)
+![image info](./images/dxcorev3.png)
 
 ## Tour of the Source Files
 
