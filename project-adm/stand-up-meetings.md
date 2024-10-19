@@ -8,5 +8,7 @@
 
 
 ### Sprint 2
+
+|  Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                        | 
 |-------------|--------------|--------------|------------------------------------------------------------------------------------------------------------------------------------|
 | 1           | 10/18/2024   | GA, FL, TW   | Discussed and edited lab deliverable formatting                                                                                    |
