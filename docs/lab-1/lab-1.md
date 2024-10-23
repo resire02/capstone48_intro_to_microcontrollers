@@ -85,7 +85,7 @@ To set the output to 0 (LOW):
 
 ## Lab Setup
 
-Go to File ⇾ Examples ⇾ 01.Basics ⇾ Blink. Below is an example code to make pin PF5 blink an LED:
+Go to File ⇾ Examples ⇾ 01.Basics ⇾ Blink. Use the example code to make pin PF5 blink an LED [^3]:
 
 | \#define LED\_Pin 25// The setup function runs once when you press reset or power the boardvoid setup() {     pinMode(LED\_Pin, OUTPUT);  // Initialize pin PF5 as an output } // The loop function runs over and over again void loop() {     digitalWrite(LED\_Pin, HIGH);  // Turn the LED on     delay(1000);                  // Wait for a second     digitalWrite(LED\_Pin, LOW);   // Turn the LED off     delay(1000);                  // Wait for a second } |
 | :---- |
@@ -145,4 +145,6 @@ Go to File ⇾ Examples ⇾ 01.Basics ⇾ Blink. Below is an example code to mak
 
 [^1]:  Most USB cables support data transfer capabilities; however, if Arduino IDE is unable to locate the board, this usually indicates that the cable does not support data transfer.
 
-[^2]:  This file can be located by navigating to the user home directory then going to AppData ⇾ Local ⇾ Arduino15 ⇾ packages ⇾ DxCore ⇾ hardware ⇾ megaavr ⇾ 1.5.11 ⇾ variants ⇾ 32pin-ddseries ⇾ pins\_arduino.h
+[^2]:  This file can be located by navigating to the user home directory then going to AppData ⇾ Local ⇾ Arduino15 ⇾ packages ⇾ DxCore ⇾ hardware ⇾ megaavr ⇾ 1.5.11 ⇾ variants ⇾ 32pin-ddseries ⇾ pins\_arduino.h. Avoid modifying it. Changes may affect execution. 
+
+[^3]:  The Arduino IDE opens example sketches in read-only mode. To modify the pin definitions, copy and paste the sketch content into a new file before making any edits.
