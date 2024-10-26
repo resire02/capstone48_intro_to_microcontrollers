@@ -36,4 +36,5 @@ The Arduino IDE utilizes libraries that simplify working with specific chips and
 7. Finally, search for "Adafruit MCP23008" and install the "Adafruit MCP23008 Library" as shown.
    ![](Photos/install4.png)
 8. Click Install All to complete the installation process.
+
 These libraries will support the components we’ll use in the lab, enabling smoother control over displays, sensors, and other connected devices.
