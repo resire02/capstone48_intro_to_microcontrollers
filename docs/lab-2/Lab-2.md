@@ -46,7 +46,7 @@ The SSD1306 is a OLED display located towards the bottom right of the Curiosity 
 
 ![The SSD1306](./Photos/ssd1306_component.png)
 
-The SSD1306 is connected to the I2C-SDA and I2C-SCL hookups. The SDA is used for data transfer while the SCL is used to synchronize communication. These pins are already connected to the Curiosity Nano.
+The SSD1306 is connected to the I2C-SDA and I2C-SCL hookups. The SDA is used for data transfer while the SCL is used to synchronize communication. These pins are already adjacent to the PA2 and PA3 pins on the Curiosity Nano, so there is no remapping required.
 
 ![SSD1306 Pin Mappings](./Photos/ssd1306_mapping.png)
 
@@ -114,6 +114,78 @@ Note: Calling `display()` multiple times will not visibly do anything, unless ad
 
 ![Result of following code](./Photos/ssd1306_using_display.jpg)
 
-In the next section, you will learn how to display an image onto the SSD1306 board.
+In the next section, you will learn how to display an image on the OLED display using `drawBitmap()`.
 
-#### Displaying an Image Lab
+#### Displaying an Image
+
+1. Open Arduino IDE and create a new sketch with the following code:
+
+```
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+#define SCREEN_ADDRESS 0x3D
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+  delay(1000);
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    for(;;);
+  }
+}
+
+void loop() {
+
+}
+```
+
+2. Install the Adafruit SSD1306 library from the library manager tab. Ensure that the Adafruit GFX library and its dependencies are installed as well.
+
+Arduino cannot read the formatting nor handle the size of regular images, so the image will need to be converted to a bitmap image (.BMP) and shrunk to a small enough size to fit on the screen.
+
+3. Go to your start menu by pressing the Windows key and Open Microsoft Paint.
+
+4. On the top left corner, go to File -> Open, this should open up a File Explorer window. Select an image of your choosing then click "Open".
+
+5. Towards the top of the screen, in the "Image" menu section click on the "Resize and Skew" option. On older versions of Microsoft Paint, it may be called "Resize". Alternatively, the shortcut Ctrl+W can be used to access this menu.
+
+![Where to find Skew and Resize](./Photos/ssd1306_paint_resizing.png)
+
+6. Change the "Resize" option to Pixels and ensure that "Maintain Aspect Ratio" is selected. Then modify either width or height such that the width is equal or less than 128 pixels and the height is equal or less than 64 pixels. This is because the SSD1306 is limited to 128 pixels by 64 pixels.
+
+![What the Skew and Resize menu looks like](./Photos/ssd1306_paint_resize_howto.png)
+
+7. Once done, select "OK" to render the size changes.
+
+8. Then, on the top left, go to File -> Save As -> BMP picture, this should open up a File Explorer window. Select an appropriate directory to save to and select Save.
+
+![How to save the image as a bitmap image](./Photos/ssd1306_paint_saveas.png)
+
+9. Go to https://javl.github.io/image2cpp. Under "Select Image", upload the BMP image that was exported in the previous step. Canvas Size under Image Settings should be the same dimensions as the image.
+
+10. Scroll to the bottom and change Code Output Format to "Arduino code, single bitmap". Then, click on Generate Code. This should generate a code snippet. Copy and paste this code snippet into the sketch before the `setup()` function.
+
+11. Directly after the image array, define width and height constants to store the dimensions of the image.
+
+```
+#define IMAGE_WIDTH <your image width in pixels>
+#define IMAGE_HEIGHT <your image height in pixels>
+```
+
+12. In the `setup()` function, call `drawBitmap()` after the display has been initialized. We will draw the image from the top left corner so that no part of the image is cut off. 
+
+```
+void setup() {
+  drawBitmap(0, 0, <name of image array>, IMAGE_WIDTH, IMAGE_HEIGHT, 1)
+}
+```
+
+13. Select the port and board then compile the sketch, ensuring that Tools -> Chip is set to "AVR64DD32 and Tools -> Programmer is set to "Curiosity Nano". Use Sketch -> Upload Using Programmer to send the code to your Curiosity Explorer.
+
+14. You should now see an image show up on the SSD1306 display. If the image does not show up, check that your Curiosity Nano is properly connected to the Curiosity Explorer board.
