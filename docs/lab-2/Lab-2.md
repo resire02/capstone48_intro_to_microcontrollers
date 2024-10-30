@@ -189,3 +189,51 @@ void setup() {
 13. Select the port and board then compile the sketch, ensuring that Tools -> Chip is set to "AVR64DD32 and Tools -> Programmer is set to "Curiosity Nano". Use Sketch -> Upload Using Programmer to send the code to your Curiosity Explorer.
 
 14. You should now see an image show up on the SSD1306 display. If the image does not show up, check that your Curiosity Nano is properly connected to the Curiosity Explorer board.
+
+## Working with the Digital Addressable LEDs
+
+The Explorer features eight serially addressable RGB LEDs.
+They are mapped to pin PC3 on the Curiosity Nano Evaluation Kit.
+
+![picture](./Photos/WS2812B_RGB_1.jpg)
+
+#### Animate a Multicolored LED Ring Chase
+
+Copy and paste this code into a new sketch. The directive ```#include <tinyNeoPixel.h>``` adds support for controlling 
+NeoPixel (WS2812) LEDs.
+
+```
+#include <tinyNeoPixel.h>
+
+tinyNeoPixel pixel_ring = tinyNeoPixel(8, PIN_PC3, NEO_GRB + NEO_KHZ800);
+unsigned long color_grid[3] = {0x00007f,0x007f00,0x7f0000};
+
+void setup() {
+  pixel_ring.begin();
+}
+
+void loop() {
+  static unsigned long ring_timer = 0UL;
+  unsigned long now;
+  static uint8_t pixel_index = 0,color_index = 0;
+
+  now = millis();
+  if(now - ring_timer > 211UL)
+  {
+    ring_timer = now;
+    pixel_ring.clear();
+    pixel_ring.show();    
+    pixel_ring.setPixelColor(pixel_index,color_grid[color_index]);
+    pixel_ring.show();
+    pixel_index++;
+    if(pixel_index > 7)
+            pixel_index = 0;
+    color_index++;
+    if(color_index > 3)
+      color_index = 0;
+  }
+}
+```
+
+The loop function shifts both the active LED and its color after 211 milliseconds, cycling through each LED in the ring 
+and the colors in ```color_grid```.
