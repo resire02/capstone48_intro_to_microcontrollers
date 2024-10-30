@@ -200,7 +200,7 @@ They are mapped to pin PC3 on the Curiosity Nano Evaluation Kit.
 #### Animate a Multicolored LED Ring Chase
 
 Copy and paste this code into a new sketch. The directive ```#include <tinyNeoPixel.h>``` adds support for controlling 
-NeoPixel (WS2812) LEDs.
+```NeoPixel (WS2812)``` LEDs.
 
 ```
 #include <tinyNeoPixel.h>
@@ -235,5 +235,16 @@ void loop() {
 }
 ```
 
-The loop function shifts both the active LED and its color after 211 milliseconds, cycling through each LED in the ring 
+The ```loop``` function shifts both the active LED and its color after 211 milliseconds, cycling through each LED in the ring 
 and the colors in ```color_grid```.
+
+For additional animations, check out the example sketches at ```File -> Examples -> tinyNeoPixel.``` 
+Be sure to open **strandtest** and **RGBWstrandtest** to see some dynamic lighting effects.
+
+Please note that these sketches may require the correct pin configuration and LED count to function as intended.
+In this case, use the following settings:
+
+```
+#define PIN PIN_PC3
+#define NUM_LEDS 8
+```
