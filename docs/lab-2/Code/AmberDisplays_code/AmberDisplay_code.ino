@@ -10,11 +10,7 @@
 
 #include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include "Adafruit_MCP23008.h"
-// #include <Adafruit_NeoPixel.h>
-#include <tinyNeoPixel.h>
 
 Adafruit_MCP23008 mcp_leds;
 
