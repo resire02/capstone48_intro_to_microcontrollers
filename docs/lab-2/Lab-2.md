@@ -1,4 +1,5 @@
 **Intro to Curiosity Nano Explorer board**
+
 The Curiosity Nano Explorer Board is a versatile development platform designed for rapid prototyping and learning. It supports all Curiosity Nano boards and features a variety of onboard components, making it easier for users to learn how to control microcontrollers and interface them with sensors, peripherals, and output devices. This board is ideal for students, hobbyists, and developers seeking hands-on experience in embedded systems and IoT applications.
 
 The Explorer Board offers the following key features:
@@ -21,7 +22,9 @@ The Explorer Board offers the following key features:
   * Powered via an onboard USB Type-C connector, with external power options and various power management ICs to support diverse power requirements.
 In this lab, we will explore the setup of the Explorer Board and learn how to use I2C to control LEDs, NeoPixels, and an LCD screen, building a foundation for understanding microcontroller-based systems.
 
+
 **Installing needed Libraries**
+
 The Arduino IDE utilizes libraries that simplify working with specific chips and components. For this lab, we’ll use libraries provided by Adafruit. Follow these steps to install them:
 
 1. Open the Arduino IDE.
@@ -40,7 +43,7 @@ The Arduino IDE utilizes libraries that simplify working with specific chips and
 These libraries will support the components we’ll use in the lab, enabling smoother control over displays, sensors, and other connected devices.
 
 
-## Working with the OLED Display
+## Working with the OLED Display##
 
 The SSD1306 is a OLED display located towards the bottom right of the Curiosity Explorer Board. The display functions as a digital screen, with the capability to draw pixels in a 128-pixels wide by 64-pixels high grid. The display does not support color, meaning pixels can only be ON or OFF.
 
