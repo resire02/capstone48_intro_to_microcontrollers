@@ -122,7 +122,7 @@ This allow us to use the library's functions to draw pixels on the screen. The o
 
 <sup>2</sup>Basic methods can be found in the Adafruit_SSD1306.h file in the repository: https://github.com/adafruit/Adafruit_SSD1306/
 
-The OLED display will display the Adafruit logo by default, we need to call `clearDisplay()` to clear it off before doing any clear operations:
+The OLED display will display the Adafruit logo by default, we need to call `clearDisplay()` to clear it off before doing any draw operations:
 
 ```
   display.clearDisplay(); // clear the Adafruit logo
