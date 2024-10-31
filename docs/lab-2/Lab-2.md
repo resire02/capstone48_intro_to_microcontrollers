@@ -258,7 +258,7 @@ void loop() {
     if(pixel_index > 7)
             pixel_index = 0;
     color_index++;
-    if(color_index > 3)
+    if(color_index >= 3)
       color_index = 0;
   }
 }
