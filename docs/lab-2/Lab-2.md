@@ -22,25 +22,6 @@ The Explorer Board offers the following key features:
   * Powered via an onboard USB Type-C connector, with external power options and various power management ICs to support diverse power requirements.
 In this lab, we will explore the setup of the Explorer Board and learn how to use I2C to control LEDs, NeoPixels, and an LCD screen, building a foundation for understanding microcontroller-based systems.
 
-## Setting up and working with the explorer Board
-
-Setting up your Curiosity Nano Explorer Board is a straightforward process.
-
-1. Installing the Curiosity Nano:
-
- * Align the Boards: Place your Curiosity Nano board at the top of the Explorer Board, ensuring the USB connector faces the top edge.
- * Align the Pins: Align the pins of the Curiosity Nano with the topmost female header pins on the Explorer Board.
- * Secure the Connection: Gently push the Curiosity Nano onto the header pins to establish a secure connection.
-
-2. Understanding the Pin Connections:
-
- * Peripheral Connections: The Explorer Board connects the Curiosity Nano's pins to various peripherals. Refer to the markings on either side of the female header pins to identify these connections.
- * Pin Jumpers: The pin jumpers link peripherals to the Curiosity Nano.
-3. Remapping Pins 
-If you need to use a peripheral that doesn't have a direct connection to your Curiosity Nano, you can remap pins:
-
- * Disconnect the Jumper: Remove the pin jumper from the peripheral you want to remap.
- * Connect the Wire: Use a jumper wire to connect the desired pin on the Curiosity Nano to the corresponding pin on the peripheral.
 
 
 ## Installing needed Libraries
