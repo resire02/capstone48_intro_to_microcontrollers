@@ -28,19 +28,19 @@ Setting up your Curiosity Nano Explorer Board is a straightforward process.
 
 1. Installing the Curiosity Nano:
 
-* Align the Boards: Place your Curiosity Nano board at the top of the Explorer Board, ensuring the USB connector faces the top edge.
-* Align the Pins: Align the pins of the Curiosity Nano with the topmost female header pins on the Explorer Board.
-* Secure the Connection: Gently push the Curiosity Nano onto the header pins to establish a secure connection.
+ * Align the Boards: Place your Curiosity Nano board at the top of the Explorer Board, ensuring the USB connector faces the top edge.
+ * Align the Pins: Align the pins of the Curiosity Nano with the topmost female header pins on the Explorer Board.
+ * Secure the Connection: Gently push the Curiosity Nano onto the header pins to establish a secure connection.
 
 2. Understanding the Pin Connections:
 
-* Peripheral Connections: The Explorer Board connects the Curiosity Nano's pins to various peripherals. Refer to the markings on either side of the female header pins to identify these connections.
-* Pin Jumpers: The pin jumpers link peripherals to the Curiosity Nano.
+ * Peripheral Connections: The Explorer Board connects the Curiosity Nano's pins to various peripherals. Refer to the markings on either side of the female header pins to identify these connections.
+ * Pin Jumpers: The pin jumpers link peripherals to the Curiosity Nano.
 3. Remapping Pins 
 If you need to use a peripheral that doesn't have a direct connection to your Curiosity Nano, you can remap pins:
 
-* Disconnect the Jumper: Remove the pin jumper from the peripheral you want to remap.
-* Connect the Wire: Use a jumper wire to connect the desired pin on the Curiosity Nano to the corresponding pin on the peripheral.
+ * Disconnect the Jumper: Remove the pin jumper from the peripheral you want to remap.
+ * Connect the Wire: Use a jumper wire to connect the desired pin on the Curiosity Nano to the corresponding pin on the peripheral.
 
 
 ## Installing needed Libraries
