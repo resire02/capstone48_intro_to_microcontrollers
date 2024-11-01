@@ -62,6 +62,87 @@ The Arduino IDE utilizes libraries that simplify working with specific chips and
 
 These libraries will support the components we’ll use in the lab, enabling smoother control over displays, sensors, and other connected devices.
 
+## Working with the Amber LEDs
+
+The MCP23008, or the "Amber LEDs", are a set of 8 LEDs located near the Microchip logo at the bottom of the Curiosity Explorer Board. These 8 LEDs 
+will be used for learning our basics of communicating to the on-board components. 
+
+![The MCP23008](./Photos/AmberLED_Location.png)
+
+The MCP23008 is connected to the Curiosity Nano in a few different ways. The primary connections are the I2C-SDA and I2C-SCL, which are used to communicate over the I2C bus connected to the IO-Expander 1. Note, the I2C address for the IO-Expander, which we will use in code later, is located at the top of the location where the LEDs are on the board (in this case being 0x25). 
+
+![MCP23008 Pin Mappings](./Photos/MCP23008_Wiring.png)
+
+To start our sketch, we will import a few basic libaries that will allow us to easily communicate to the IO-Expander 1. 
+
+```
+#include <SPI.h>
+#include <Wire.h>
+#include "Adafruit_MCP23008.h"
+```
+
+Here, we are getting the basic libraries for communication over I2C, and the specific Adafruit library for communicating to the MCP23008.
+
+```
+Adafruit_MCP23008 mcp_leds;
+```
+
+Next, outside of our setup or loop functions, we will create a variable to hold the reference to our LEDs. This holds the necessary methods we need to interact with the LEDs. 
+
+```
+void setup() {
+  uint8_t pin_id, status;
+
+  status = mcp_leds.begin(0x25);
+
+  for (pin_id = 0; pin_id < 8; pin_id++) {
+    mcp_leds.pinMode(pin_id, OUTPUT);
+    mcp_leds.digitalWrite(pin_id, HIGH);
+  }
+}
+```
+
+Inside of our setup function, we define a variable for pin_id, which we use to iterate through our available pins, and a status variable to store the result of starting our mcp_leds. Note, we are using the address (0x25) that we noted earlier to instantiate the connection. While we aren't doing anything with this variable in this code, it can be used to debug later if neccessary. 
+
+Now, instead of putting all of our code into our loop function, since it might be a bit long, we will create a separate method for it
+
+```
+void cylon(void) {
+  static uint8_t led_index = 0, led_state = false, led_dir = true;
+  static unsigned long cylon_timer = 0UL;
+  unsigned long now;
+
+  now = millis();
+  if (now - cylon_timer > 37UL) {
+    cylon_timer = now;
+    if (led_state) {
+      led_state = false;
+      mcp_leds.digitalWrite(led_index, HIGH);
+    } else {
+      led_state = true;
+      mcp_leds.digitalWrite(led_index, LOW);
+    }
+
+    if (led_state == false) {
+      if (led_dir) {
+        led_index++;
+        if (led_index > 7) {
+          led_index = 7;
+          led_dir = false;
+        }
+      } else {
+        led_index--;
+        if (led_index > 127)  // unsigned 8 bit gone negative
+        {
+          led_index = 0;
+          led_dir = true;
+        }
+      }
+    }
+  }
+}
+```
+
 
 ## Working with the OLED Display
 
