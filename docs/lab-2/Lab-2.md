@@ -186,7 +186,7 @@ Arduino cannot read the formatting nor handle the size of regular images, so the
 
 ![Where to find Skew and Resize](./Photos/ssd1306_paint_resizing.png)
 
-6. Change the "Resize" option to Pixels and ensure that "Maintain Aspect Ratio" is selected. Then modify either width or height such that the width is equal or less than 128 pixels and the height is equal or less than 64 pixels. This is because the SSD1306 is limited to 128 pixels by 64 pixels.
+6. Change the "Resize" option to Pixels. Then modify either width or height such that the width is equal or less than 128 pixels and the height is equal or less than 64 pixels. This is because the SSD1306 is limited to 128 pixels by 64 pixels. It is recommended to select "Maintain Aspect Ratio" so that the image does not look distorted.
 
 ![What the Skew and Resize menu looks like](./Photos/ssd1306_paint_resize_howto.png)
 
@@ -198,9 +198,11 @@ Arduino cannot read the formatting nor handle the size of regular images, so the
 
 9. Go to https://javl.github.io/image2cpp. Under "Select Image", upload the BMP image that was exported in the previous step. Canvas Size under Image Settings should be the same dimensions as the image.
 
-10. Scroll to the bottom and change Code Output Format to "Arduino code, single bitmap". Then, click on Generate Code. This should generate a code snippet. Copy and paste this code snippet into the sketch before the `setup()` function.
+10. Scroll to the bottom and change Code Output Format to "Arduino code, single bitmap". Then, click on Generate Code. This should generate a code snippet<sup>3</sup>. Copy and paste this code snippet into the sketch before the `setup()` function.
 
-11. Directly after the image array, define width and height constants to store the dimensions of the image.
+<sup>3</sup>`PROGMEM` tells the micro-controller to store the variable in flash memory instead of in program memory. This is usually applied to variables that do not change at all during a program's execution and take up a notable amount of memory.
+
+11. Directly after the image array, define width and height constants to store the dimensions of the image. This will be used to tell the library how tall and wide our image is.
 
 ```
 #define IMAGE_WIDTH <your image width in pixels>
@@ -218,6 +220,8 @@ void setup() {
 13. Select the port and board then compile the sketch, ensuring that Tools -> Chip is set to "AVR64DD32 and Tools -> Programmer is set to "Curiosity Nano". Use Sketch -> Upload Using Programmer to send the code to your Curiosity Explorer.
 
 14. You should now see an image show up on the SSD1306 display. If the image does not show up, check that your Curiosity Nano is properly connected to the Curiosity Explorer board.
+
+The SSD1306 OLED display is a very versatile peripheral that can be used to display graphics. For a more advanced example, check out the [ssd1306_bouncing_logo](./Code/OLED_code/ssd1306_bouncing_logo.ino) sketch that displays a bouncing logo.
 
 ## Working with the Digital Addressable LEDs
 
