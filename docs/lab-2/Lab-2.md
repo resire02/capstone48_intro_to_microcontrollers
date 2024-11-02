@@ -188,7 +188,7 @@ void setup() {
 }
 ```
 
-This allow us to use the library's functions to draw pixels on the screen. The origin point (x=0, y=0) is located at the top left of the screen, as pixels are draw left to right, up to down. Since the SSD1306 does not support color, all color values will always be 1 (white) or 0 (black). The library includes functions for drawing<sup>1</sup><sup>2</sup>, most notably:
+This allows us to use the library's functions to draw pixels on the screen. The origin point (x=0, y=0) is located at the top left of the screen, as pixels are draw left to right, up to down. Since the SSD1306 does not support color, all color values will always be 1 (white) or 0 (black). The library includes functions for drawing<sup>1</sup><sup>2</sup>, most notably:
 
 - clearDisplay() - Clears the screen of all active pixels.
 - drawPixel() - Draws a single pixel at the given position
@@ -222,9 +222,9 @@ When drawing on the SSD1306, calling draw functions will not automatically show 
 
 Note: Calling `display()` multiple times will not visibly do anything, unless additional draw operations are used.
 
-![Result of following code](./Photos/ssd1306_using_display.jpg)
+This generates the following visual on the OLED display. In the next section, you will learn how to display an image on the OLED display using `drawBitmap()`.
 
-In the next section, you will learn how to display an image on the OLED display using `drawBitmap()`.
+![Result of following code](./Photos/ssd1306_using_display.jpg)
 
 #### Displaying an Image
 
