@@ -53,6 +53,15 @@ If you need to use a peripheral that doesn't have a direct connection to your Cu
    * Connect the Wire: Use a jumper wire to connect the desired pin on the Curiosity Nano to the corresponding pin on the peripheral.
    ![](Photos/CNANORemap.png)
 
+## Serial Communication - I2C
+
+The Explorer features an I2C bus with several attached devices and external connectivity options. All connected devices are compatible with Standard Mode (100 kHz) and Fast Mode (400 kHz) I2C. The bus is designed to meet the rise-time requirements for both modes. The SDA and SCL signals are connected to the COM section of the CNANO socket.
+
+Two components in this lab can be controlled via the I2C Bus.
+
+1. The Amber LED Row can be controlled from the I/O Expander 1 via the I2C Bus.
+2. The OLED Display is directly connected to the I2C Bus.
+
 ## Installing needed Libraries
 
 The Arduino IDE utilizes libraries that simplify working with specific chips and components. For this lab, we’ll use libraries provided by Adafruit. Follow these steps to install them:
