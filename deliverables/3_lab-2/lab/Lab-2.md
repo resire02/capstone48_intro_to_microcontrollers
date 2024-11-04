@@ -73,6 +73,8 @@ The MCP23008 is connected to the Curiosity Nano in a few different ways. The pri
 
 ![MCP23008 Pin Mappings](./images/MCP23008_Wiring.png)
 
+To test this component, we will be creating a small sketch that "bounces" a light from one side of the LEDs to the other. Our goal will be to have the left-most LED start as on, then turn off, an the one right of it to turn on, repeating this until it reaches the other side, and then turning around and doing the opposite (right turns on, then off, one left of it turn and so on). 
+
 To start our sketch, we will import a few basic libaries that will allow us to easily communicate to the IO-Expander 1. 
 
 ```
@@ -107,6 +109,11 @@ Inside of our setup function, we define a variable for pin_id, which we use to i
 Now, instead of putting all of our code into our loop function, since it might be a bit long, we will create a separate method for it
 
 ```
+
+void loop() {
+  cylon();
+}
+
 void cylon(void) {
   static uint8_t led_index = 0, led_state = false, led_dir = true;
   static unsigned long cylon_timer = 0UL;
@@ -143,6 +150,53 @@ void cylon(void) {
 }
 ```
 
+This is quite a large method! But the functionality of it is actually quite simple. Initially, we start by instantiating our necessary variables, those being:
+- led_index - An unsigned integer representing which LED we are currently looking at
+- led_state - An unsigned integer (though used as a boolean) representing if the LED is on or off
+- led_dir - An unsigned integer representing the direction that the lights are travelling (left to right or right to left), also treated as a boolean
+- cylon_timer - An unsigned long representing the time since we last updated the LEDs 
+
+Note that all of these variables are marked with the `static` keyword, which will ensure that their values are kept between calls to our "loop" method. 
+
+And finally, 
+
+- now - An unsigned long representing the current time
+
+Now we have all the necessary values we need to determine how to manipulate the LEDs to match our pattern of bouncing back and forth. 
+```
+    if (led_state) {
+      led_state = false;
+      mcp_leds.digitalWrite(led_index, HIGH);
+    } else {
+      led_state = true;
+      mcp_leds.digitalWrite(led_index, LOW);
+    }
+```
+
+Our first if statement is what turns on or off our LED at this location, if it is on, it is turned off, and if it is off it is turned on. This is done through the "digitalWrite" method on the mcp_leds instance we made earlier, and the led_index we created at the start of this method. Note again that the Curiosity Nano Explorer is low-activated, meaning that `mcp_leds.digitalWrite(led_index, LOW);` turns the LED on. 
+
+```
+if (led_state == false) {
+      if (led_dir) {
+        led_index++;
+        if (led_index > 7) {
+          led_index = 7;
+          led_dir = false;
+        }
+      } else {
+        led_index--;
+        if (led_index > 127)  // unsigned 8 bit gone negative
+        {
+          led_index = 0;
+          led_dir = true;
+        }
+      }
+    }
+```
+
+In this if statement (note this is AFTER we have changed the led_state in the first if statement) we increment (or decrement) the current led_index based on the led_dir. Additionally, we check if we have reached the end of the LEDs (led_index > 7 for example), and change direction as necessary. 
+
+And that's it! We now have a working program for bouncing an LED from one side to the other of the Amber LEDs, and an understanding of using the Adafruit library for the MCP23008. 
 
 ## Working with the OLED Display
 
