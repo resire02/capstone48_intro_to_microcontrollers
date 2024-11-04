@@ -26,7 +26,7 @@ This guide will provide you with a foundation for learning electrical circuits a
 2. Download and run the MSI Installer (Windows).  
 3. The IDE should be immediately installed. Run it and allow it some time to install dependencies.
 
-![image info](./images/Download.png)
+![image info](./images/download.png)
 
 4. Go to File \-\> Preferences and under the Settings tab, check **'compile'** and **'upload'** to enable verbose output.  
 5. Under the same tab, click on the icon next to 'Additional Board Manager URLs'  
