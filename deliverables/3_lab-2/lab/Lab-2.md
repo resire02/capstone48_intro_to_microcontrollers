@@ -360,15 +360,35 @@ The SSD1306 OLED display is a very versatile peripheral that can be used to disp
 
 ## Working with the Digital Addressable LEDs
 
-The Explorer features eight serially addressable RGB LEDs.
-They are mapped to pin PC3 on the Curiosity Nano Evaluation Kit.
+The Curiosity Nano Explorer Board features eight RGB LEDs, manufactured by Luckilight, which are serially addressable 
+and mapped to pin PC3 on the Curiosity Nano Evaluation Kit. These LEDs each have independent addresses and are known 
+for their vibrant colors.
 
 ![picture](./images/WS2812B_RGB_1.jpg)
 
-#### Animate a Multicolored LED Ring Chase
+On the next page, you will find a script designed to animate a ring chase on the LEDs. This animation will create a dynamic effect where each LED lights up in sequence, transitioning through a range of colors.
 
-Copy and paste this code into a new sketch. The directive ```#include <tinyNeoPixel.h>``` adds support for controlling 
-```NeoPixel (WS2812)``` LEDs.
+### Script Overview
+
+The core of the animation is managed by the ```loop``` function, which iterates over the following tasks every 211 milliseconds:
+
+1. The function shifts the active LED, ensuring that each LED in the ring is illuminated in turn.
+2. Along with the shifting LED, the color of the active LED changes as well after being selected from a predefined array named ```color_grid```.
+3. Repeat from 1.
+
+For additional animations, check out the example sketches at **File -> Examples -> tinyNeoPixel**. Be sure to open **strandtest** and **RGBWstrandtest** to see some dynamic lighting effects.
+
+Please note that these sketches may require the correct pin configuration and LED count to function as intended.
+
+In this case, use the following settings:
+
+```#define PIN PIN_PC3```
+
+```#define NUM_LEDS 8```
+
+## Working with the Digital Addressable LEDs (Cont.)
+
+Transfer this snippet of code into a new sketch. The directive ```#include <tinyNeoPixel.h>``` adds support for controlling ```WS2812``` LEDs. 
 
 ```
 #include <tinyNeoPixel.h>
@@ -401,18 +421,4 @@ void loop() {
       color_index = 0;
   }
 }
-```
-
-The ```loop``` function shifts both the active LED and its color after 211 milliseconds, cycling through each LED in the ring 
-and the colors in ```color_grid```.
-
-For additional animations, check out the example sketches at ```File -> Examples -> tinyNeoPixel.``` 
-Be sure to open **strandtest** and **RGBWstrandtest** to see some dynamic lighting effects.
-
-Please note that these sketches may require the correct pin configuration and LED count to function as intended.
-In this case, use the following settings:
-
-```
-#define PIN PIN_PC3
-#define NUM_LEDS 8
 ```
