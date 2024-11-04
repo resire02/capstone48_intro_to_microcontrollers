@@ -1,3 +1,13 @@
+## Required Materials
+This lab requires the same materials as listed in Lab 1. Please refer to Lab 1 for the complete list of required materials.
+
+## Learning Objectives
+This lab will introduce you to the Curiosity Nano Explorer board, starting with an in-depth look at three essential components:
+1. The Amber LEDs (MCP23008).
+2. The Digital Addressable LEDs (WS2812 RGB).
+3. The OLED Display (SSD1306).
+By the end of this lab, you will be familiar with setting up and interacting with each of these components on the Explorer board.
+
 ## Intro to Curiosity Nano Explorer board
 
 The Curiosity Nano Explorer Board is a versatile development platform designed for rapid prototyping and learning. It supports all Curiosity Nano boards and features a variety of onboard components, making it easier for users to learn how to control microcontrollers and interface them with sensors, peripherals, and output devices. This board is ideal for students, hobbyists, and developers seeking hands-on experience in embedded systems and IoT applications.
