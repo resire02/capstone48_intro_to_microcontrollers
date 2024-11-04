@@ -67,11 +67,11 @@ These libraries will support the components we’ll use in the lab, enabling smo
 The MCP23008, or the "Amber LEDs", are a set of 8 LEDs located near the Microchip logo at the bottom of the Curiosity Explorer Board. These 8 LEDs 
 will be used for learning our basics of communicating to the on-board components. 
 
-![The MCP23008](./Photos/AmberLED_Location.png)
+![The MCP23008](./images/AmberLED_Location.jpg)
 
 The MCP23008 is connected to the Curiosity Nano in a few different ways. The primary connections are the I2C-SDA and I2C-SCL, which are used to communicate over the I2C bus connected to the IO-Expander 1. Note, the I2C address for the IO-Expander, which we will use in code later, is located at the top of the location where the LEDs are on the board (in this case being 0x25). 
 
-![MCP23008 Pin Mappings](./Photos/MCP23008_Wiring.png)
+![MCP23008 Pin Mappings](./images/MCP23008_Wiring.png)
 
 To start our sketch, we will import a few basic libaries that will allow us to easily communicate to the IO-Expander 1. 
 
@@ -148,11 +148,11 @@ void cylon(void) {
 
 The SSD1306 is a OLED display located towards the bottom right of the Curiosity Explorer Board. The display functions as a digital screen, with the capability to draw pixels in a 128-pixels wide by 64-pixels high grid. The display does not support color, meaning pixels can only be ON or OFF.
 
-![The SSD1306](./Photos/ssd1306_component.png)
+![The SSD1306](./images/ssd1306_component.png)
 
 The SSD1306 is connected to the I2C-SDA and I2C-SCL hookups. The SDA is used for data transfer while the SCL is used to synchronize communication. These pins are already adjacent to the PA2 and PA3 pins on the Curiosity Nano, so there is no remapping required.
 
-![SSD1306 Pin Mappings](./Photos/ssd1306_mapping.png)
+![SSD1306 Pin Mappings](./images/ssd1306_mapping.png)
 
 Working with the SSD1306 requires the Adafruit GFX and SSD1306 libraries, along with their dependency libraries:
 
@@ -224,7 +224,7 @@ Note: Calling `display()` multiple times will not visibly do anything, unless ad
 
 This generates the following visual on the OLED display. In the next section, you will learn how to display an image on the OLED display using `drawBitmap()`.
 
-![Result of following code](./Photos/ssd1306_using_display.jpg)
+![Result of following code](./images/ssd1306_using_display.jpg)
 
 #### Displaying an Image
 
@@ -265,17 +265,17 @@ Arduino cannot read the formatting nor handle the size of regular images, so the
 
 5. Towards the top of the screen, in the "Image" menu section click on the "Resize and Skew" option. On older versions of Microsoft Paint, it may be called "Resize". Alternatively, the shortcut Ctrl+W can be used to access this menu.
 
-![Where to find Skew and Resize](./Photos/ssd1306_paint_resizing.png)
+![Where to find Skew and Resize](./images/ssd1306_paint_resizing.png)
 
 6. Change the "Resize" option to Pixels. Then modify either width or height such that the width is equal or less than 128 pixels and the height is equal or less than 64 pixels. This is because the SSD1306 is limited to 128 pixels by 64 pixels. It is recommended to select "Maintain Aspect Ratio" so that the image does not look distorted.
 
-![What the Skew and Resize menu looks like](./Photos/ssd1306_paint_resize_howto.png)
+![What the Skew and Resize menu looks like](./images/ssd1306_paint_resize_howto.png)
 
 7. Once done, select "OK" to render the size changes.
 
 8. Then, on the top left, go to File -> Save As -> BMP picture, this should open up a File Explorer window. Select an appropriate directory to save to and select Save.
 
-![How to save the image as a bitmap image](./Photos/ssd1306_paint_saveas.png)
+![How to save the image as a bitmap image](./images/ssd1306_paint_saveas.png)
 
 9. Go to https://javl.github.io/image2cpp. Under "Select Image", upload the BMP image that was exported in the previous step. Canvas Size under Image Settings should be the same dimensions as the image.
 
@@ -309,7 +309,7 @@ The SSD1306 OLED display is a very versatile peripheral that can be used to disp
 The Explorer features eight serially addressable RGB LEDs.
 They are mapped to pin PC3 on the Curiosity Nano Evaluation Kit.
 
-![picture](./Photos/WS2812B_RGB_1.jpg)
+![picture](./images/WS2812B_RGB_1.jpg)
 
 #### Animate a Multicolored LED Ring Chase
 
