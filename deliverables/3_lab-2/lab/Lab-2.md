@@ -1,12 +1,16 @@
 ## Required Materials
-This lab requires the same materials as listed in Lab 1. Please refer to Lab 1 for the complete list of required materials.
+This lab requires the following materials:
+* A computer with Arduino IDE installed (with DXCore libraries)
+* AVR64DD32 Curiosity Nano
+* EV58G97A Curiosity Explorer Board
+* Standard USB to Micro USB cable
 
 ## Learning Objectives
 This lab will introduce you to the Curiosity Nano Explorer board, starting with an in-depth look at three essential components:
 1. The Amber LEDs (MCP23008).
 2. The Digital Addressable LEDs (WS2812 RGB).
 3. The OLED Display (SSD1306).
-By the end of this lab, you will be familiar with setting up and interacting with each of these components on the Explorer board.
+By the end of this lab, you will be familiar with setting up and interacting with each of these components on the Curiosity Explorer.
 
 ## Intro to Curiosity Nano Explorer board
 
