@@ -9,13 +9,13 @@ In the Curiosity Nano, UART allows the board to connect with a computer through 
 An Analog-To-Digital (ADC) converter is a tool that takes real world reading from a sensor (analog) and converts it into a value that can be understood by a program (digital). 
 Generally speaking, analog data comes in through sensors or other peripherals, and is continuous in nature; This meaning that it is not set to certain breakpoint or restrictions like variables in code are, think things like voltage or temperature. In order to translate this continous data into digital data, 'breakpoints' are set in order to determine how to round the continous data to fit the digital version. In the below graph you can see an example of this, where value are simply rounded up or down depending on if the value is equal to the actual breakpoint. 
 
-[ADC example graph](./ADC.jpg)  
+![ADC example graph](./Images/ADC.jpg)  
 (from: [https://www.microcontrollerboard.com/analog-to-digital-converter.html](https://www.microcontrollerboard.com/analog-to-digital-converter.html))
 
 In specific, we can look at the space between 011 and 100. Here, we see that the red line (representing digital) only ever increases after the blue line (representing analog) reaches the dashed line above it, even though the blue line is in between 011 and 100. While different Analog-To-Digital converters can interpret these breakpoints differently, especially depending on what is being digitized, the general idea of rounding based on breakpoints remains consistent. 
 
 To further understand this concept, we will be using the on board potentiometer on the Curiosity Nano Explorer board, pictured below. 
 
-[Curiosity Nano Explorer Potentiometer](./Potentiometer.jpg)
+![Curiosity Nano Explorer Potentiometer](./Images/Potentiometer.jpg)
 
 
