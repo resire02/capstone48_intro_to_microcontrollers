@@ -1,0 +1,32 @@
+/*
+  analogWrite() test
+  This is an adaptation of the sample sketch at
+  File -> Examples -> 03.Analog -> AnalogWriteMega
+  This sketch fades LEDs up and down one at a time on pins PD1 through PD3
+*/
+
+const int lowestPin = PIN_PD1;
+const int highestPin = PIN_PD3;
+
+void setup() {
+  // this is required to route the TCA to Port D and enable PWM on pins PD1 to PD3
+  PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
+}
+
+void loop() {
+  // iterate over the pins:
+  for (int thisPin = lowestPin; thisPin <= highestPin; thisPin++) {
+    // fade the LED on thisPin from off to brightest:
+    for (int brightness = 0; brightness < 255; brightness++) {
+      analogWrite(thisPin, brightness);
+      delay(2);
+    }
+    // fade the LED on thisPin from brightest to off:
+    for (int brightness = 255; brightness >= 0; brightness--) {
+      analogWrite(thisPin, brightness);
+      delay(2);
+    }
+    // pause between LEDs:
+    delay(100);
+  }
+}
