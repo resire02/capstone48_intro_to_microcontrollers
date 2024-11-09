@@ -6,3 +6,4 @@
 | 9/24/2024  | https://docs.google.com/document/d/1Oi0BTvwnlYFeYes3W9ZNk9wCQWmZ_8PBYALEuftjgtE/edit?usp=drive_link |
 | 10/8/2024  | https://docs.google.com/document/d/1sc_tGkNuUwlnuhdubgQioUmMcwZGDy-LhoMyGiZPO3A/edit?usp=drive_link |
 | 10/22/2024 | https://docs.google.com/document/d/1fMl4Uo9OeoEJGvb4IjMbCKfEhbrNgNn_PoJ0yWC-4ls/edit?usp=drive_link |
+| 11/05/2024 | https://docs.google.com/document/d/1118Ak5i7EczFlIn-SA2kgvJHiNsJEVrbMDOW2bqjVjE/edit?usp=drive_link |
