@@ -51,7 +51,7 @@ void loop()
   delay(1000);
 
   for (uint8_t index = 0; index < NUM_OF_PINS; index++) {
-    PWM_Instance[index]->setPWM(PWM_Pins[index], frequency[index], dutyCycle[index]/2);
+    PWM_Instance[index]->setPWM(PWM_Pins[index], frequency[index], dutyCycle[index]/3);
     printPWMInfo(PWM_Instance[index]);
   }
 
