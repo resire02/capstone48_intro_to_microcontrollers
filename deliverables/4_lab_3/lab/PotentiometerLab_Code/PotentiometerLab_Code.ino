@@ -1,0 +1,16 @@
+#define POTMETERPIN 19
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.swap(3);
+  Serial.begin(115200);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  Serial.println("Wow");
+
+  int a = analogRead(POTMETERPIN);
+  
+  Serial.println("Potmeter value: " + String(a));
+}
