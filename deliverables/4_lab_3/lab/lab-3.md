@@ -6,64 +6,92 @@ In the Curiosity Nano, UART allows the board to connect with a computer through 
 
 ## UART Code Example 1
 
-void setup() { 
-  Serial.swap(3);
-  Serial.begin(115200);
-  Serial.println("Enter an expression (e.g., 5+3):");
-}
-
-void loop() {
-  if (Serial.available() > 0) {
-    String input = Serial.readStringUntil('\n');  // Read the input until newline
-    float num1 = 0, num2 = 0;
-    char op;
-    bool operatorFound = false;
-
-    // Parse the input
-    int i = 0;
-    while (i < input.length()) {
-      char c = input[i];
-
-      if (isdigit(c)) {
-        if (!operatorFound) {
-          num1 = num1 * 10 + (c - '0');
-        } else {
-          num2 = num2 * 10 + (c - '0');
-        }
-      } else {
-        op = c;  // Store the operator
-        operatorFound = true;
-      }
-      i++;
+    void setup() { 
+      Serial.swap(3);
+      Serial.begin(115200);
+      Serial.println("Enter an expression (e.g., 5+3):");
     }
-
-    // Check if an operator was found and perform the calculation
-    if (operatorFound) {
-      switch (op) {
-        case '+':
-          Serial.println(num1 + num2);
-          break;
-        case '-':
-          Serial.println(num1 - num2);
-          break;
-        case '':
-          Serial.println(num1 num2);
-          break;
-        case '/':
-          if (num2 != 0) {
-            Serial.println(num1 / num2);
+    
+    void loop() {
+      if (Serial.available() > 0) {
+        String input = Serial.readStringUntil('\n');  // Read the input until newline
+        float num1 = 0, num2 = 0;
+        char op;
+        bool operatorFound = false;
+    
+        // Parse the input
+        int i = 0;
+        while (i < input.length()) {
+          char c = input[i];
+    
+          if (isdigit(c)) {
+            if (!operatorFound) {
+              num1 = num1 * 10 + (c - '0');
+            } else {
+              num2 = num2 * 10 + (c - '0');
+            }
           } else {
-            Serial.println("Error: Division by zero");
+            op = c;  // Store the operator
+            operatorFound = true;
           }
-          break;
-        default:
-          Serial.println("Invalid operator");
+          i++;
+        }
+    
+        // Check if an operator was found and perform the calculation
+        if (operatorFound) {
+          switch (op) {
+            case '+':
+              Serial.println(num1 + num2);
+              break;
+            case '-':
+              Serial.println(num1 - num2);
+              break;
+            case '':
+              Serial.println(num1 num2);
+              break;
+            case '/':
+              if (num2 != 0) {
+                Serial.println(num1 / num2);
+              } else {
+                Serial.println("Error: Division by zero");
+              }
+              break;
+            default:
+              Serial.println("Invalid operator");
+          }
+        } else {
+          Serial.println("Invalid expression format");
+        }
       }
-    } else {
-      Serial.println("Invalid expression format");
     }
-  }
-}
+
+## UART Code Example 2
+
+    #define LED_Pin 25
+    void setup() { 
+      pinMode(LED_Pin, OUTPUT);
+      Serial.swap(3);
+      Serial.begin(115200);
+      delay(100);
+      Serial.println("Enter on or off.");
+    }
+    
+    void loop() {
+     if (Serial.available() > 0) {
+        String input = Serial.readStringUntil('\n');  // Read the input until newline character
+        input.trim(); // Remove any extra spaces or newline characters
+    
+        if (input.equalsIgnoreCase("on")) {  // Check if input is "on"
+          digitalWrite(LED_Pin, LOW);       // Turn LED on
+          Serial.println("LED is ON");
+        } else if (input.equalsIgnoreCase("off")) {  // Check if input is "off"
+          digitalWrite(LED_Pin, HIGH);        // Turn LED off
+          Serial.println("LED is OFF");
+        } else {
+          Serial.println("Invalid input. Type 'on' or 'off'.");  // Handle invalid input
+        }
+      }
+    }
 
 ## ADC (Analog-To-Digital) Converters
 
