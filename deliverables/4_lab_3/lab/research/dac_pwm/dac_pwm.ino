@@ -3,18 +3,24 @@
 
 Dx_PWM *pwmModulator;
 
-#define NOTE_COUNT 4
+#define RESONANCE_SHAPE 5.0f
+#define BEEP_SHAPE 25.0f
+#define SQUARE_SHAPE 50.0f
 
 void setup() {
   PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
   pwmModulator = new Dx_PWM(PIN_PD1, 0.0f, 50.0f);
 }
 
+// First distinct note at NOTE_F5
 void loop() {
-  pwmModulator->setPWM(PIN_PD1, 220.0f, 25.0f);
-  delay(1000);
-  pwmModulator->setPWM(PIN_PD1, 440.0f, 25.0f);
-  delay(1000);
-  pwmModulator->setPWM(PIN_PD1, 880.0f, 25.0f);
-  delay(1000);
+  // Cm7 chord
+  pwmModulator->setPWM(PIN_PD1, NOTE_C6, RESONANCE_SHAPE);
+  delay(500);
+  pwmModulator->setPWM(PIN_PD1, NOTE_D6S, BEEP_SHAPE);
+  delay(500);
+  pwmModulator->setPWM(PIN_PD1, NOTE_G6, SQUARE_SHAPE);
+  delay(500);
+  pwmModulator->setPWM(PIN_PD1, NOTE_A6S, SQUARE_SHAPE);
+  delay(500);
 }
