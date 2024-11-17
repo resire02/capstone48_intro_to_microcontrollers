@@ -109,16 +109,32 @@ To further understand this concept, we will be using the on board potentiometer 
 
 ## Pulse Width Modulation
 
-### PWM Introduction
+### What is Pulse Width Modulation?
 
-#### What is Pulse Width Modulation?
+**Digital vs. Analog Signals:**  
+Digital signals are binary (0 or 1), while analog signals have a continuous range of values. To convert analog input into a digital format, we use an **Analog-to-Digital Converter (ADC)**.
 
-Pulse Width Modulation (PWM) is a technique used to generate variable output voltage by rapidly
-switching a pin between high and low states at a fixed **frequency**. The **duty cycle** (percentage of the time 
-the pin is high) determines the average voltage output. As the relative on-time of the signal increases or decreases,
-the average voltage of the signal also changes. This average voltage provides an equivalent lower power, 
-while still keeping the full voltage during the pulse's on-state. This is useful for applications like motor 
-speed control, LED dimming, and audio synthesis. 
+**Controlling Analog Devices with Digital Signals:**  
+  To control analog devices with a digital signal, a **Digital-to-Analog Converter (DAC)** is typically used to generate true analog signals.
+
+**PWM as an Alternative to DAC:**  
+  However, **Pulse Width Modulation (PWM)** offers a cost-effective alternative to a DAC by mimicking analog behavior with a digital signal. PWM can control devices like motors and lights, producing an analog-like signal instead of a true analog output.
+
+**How PWM Works:**  
+  PWM generates a variable output voltage by rapidly switching a pin between high and low states at a fixed **frequency**. The **duty cycle** (the percentage of time the pin is high) determines the average voltage output. By increasing or decreasing the relative on-time, the average voltage changes. This average voltage provides a lower power equivalent, while still maintaining full voltage during the pulse's on-state.
+
+**Applications of PWM:**  
+  PWM is widely used in various applications that require the control of power and brightness:
+  - **Motor Speed Control:** Adjusting the speed of motors by controlling the average voltage delivered.
+  - **LED Dimming:** Adjusting the brightness of LEDs by changing the duty cycle.
+  - **Audio Synthesis:** Modulating audio signals for sound generation.
+
+**Advantages of PWM:**  
+  - **Cost-Effective:** PWM provides an inexpensive way to simulate analog control without requiring expensive DACs.
+  - **Efficiency:** PWM can efficiently control power while reducing power losses, as full voltage is only used during 
+the pulse’s on-state.
+
+### What are the Key Parameters of PWM?
 
 #### Frequency
 Frequency measures how fast the signal is alternating between HIGH and LOW. It is measured in Hz.
