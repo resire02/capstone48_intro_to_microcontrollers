@@ -1,42 +1,37 @@
-/*
-  This is an adaptation of the sample sketch at
-  File -> Examples -> 03.Analog -> AnalogInOutSerial
+const int analogInPin = PIN_PD7;  // Analog input pin where the potentiometer is connected
+const int analogOutPin = PIN_PD1;  // Analog output pin where the LED (RGB) is connected
 
-  Reads an analog input pin, maps the result to a range from 0 to 255 and uses
-  the result to set the pulse width modulation (PWM) of an output pin.
-  Also prints the results to the Serial Monitor.
-*/
-
-// These constants won't change. They're used to give names to the pins used:
-const int analogInPin = PIN_PD7;  // Analog input pin that the potentiometer is attached to
-const int analogOutPin = PIN_PD1;  // Analog output pin that the LED is attached to
-
-int sensorValue = 0;  // value read from the pot
-int outputValue = 0;  // value output to the PWM (analog out)
+int sensorValue = 0;  // Variable to store the value read from the potentiometer
+int outputValue = 0;  // Variable to store the mapped PWM value for controlling LED brightness
 
 void setup() {
-  // initialize serial communications at 9600 bps:
-  Serial.swap(3);
-  Serial.begin(115200);
-  // this is required to route the TCA to Port D and enable PWM on pins PD1 to PD3
+  // Initialize serial communication at 115200 baud rate
+  Serial.swap(3);  // Swap UART for serial communication
+  Serial.begin(115200);  // Start serial communication
+
+  // Set up the port multiplexer to route the PWM signal to Port D
+  // This enables PWM output on pins PD1 to PD3
   PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
 }
 
 void loop() {
-  // read the analog in value:
+  // Read the analog value from the potentiometer (range: 0 to 1023)
   sensorValue = analogRead(analogInPin);
-  // map it to the range of the analog out:
+
+  // Map the sensor value (0-1023) to the PWM range (0-254)
+  // PWM has a range of 0-255, but 254 is used to avoid full duty cycle
   outputValue = map(sensorValue, 0, 1023, 0, 254);
-  // change the analog out value:
+
+  // Write the mapped PWM value to the output pin, adjusting LED brightness
   analogWrite(analogOutPin, outputValue);
 
-  // print the results to the Serial Monitor:
+  // Print the sensor value and the corresponding PWM output value to the Serial Monitor
+  // Helps in debugging and observing the effect of the potentiometer
   Serial.print("sensor = ");
   Serial.print(sensorValue);
   Serial.print("\t output = ");
   Serial.println(outputValue);
 
-  // wait 2 milliseconds before the next loop for the analog-to-digital
-  // converter to settle after the last reading:
+  // Wait for 2 milliseconds to allow the analog-to-digital converter to settle before the next reading
   delay(2);
 }
