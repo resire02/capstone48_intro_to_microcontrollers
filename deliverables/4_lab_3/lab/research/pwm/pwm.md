@@ -113,7 +113,7 @@ found at: **File -> Examples -> 03.Analog -> AnalogWriteMega**.
 2. Compile it.  
 3. Upload it to your board to observe the fading effect.
 
- 
+``` 
     const int lowestPin = PIN_PD1;
     const int highestPin = PIN_PD3;
     
@@ -139,7 +139,7 @@ found at: **File -> Examples -> 03.Analog -> AnalogWriteMega**.
         delay(100); // Delay before fading the next color
       }
     }
-
+```
 
 #### Sketch 2: Potentiometer Dimming
 
@@ -156,7 +156,7 @@ are printed to the Serial Monitor. This allows you to observe the changes in bri
 2. Compile it.  
 3. Upload it to your board and use the potentiometer to adjust the brightness of the RGB LED.
 
-
+```
     const int analogInPin = PIN_PD7;  // Analog input pin where the potentiometer is connected
     const int analogOutPin = PIN_PD1;  // Analog output pin where the LED (RGB) is connected
     
@@ -194,7 +194,7 @@ are printed to the Serial Monitor. This allows you to observe the changes in bri
       // Wait for 2 milliseconds to allow the analog-to-digital converter to settle before the next reading
       delay(2);
     }
-
+```
 #### Sketch 3: Additional Libraries
 
 This sketch uses the **Dx_PWM** library to control the brightness of a white light on an RGB LED by generating PWM signals
@@ -215,7 +215,7 @@ which is quite fine-grained for PWM control.
 2. Compile it.  
 3. Upload it to your board to observe the fading effect on the combined white light.
 
-    
+```    
     #include "Dx_PWM.h"  // Include the Dx_PWM library to handle PWM functionality on multiple pins
     
     #define SerialDebug   Serial
@@ -299,4 +299,5 @@ which is quite fine-grained for PWM control.
           printPWMInfo(PWM_Instance[index]);
         }
       }
-    } 
+    }
+```
