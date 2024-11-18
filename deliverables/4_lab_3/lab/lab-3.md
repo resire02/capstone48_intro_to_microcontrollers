@@ -410,3 +410,206 @@ which is quite fine-grained for PWM control.
       }
     }
 ```
+
+## SPI
+
+### SPI
+
+Serial Peripheral Interface is a communication protocol used to send data between the microcontroller and multiple peripherals. SPI has two main data lines: the serial clock line and the data transfer line. Since data transfer is bidirectional, the data transfer line is typically decomposed into the Peripheral In Controller Out (PICO) line and the Peripheral Out Controller In (POCI) line. Finally, SPI also includes a Chip Select (CS) line and a Load Digital to Analog Converter (LDAC) line.
+
+- PICO – used to read data from the peripheral
+- POCI – used to send data to the peripheral
+- SPI SCK – used to synchronize communication between the controller and peripheral
+- CS – used to specify which peripheral to send data to
+- LDAC – used to send or receive data from multiple peripherals at the same time
+
+The SPI communication protocol relies on a consistent series of steps to send data:
+
+1. Set the pin tied to the Chip Select of the target peripheral to LOW. This marks the peripheral as the destination of the data transfer.
+2. Set the Serial Clock Line to LOW. This is the resting state of the communication line.
+3. Write either a HIGH or LOW value to the POCI line or call digitalRead from the PICO line depending on if data is being sent or received.
+4. Write a HIGH value then a LOW value to the Serial Clock Line (SCK). This pulses the clock line, signaling the data to be sent over
+5. Repeat steps 3 and 4 until all data has been transferred over. 
+6. Set the Chip Select line of the peripheral to HIGH. This means that the data transfer is done and frees up the line to communicate with other peripherals.
+
+The LDAC line is set to LOW by default. By setting it to HIGH, all data written to the peripherals will not immediately be sent, allowing for synchronous data transfer. Then, setting the LDAC to LOW causes all awaiting data to be sent to all target peripherals at the same time.
+
+### SPI Peripherals
+
+The Curiosity Nano comes packaged with 4 SPI compatible peripherals:
+- Digital to Analog Converter (DAC)
+- Electrically Erasable Programmable Read-Only Memory (EEPROM)
+- MicroSD card socket
+- MikroBUS socket
+
+This section will focus on the first two peripherals: DAC and EEPROM. 
+
+### DAC Lab
+
+The DAC is used to convert digital pin values (LOW and HIGH) into an analog voltage (between 0V and 3.3V). The onboard DAC, the MCP4821, is located to the left of the Curiosity Nano. It is connected to the onboard speaker by default. Changing the voltage changes the volume of the speaker. The following steps will guide you on how to interface with the speaker using SPI.
+
+1. Create a new sketch and navigate to the Library Manager on the left hand side. Search for “mcp4821” and install the MCP_DAC library by Rob Tillaart.
+
+![MCP_DAC Library Download](./Images/mcp-dac-library-download.png)
+
+2. Import the SPI.h and MCP_DAC.h libraries. Define the SPI_COPI, SPI_SCK, and DAC_CS values according to the Curiosity Explorer to CNANO mappings. Define MAX_VOLUME to be 4095. This is the maximum value that can be represented since the DAC is 12 bits (2^12).
+
+```
+#include <SPI.h>
+#include <MCP_DAC.h>
+
+#define SPI_COPI PIN_PA4
+#define SPI_SCK PIN_PA6
+#define DAC_CS PIN_PC2
+
+#define MAX_VOLUME 4095
+```
+
+3. Create an instance of the MCP4821 class and provide the data transfer and serial clock line pin numbers defined from the previous step.
+
+```
+MCP4821 dac(SPI_COPI, SPI_SCK);
+```
+
+4. In the setup() function, start the MCP4821 instance with the chip select pin number.
+
+```
+void setup() {
+  dac.begin(DAC_CS);
+}
+```
+
+5. Copy the following code into the loop() function. This code will gradually increase the volume of the speaker then cut off.
+
+```
+void loop() {
+  static uint16_t current_vol = 0;
+
+  dac.write(current_vol);
+  dac.write(0);
+  delay(1);
+
+  current_vol++;
+  if (current_vol >= MAX_VOLUME) {
+    while (true) delay(1000);
+  }
+}
+```
+
+6. Set the port to the Arduino Explorer and the programmer under Tools, and Upload Using Programmer. Adjust the gain knob on the speaker until you can hear the sound. Use the reset button on the Curiosity Nano to restart the program.
+
+The lab uses two sequential writes to create a pseudo wave in order to generate a sound, which is not ideal for playing specific frequencies. To have more control over what frequency is played, we need to use pulse width modulation to control the voltage instead of using an ADC, since the ADC can only control the amplitude of a wave and not the frequency.
+
+### EEPROM Lab
+
+The EEPROM is a read-only memory device located to the left of the Curiosity Nano. It has 2048 pages, or  continuous blocks of memory, with each page having 256 bytes of memory, also referred to as cells. The memory is non volatile, meaning that disconnecting the power will not erase the memory. The EEPROM has a limited number of writes that can be performed before it starts to fail, which ranges from 10,000 to 100,000. The following steps will guide you through using the EEPROM.
+
+1. Create a new sketch and import the EEPROM library<sup>1</sup>. This library is already built into Arduino.
+
+```
+#include <EEPROM.h>
+```
+
+<sup>1</sup> https://github.com/arduino/ArduinoCore-avr/blob/master/libraries/EEPROM/src/EEPROM.h
+
+2. Setup serial communication on 115,200 baud. This will allow you to see the contents of the EEPROM from the Serial Monitor.
+
+```
+void setup() {
+  Serial.swap(3);
+  Serial.begin(115200);
+  while (!Serial);   
+}
+```
+
+3. In the setup() function, use EEPROM.update to write the numbers from 1 to 10 into the first 10 cells. Note that we use update instead of write. Write will always write regardless of the value while update will check if the values are different before writing. This practice prevents redundant writes from occurring.
+
+```
+  Serial.println(F("Writing numbers from 1 to 10 to the first 10 cells!"));
+  for (index = 0; index < 10; index++) {
+    EEPROM.update(index, index + 1);
+  }
+```
+
+4. In the setup() function, use EEPtr from EEPROM.h to iterate through the first ten cells, printing their contents. EEPtr serves as a pointer to a specific cell that can be used to access or modify the cell’s value.
+
+```
+Serial.print("[ ");
+for (EEPtr ptr = 0; ptr.index < 10; ptr++) {
+  read_value = *ptr;
+  Serial.printf("%d, ", read_value);
+}
+Serial.print("]\n");
+```
+
+5. In the setup() function, traverse the first ten cells, square each value and store it back into the cell.
+
+```
+Serial.println(F("Squaring the first 10 cells!"));
+  for (index = 0; index < 10; index++) {
+    EEPROM.get(index, read_value);
+    EEPROM.update(index, read_value * read_value);
+  }
+```
+
+6. Print the contents of the first ten cells to see the result of the previous step. Refer back to step 4 on how to do this.
+
+7. Set the port to the Arduino Explorer and the programmer under Tools, and Upload Using Programmer. Go to Tools → Serial Monitor and set the rate to 115,200 to see the output of the program. Rerun the program by pressing the reset button on the Curiosity Nano.
+
+![EEPROM Lab Output](./Images/eeprom-lab-output.png)
+
+8. Remove the EEPROM update sections of the code and see what happens!
+
+### Speaker with PWM (Bonus Section)
+
+In the DAC lab section, we interfaced with the speaker using the onboard Digital to Analog Converter (DAC). However, we were unable to control the frequency (pitch) of the speaker. Using Pulse Width Modulation (PWM) allows us to control the frequency of the speaker, which will allow us to play specific pitches (notes). The following steps will guide you through connecting PWM to the speaker.
+
+1. On your Curiosity Explorer board, remap the PWM-A pin to the AMP-IN pin located next to the speaker.
+
+![Remapping PWM for Speaker](./Images/pwm_speaker_remapping.png)
+
+2. Create a new sketch and navigate to the Library Manager on the left hand side of Arduino IDE. Search for “Dx_PWM” by Khoi Hoang and click install.
+
+3. In the sketch, import the Dx_PWM library. Define PWM_PIN to the pin mapped to PWM-A.
+
+```
+#include "Dx_PWM.h"
+#define PWM_PIN PIN_PD1
+```
+
+4. In the setup() function, reroute the TCA timer A to the TCA0 timer port. This connects PWM to Arduino’s internal timer. Then, create an instance of Dx_PWM with the PWM_PIN, a frequency of 0, and a duty cycle of 50%.
+
+```
+Dx_PWM *pwmModulator;
+void setup() {
+  PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
+  pwmModulator = new Dx_PWM(PIN_PD1, 0.0f, 50.0f);
+}
+```
+
+5. Copy the following code into the loop function. This will play the C major scale infinitely.
+
+```
+void loop() {
+  pwmModulator->setPWM(PWM_PIN, 523.251f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 587.33f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 659.255f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 698.456f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 783.991f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 880.0f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 987.767f, 50.0f);
+  delay(1000);
+  pwmModulator->setPWM(PWM_PIN, 1046.502f, 50.0f);
+  delay(1000);
+}
+```
+
+6. Set the port to the Arduino Explorer and the programmer under Tools, and Upload Using Programmer. Enable the speaker by switching it to ON and adjust the gain until you can hear sound.
+
+In the speaker_pwm_advanced sketch in the repository, there is a pwm_notes.h file that you can include in your own sketches to have access to predefined notes to avoid the hassle of finding the frequencies. Copy the file into the same folder as your sketch and include it using “#include “pwm_notes.h”.
