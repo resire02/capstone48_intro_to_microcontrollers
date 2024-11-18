@@ -107,6 +107,119 @@ To further understand this concept, we will be using the on board potentiometer 
 
 ![Curiosity Nano Explorer Potentiometer](./Images/Potentiometer.jpg)
 
+### ADC Demonstration Sketch
+
+In order to see how the board takes outside (analog) input and translates it into digital values, we will create a small sketch that will do two main things: read in analog input from the potentiometer and display it to see how it is digitized. 
+
+To accomplish this, we will be using the AmberLEDs from the previous lab, as well as the UART to print the digitized value to the serial monitor. 
+
+```
+#define POTMETERPIN 19
+
+#include <Wire.h>
+#include "Adafruit_MCP23008.h"
+
+Adafruit_MCP23008 mcp_leds;
+```
+
+Our first few lines define the very important components we will use to accomplish this, namely the POTMETERPIN (with value of 19, the identifier index found in pins_arduino.c for the Curiosity Nano board). We also have the familiar import for the AmberLED component (refer to lab 2 for further details).
+
+```
+void setup() {
+  // put your setup code here, to run once:
+  Serial.swap(3);
+  Serial.begin(115200);
+
+  uint8_t pin_id, status;
+
+  status = mcp_leds.begin(0x25);
+
+  for (pin_id = 0; pin_id < 8; pin_id++) {
+    mcp_leds.pinMode(pin_id, OUTPUT);
+    mcp_leds.digitalWrite(pin_id, HIGH);
+  }
+}
+``` 
+
+In our setup function, we do a further 2 important things, we:
+
+- Initialize our UART serialization:
+
+```
+  Serial.swap(3);
+  Serial.begin(115200);
+```
+
+and initialize our AmberLEDS
+
+```
+  uint8_t pin_id, status;
+
+  status = mcp_leds.begin(0x25);
+
+  for (pin_id = 0; pin_id < 8; pin_id++) {
+    mcp_leds.pinMode(pin_id, OUTPUT);
+    mcp_leds.digitalWrite(pin_id, HIGH);
+  }
+```
+
+Next, our simple loop function: 
+
+```
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  int readValue = analogRead(POTMETERPIN);
+  int leds = 0;
+
+  Serial.println("Potmeter value: " + String(readValue));
+
+  while(readValue > 128) {
+    readValue = readValue - 128; 
+    leds++;
+  }
+
+  for(int i = 0; i < 8; i++){
+    if(i <= leds){
+      mcp_leds.digitalWrite(7-i, LOW);
+    } else {
+      mcp_leds.digitalWrite(7-i, HIGH);
+    }
+  }
+}
+```
+
+Here, we do the main part of this lab, the line 
+
+```
+ int readValue = analogRead(POTMETERPIN);
+```
+
+Which will read in the analog input from the potentiometer, with a value of between 0 and 1024. As mentioned in the graph at the start of this section, the potentiometer includes and internal ADC that reads in these values and digitizes them, allowing us to use them as an integer value in this case in code. Note: since analog values are continous, the value maybe be somewhat inconsistent in what it reports, such as swapping between 1023 and 1024 at max value. 
+
+```
+  int leds = 0;
+
+  Serial.println("Potmeter value: " + String(readValue));
+
+  while(readValue > 128) {
+    readValue = readValue - 128; 
+    leds++;
+  }
+
+  for(int i = 0; i < 8; i++){
+    if(i <= leds){
+      mcp_leds.digitalWrite(7-i, LOW);
+    } else {
+      mcp_leds.digitalWrite(7-i, HIGH);
+    }
+  }
+```
+
+In the remaining portion of our loop function, we create a variable to hold how many LEDs to illuminate, and print the value read from the potentiometer to the UART serial monitor. Then, since we have 8 total LEDs, we repeatedly subtract 128 from the value we have read and add 1 LED to light up, until the value is less than 128. Finally, we loop through all 8 possible LEDs, and for however many we found for the "leds" variable, we set their value to LOW to turn them on, and turn the rest to HIGH to turn them off (especially important so they dont remain on when we go from a higher to lower value!) Additionally, we are using an index of `7-i` since the leftmost LED is considered at index 7, allowing it to grow left to right instead of right to left. 
+
+And thats our basic demonstration of ADCs! They are a simple but very important tool for any microcontroller to interface with outside sensors and other analog signals.  
+
 ## Pulse Width Modulation
 
 ### What is Pulse Width Modulation?
