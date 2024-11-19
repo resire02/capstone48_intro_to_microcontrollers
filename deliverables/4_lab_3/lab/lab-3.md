@@ -4,7 +4,66 @@ UART is a communication protocol that enables serial data exchange between two d
 
 In the Curiosity Nano, UART allows the board to connect with a computer through a serial communication interface. The Curiosity Nano has a built-in USB-to-UART converter that translates UART signals into USB signals. When the board is connected to a computer via USB, the computer sees it as a virtual COM port, enabling data transfer through serial communication tools like a terminal emulator. This setup allows you to send data to and receive data from the Curiosity Nano for debugging or data exchange.
 
-## UART Code Example 1
+## Using UART
+
+Setting up UART is straightforward. In the following examples, I'll demonstrate two use cases:
+
+Creating a simple calculator that takes user input from the computer and returns the result.
+Controlling components on the Curiosity Nano board using input from the computer.
+
+# Calculator example
+
+In the setup phase, you'll need to configure the UART and swap the default Arduino UART pins to the correct ones for the Curiosity Nano. 
+
+1. Pin Setup: Since we're using the Curiosity Nano, swap the default UART pins to the appropriate ones with:
+
+        Serial.swap(3);
+
+2. Baud Rate: UART communication requires setting a baud rate, which determines the data transmission speed. Both the microcontroller and the computer must use the same baud rate to ensure proper communication. For the Curiosity Nano, the standard baud rate is 115200:
+
+        Serial.begin(115200);
+
+3. User Prompt: To ask the user for input, use Serial.println:
+
+       Serial.println("Enter an expression (e.g., 5+3):");
+
+In the main loop, we’ll read user input from the UART buffer, split it into two numbers and an operator, then perform the calculation.
+
+1. Data Availability Check: Use Serial.available() to see if there’s data in the UART buffer.
+
+        if (Serial.available() > 0) { ... }
+
+2. Reading Input: The input is read from the buffer using Serial.readStringUntil('\n'), which captures data until it hits a newline character.
+
+        String input = Serial.readStringUntil('\n');
+
+3. Input Parsing: We loop through the input string to separate numbers and the operator:
+
+        while (i < input.length()) {
+          char c = input[i];
+          // Code to separate numbers and operator...
+        }
+   * Digits before the operator are used to build num1.
+   * Digits after the operator are used for num2.
+   * The operator (+,-,*,/) is stored in op.
+   
+4. Calculation: Depending on the operator, perform the appropriate calculation:
+
+        switch (op) {
+          case '+':
+            Serial.println(num1 + num2);
+            break;
+          case '-':
+            Serial.println(num1 - num2);
+            break;
+          case '*':
+            Serial.println(num1 * num2);
+            break;
+          case '/':
+            // Handle division with a check for division by zero
+        }
+
+# UART Code Example 1
 
     void setup() { 
       Serial.swap(3);
@@ -65,7 +124,10 @@ In the Curiosity Nano, UART allows the board to connect with a computer through 
       }
     }
 
-## UART Code Example 2
+# LED Control example
+
+
+# UART Code Example 2
 
     #define LED_Pin 25
     void setup() { 
