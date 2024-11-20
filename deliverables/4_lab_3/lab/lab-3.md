@@ -126,6 +126,62 @@ In the main loop, we’ll read user input from the UART buffer, split it into tw
 
 # LED Control example
 
+In this example, we'll use UART communication to control the built-in LED on the Curiosity Nano, which is the same LED used in the "Blink LED" lab. The setup is very similar to both the UART calculator example above and the Blink LED lab.
+
+First, let's look at the setup() function:
+
+        #define LED_Pin 25
+        void setup() { 
+          pinMode(LED_Pin, OUTPUT);
+          Serial.swap(3);
+          Serial.begin(115200);
+          delay(100);
+          Serial.println("Enter on or off.");
+        }
+
+1. Pin Setup: We define LED_Pin as pin 25 and set it as an output using pinMode(LED_Pin, OUTPUT);.
+
+2. UART Initialization: We configure the UART communication by swapping the UART pins (Serial.swap(3)) and setting the baud rate to 115200 using Serial.begin(115200);. This baud rate ensures both the microcontroller and the computer communicate at the same speed.
+
+3. Delay and User Prompt: A 100-millisecond delay is added to make sure the UART is fully connected before sending the initial prompt to the user:
+
+        delay(100);
+        Serial.println("Enter 'on' or 'off'.");
+
+In the loop() function, we monitor the serial input to control the LED:
+
+                void loop() {
+                  // Check if there is data available in the UART buffer
+                  if (Serial.available() > 0) {
+                    // Read the user input until a newline character
+                    String input = Serial.readStringUntil('\n');
+                    
+                    // Trim any extra whitespace or newline characters
+                    input.trim();
+                    
+                    // Check the user's input and control the LED accordingly
+                    if (input.equalsIgnoreCase("on")) {
+                      // Turn the LED on
+                      digitalWrite(LED_Pin, LOW);
+                      Serial.println("LED is ON");
+                    } else if (input.equalsIgnoreCase("off")) {
+                      // Turn the LED off
+                      digitalWrite(LED_Pin, HIGH);
+                      Serial.println("LED is OFF");
+                    } else {
+                      // Handle invalid input
+                      Serial.println("Invalid input. Type 'on' or 'off'.");
+                    }
+                  }
+                }
+1. Reading Input: We first check if there's any available data using Serial.available() > 0. If data is present, it's read into a String using Serial.readStringUntil('\n');. The input.trim() function is used to remove any leading or trailing whitespace.
+
+2. Controlling the LED: We then check the user’s input:
+
+   * If the input is "on", the LED is turned on by setting digitalWrite(LED_Pin, LOW); (assuming the LED is active low).
+   * If the input is "off", the LED is turned off with digitalWrite(LED_Pin, HIGH);.
+   * If the input doesn't match "on" or "off", an error message is displayed.
+
 
 # UART Code Example 2
 
