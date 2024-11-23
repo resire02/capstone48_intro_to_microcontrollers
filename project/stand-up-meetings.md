@@ -18,3 +18,9 @@
 |  Meeting No. | Meeting Date | Who Attended  | Meeting notes (very brief)                                                                                                        | 
 |-------------|--------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | 1           | 11/4/2024    | GA, FL, TW, KL | Discussed lab section order and inclusion of topics, if document needs to be split, planning for sponsor meeting                  |
+
+### Sprint 4
+
+| Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                   | 
+|-------------|--------------|----------------|------------------------------------------------------------------------------------------------------------------------------|
+| 1           | 11/18/2024   | GA, FL, TW, KL | Discussed order of the elements in the finished lab after completing individual sections. Edited lab deliverable formatting. |
