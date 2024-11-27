@@ -28,23 +28,23 @@ void setup() {
   Serial.swap(3);
   Serial.begin(115200);
   delay(100);
-  checkStoredPassword();
+  checkForStoredPassword();
   Serial.println("Login success!");
 }
 
-void checkStoredPassword() {
+void checkForStoredPassword() {
   Serial.println("Welcome!");
   if (EEPROM.read(PASSWORD_SLOT) != 0xFF) {
     Serial.println("Password found. Please enter the stored password.");
-    takePassword(false);
+    handlePasswordInput(false);
   }
   else {
     Serial.println("No password found. Create a new one.");
-    takePassword(true);
+    handlePasswordInput(true);
   }
 }
 
-void takePassword(bool newUser) {
+void handlePasswordInput(bool newUser) {
   Serial.println(newUser ? "Create a new password:" : "Enter your password:");
   String input;
   bool passed = false;
@@ -61,7 +61,7 @@ void takePassword(bool newUser) {
         }
         if (newUser) {
           passed = true;
-          storePassword(input);
+          savePassword(input);
         }
         else {
           if (verifyPassword(input)) {
@@ -80,7 +80,7 @@ void takePassword(bool newUser) {
   }
 }
 
-void storePassword(String input) {
+void savePassword(String input) {
   for (int i = 0; i < 6; i++) {
     int cell = i + 11;
     int digit = input[i] - '0';
