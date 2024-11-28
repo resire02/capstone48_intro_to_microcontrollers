@@ -38,15 +38,13 @@ def arduino_uart_thread():
     try:
         print(f'Attempting connection on port {SELECTED_PORT} at {SELECTED_BAUD_RATE}...')
         uart = serial.Serial(port=SELECTED_PORT, baudrate=SELECTED_BAUD_RATE, timeout=0.1)
+        print('Established connection!')
         while True:
             if uart.in_waiting:
                 received_data = uart.readline().decode('utf-8').replace('\n', '')
-                data = [int(x) for x in received_data.split(',')]
-                print(f'Received: {data}')
-                # update_temperature(data[0])
-                # update_selected_room(data[0])
+                print(f'Received: {received_data}')
     except serial.SerialException:
-        create_popup('Error', 'Could not connect to Arduino.\nEnsure that Arduino IDE is closed and\nthat the port name matches the port in device manager.')
+        create_popup('Error', 'Could not connect to Arduino. Ensure that Arduino IDE is closed\nand that the port name matches the port in device manager and is not being currently used.')
 
 def connect_to_ardunio():
     thread = threading.Thread(target=arduino_uart_thread, daemon=True)
@@ -213,7 +211,6 @@ def update_temperature(temp):
     temp_label.config(text=f'Temperature: {temp}')
 
 def create_popup(title, text, width=300, height=100):
-    root.update_idletasks()
     popup = tk.Toplevel(root, padx=10, pady=10, width=width, height=height)
     x = root.winfo_x() + (root.winfo_width() - width) // 2
     y = root.winfo_y() + (root.winfo_height() - height) // 2
