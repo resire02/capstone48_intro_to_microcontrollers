@@ -15,3 +15,13 @@ In this lab, we will bring together everything we've covered so far into one com
 2. When the middle button (SW2) is pressed, LED should turn green.
 3. When rightmost button (SW3) is pressed, LED should turn red.
 4. Temp state should be maintained for each of the 8 "rooms" (LEDs that form the neo pixel LED ring), at least while board is plugged in (not between deployments). 
+5. Default color state is blue
+
+### Room Selector
+
+1. When potentiometer is turned, light changes accordingly (scaling 1-8 for lowest vs highest point of potentiometer
+2. Light color should match that of the color selected from temp swaper (default is blue)
+
+### Joystick 
+
+1. Joy stick should retrieve input from all 4 directions (up, down, left, right) and additionally pressing in
