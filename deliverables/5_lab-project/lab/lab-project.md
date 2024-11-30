@@ -29,3 +29,8 @@ home entry if the passwords match, or deny access if they do not match.
 
 ### Joystick
 1. Joy stick should retrieve input from all 4 directions (up, down, left, right) and additionally pressing in
+
+### Distance Sensor
+
+1. Read data from the distance sensor VCNL4200.
+2. Based of the data from the distance sensor make the Amber LEDS light up so that the closer an object is to the distance sensor the more LEDs light up.
