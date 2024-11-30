@@ -16,7 +16,7 @@ home entry if the passwords match, or deny access if they do not match.
 1. The first requirement is to read temperature data from the MCP9808 temperature sensor on the board.
 2. Based on the temperature value read from the sensor, adjust the color of the RGB LED. The LED should transition from blue (cold) to red (hot), depending on the temperature.
 
-### Temp Swapper
+### Smart Lighting
 1. When the leftmost button (SW1) is pressed, LED should turn blue.
 2. When the middle button (SW2) is pressed, LED should turn green.
 3. When rightmost button (SW3) is pressed, LED should turn red.
@@ -24,8 +24,8 @@ home entry if the passwords match, or deny access if they do not match.
 5. Default color state is blue
 
 ### Room Selector
-1. When potentiometer is turned, light changes accordingly (scaling 1-8 for lowest vs highest point of potentiometer
-2. Light color should match that of the color selected from temp swapper (default is blue)
+1. When potentiometer is turned, the light should change accordingly (scaling 1-8 for lowest vs highest point of potentiometer)
+2. Light color should match that of the color selected from smart lighting (default is blue)
 
 ### Joystick
 1. Joy stick should retrieve input from all 4 directions (up, down, left, right) and additionally pressing in

@@ -4,20 +4,21 @@
 /**
   Requires remapping 
   -> PWM4 to Speaker AMP-IN 
-  -> 27 (IO 2) to SW 2 (middle touch sensor)
+  -> 27 (IO 2) to TS4 Sensor (logo touch sensor)
+  -> 27 (IO 2) to SW 2 (middle touch sensor) (if capacitive touch button not working)
 **/
-#define DOOR_BELL PIN_PC3
+#define DOOR_BELL PIN_PC2
 #define SPEAKER_PIN PIN_PD2
 
 #define NOTE_PERIOD 750
-
 #define DOOR_NOTES_COUNT 2
 float door_notes[] = {NOTE_A6S, NOTE_F6S};
 
 Dx_PWM* speaker;
 
 void setup() {
-  pinMode(DOOR_BELL, INPUT_PULLUP);
+  pinMode(DOOR_BELL, INPUT);
+  pinMode(SPEAKER_PIN, OUTPUT);
   
   PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
   speaker = new Dx_PWM(SPEAKER_PIN, 1000.0f, 0.0f);

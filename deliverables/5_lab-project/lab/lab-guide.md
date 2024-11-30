@@ -119,3 +119,76 @@ Clamping: Ensures the temperature stays within the defined range (TEMP_MIN to TE
 Interpolation: Calculates a factor to linearly interpolate between the minimum and maximum temperature range.
 Color Adjustment: Sets red and blue intensities based on the interpolation factor. Cooler temperatures favor blue, while warmer temperatures favor red.
 PWM Control: Sends the calculated values to the LED using analogWrite().
+
+# Door Bell Walkthrough
+Objective: Implement a functioning doorbell using PWM and capacitive touch sensor in the middle.
+
+Implementing a door bell is slightly challenging since we cannot use delay functions as it would interfere with other code in the loop function.
+The door bell consists of two parts: reading input from the capacitive touch sensor and playing notes on the speaker using PWM.
+First, we need to import the Dx_PWM library and setup the speaker and capacitive touch pins. We will also use an external file for the notes.
+```
+#include <Dx_PWM.h>
+#include "notes.h"
+
+#define DOOR_BELL PIN_PC2
+#define SPEAKER_PIN PIN_PD2
+```
+
+Before the setup function, we set up doorbell tones and declare a note duration:
+```
+#define NOTE_PERIOD 750
+#define DOOR_NOTES_COUNT 2
+float door_notes[] = {NOTE_A6S, NOTE_F6S};
+```
+
+We will also need to initialize the Dx_PWM class to play notes through PWM.
+```
+Dx_PWM* speaker;
+``` 
+
+In the setup function, we will need to set the pinModes for the pins and reroute the PWM timer.
+```
+void setup() {
+  pinMode(DOOR_BELL, INPUT);
+  pinMode(SPEAKER_PIN, OUTPUT);
+  
+  PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
+  speaker = new Dx_PWM(SPEAKER_PIN, 1000.0f, 0.0f);
+}
+```
+
+In the loop function, we will setup the following code:
+```
+void loop() {
+  static int speaker_index = -1;
+  static uint16_t speaker_timer = 0;
+  uint16_t now = millis();
+
+  if (speaker_index != -1 && now - speaker_timer > NOTE_PERIOD) {
+    speaker_timer = now;
+    speaker_index++;
+    if (speaker_index < DOOR_NOTES_COUNT) {
+      speaker->setPWM(SPEAKER_PIN, door_notes[speaker_index], 0.0f);
+    } else {
+      speaker_index = -1;
+      speaker->setPWM(SPEAKER_PIN, 0.0f, 0.0f);
+    }
+  }
+
+  bell_value = digitalRead(DOOR_BELL);
+  if (bell_value == LOW && speaker_index == -1) {
+    speaker_index = 0;
+    speaker->setPWM(SPEAKER_PIN, door_notes[speaker_index], 0.0f);
+    speaker_timer = now;
+  }
+}
+```
+
+In the beginning part of the loop function, we set up a few static (meaning consistent between function runs) variables to store the speaker index, which is used to track which note is being played, and the speaker timer, which is used to track when the speaker should move on the next note. The speaker index is set to -1 as a default state to indicate that it is not playing.
+In the first if statement, it is checking if the speaker is not playing and checks if the time (note period) since the last note has passed already. When these conditions are met, the speaker timer is updated to the current time, effectively resetting the timer.
+Then, the speaker index is incremented and checked if all notes have been played. If all notes have not been played (ie. not at the end of the note array), then we will continue on to the next note.
+
+In the second half, we read the value from the capacitive touch sensor. When the sensor is being pressed, the value is LOW so we check in the if statement if the sensor is being pressed and that the speaker is not already playing.
+Then, the speaker index is updated to 0 and the first note is played from the note array.
+
+The capacitive touch sensor and speaker need to be connected via pin remapping, so we will reroute PIN_PC3 to the capacitive touch button's TS4 sensor pin and the PIN_PD2 to the AMP_IN pin to the right of the speaker.
