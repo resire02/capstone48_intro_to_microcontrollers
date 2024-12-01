@@ -1,5 +1,156 @@
 ## Lab Walk Through
 
+# Code Walkthrough for Password Entry
+
+This code is designed to handle the password entry for a smart lock system. The password is either set by a new user 
+or verified by an existing user. The system uses an OLED display to show the password entry process and EEPROM to
+store and retrieve the password.
+
+First, include the necessary external libraries to support OLED display and EEPROM password storage.
+Instantiate an OLED display object. Set the password slot to 11, as we already utilized the first 10 slots in our 
+previous EEPROM sketch.
+
+    #include <SPI.h>
+    #include <Wire.h>
+    #include <Adafruit_GFX.h>
+    #include <Adafruit_SSD1306.h>
+    #include <EEPROM.h>
+
+    #define SCREEN_WIDTH 128      // OLED display width, in pixels
+    #define SCREEN_HEIGHT 64      // OLED display height, in pixels
+    #define OLED_RESET -1         // Reset pin, set to -1 to share Arduino reset pin
+    #define SCREEN_ADDRESS 0x3D   // 7-bit I2C Address
+    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+    uint8_t pos = 5;
+
+    #define PASSWORD_SLOT 11
+
+Initialize the display and draw 6 underscore characters on the display as placeholders for the password. Swap 
+the default UART pins to the appropriate ones, and call the checkForStoredPassword() function. he successful execution 
+of checkForStoredPassword() allows the program to proceed to the next step in the setup() function, 
+where we can continue to the loop function.
+
+    void setup() {
+      delay(1000); // Wait for the display to ready
+      if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+        for(;;); // Display not connected or malfunctioning, loop forever
+      }
+      display.clearDisplay();
+      for (int i = 0; i < 6; i++) {
+        display.drawChar(pos, 40, '_', 1, 0, 2);
+        display.drawChar(pos, 40, ' ', 1, 0, 1);
+        pos += 20;
+      }
+      display.display(); // Display draw operations on screen
+      Serial.swap(3);
+      Serial.begin(115200);
+      delay(100);
+      checkForStoredPassword();
+
+The checkForStoredPassword() function checks if there is a stored password by reading the EEPROM at the PASSWORD_SLOT.
+If a password exists, it prompts the user to enter the password. If no password is found,
+it prompts the user to create a new one.
+
+    void checkForStoredPassword() {
+      Serial.println("Welcome!");
+      if (EEPROM.read(PASSWORD_SLOT) != 0xFF) {
+        Serial.println("Password found. Please enter the stored password.");
+        handlePasswordInput(false);
+      }
+      else {
+        Serial.println("No password found. Create a new one.");
+        handlePasswordInput(true);
+      }
+    }
+
+The function handlePasswordInput() prompts the user to either create a new password or enter an existing one. It reads
+the input from the serial monitor, checking that it is exactly 6 characters long. If creating a new password, it calls 
+savePassword(input) to store the password in EEPROM. If verifying an existing password, it calls verifyPassword(input) 
+to check if the entered password matches the stored password. If the password is incorrect, it asks the user to try again.
+
+    void handlePasswordInput(bool newUser) {
+      Serial.println(newUser ? "Create a new password:" : "Enter your password:");
+      String input;
+      bool passed = false;
+      while (!passed) {
+        pos = 5;
+        if (Serial.available() > 0) {
+          input = Serial.readStringUntil('\n'); // Read the input until newline
+          if (input.length() == 6) {
+            for (int i = 0; i < 6; i++) {
+              char displayChar = (i < input.length()) ? input[i] : ' ';
+              display.drawChar(pos, 20, displayChar, 1, 0, 2);
+              display.drawChar(pos, 40, '_', 1, 0, 2);
+              pos += 20;
+            }
+            if (newUser) {
+              passed = true;
+              savePassword(input);
+            }
+            else {
+              if (verifyPassword(input)) {
+                passed = true;
+              }
+              else {
+                Serial.println("Incorrect Password. Try Again.");
+              }
+            }
+          }
+          else {
+            Serial.println("Password must be exactly 6 characters. Try again.");
+          }
+        }
+        display.display();
+      }
+    }
+
+The function savePassword() saves the 6-digit password entered by the user into the EEPROM, starting from address 11.
+Each character in the password is converted to an integer and stored in consecutive EEPROM locations.
+
+    void savePassword(String input) {
+      for (int i = 0; i < 6; i++) {
+        int cell = i + 11;
+        int digit = input[i] - '0';
+        EEPROM.update(cell, digit);
+      }
+      int read_value;
+      for (EEPtr ptr = 11; ptr.index < 17; ptr++) {
+        read_value = *ptr;
+      }
+    }
+
+This function verifyPassword(String input) checks if the entered password matches the stored password in EEPROM. 
+It compares each digit of the input password with the corresponding value in EEPROM. If any digit does not match, 
+it returns false, indicating an incorrect password.
+
+    bool verifyPassword(String input) {
+      int read_value;
+      int i = 0;
+      for (EEPtr ptr = 11; ptr.index < 17; ptr++) {
+        read_value = *ptr;
+        int digit = input[i] - '0';
+        if (digit != read_value) {
+          return false;
+        }
+        i++;
+      }
+      return true;
+    }
+
+After the password is successfully matched, the user will be granted access to the home system, and the system will 
+print "Login success!" to indicate that the user is authorized.
+
+      Serial.println("Login success!");
+    }
+
+At this point, the setup() function will complete its execution, and the program will move to the loop() function. 
+The loop() function is where the main operation of the home system begins. This function will be used to manage the
+various home automation and monitoring tasks.
+
+    void loop() {
+      // Functionality for home monitoring and automation. 
+    }
+
 # Code Walkthrough for MCP9808 Temperature Sensor with RGB LED
 
 Objective
