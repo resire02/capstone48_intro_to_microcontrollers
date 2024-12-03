@@ -350,7 +350,7 @@ This program demonstrates how to wire the bottom-left switches to the curiosity 
 
 Before we begin with the code, we will have to take special steps in order to wire the SW2 and SW3 to the Curiosity Nano. This is because the Curiosity Nano is too short to reach the pins from the Curiosity Nano Explorer board that correspond to these, so, we will remap them like in the image below to get these functioning (it does not have to be these specific pins we remap to, but the rest of the guide will be based on them, if you choose somewhere else, make sure it doesnt break any other functionality!) 
 
-![](../Images/SmartLighting_Rewire.jpg)
+![](./Images/SmartLighting_Rewire.jpg)
 
 With that remapping done, we can begin with our basic imports. (Again, remember to refer to pins_arduino.h for your board for the pin numbers!)
 
