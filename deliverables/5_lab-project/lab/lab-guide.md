@@ -343,3 +343,65 @@ In the second half, we read the value from the capacitive touch sensor. When the
 Then, the speaker index is updated to 0 and the first note is played from the note array.
 
 The capacitive touch sensor and speaker need to be connected via pin remapping, so we will reroute PIN_PC3 to the capacitive touch button's TS4 sensor pin and the PIN_PD2 to the AMP_IN pin to the right of the speaker.
+
+# Code Walkthrough for Smart Lighting
+Objective: 
+This program demonstrates how to wire the bottom-left switches to the curiosity nano and utilize them to change the color of the Neo Pixel LEDs.
+
+Before we begin with the code, we will have to take special steps in order to wire the SW2 and SW3 to the Curiosity Nano. This is because the Curiosity Nano is too short to reach the pins from the Curiosity Nano Explorer board that correspond to these, so, we will remap them like in the image below to get these functioning (it does not have to be these specific pins we remap to, but the rest of the guide will be based on them, if you choose somewhere else, make sure it doesnt break any other functionality!) 
+
+![](../Images/SmartLighting_Rewire.jpg)
+
+With that remapping done, we can begin with our basic imports. (Again, remember to refer to pins_arduino.h for your board for the pin numbers!)
+
+```
+#define SWITCH_ONE 22 
+#define SWITCH_TWO 8
+#define SWITCH_THREE 9
+
+#include <tinyNeoPixel.h>
+```
+
+Next, we will declare 2 variables we will use for this program, one being a reference to the pixel_ring, with the other being a static list with the necessary colors we want to switch between
+
+```
+tinyNeoPixel pixel_ring = tinyNeoPixel(8, PIN_PC3, NEO_GRB + NEO_KHZ800);
+unsigned long color_grid[3] = { 0x00007f, 0x007f00, 0x7f0000 };  // Red, green, and blue
+```
+
+In our setup function, we will begin our pixel_ring connection, as well as enabling the specified pins as input. 
+
+```
+void setup() {
+  pixel_ring.begin();
+  pinMode(SWITCH_ONE, INPUT);
+  pinMode(SWITCH_TWO, INPUT);
+  pinMode(SWITCH_THREE, INPUT);
+}
+```
+
+Now, in this demonstration I will do it as changing all of the LEDs to the specified color, but ideally, it would be on a per-room basis as with the room selector. In either case, we will get input from the buttons
+
+```
+void loop() {
+  // put your main code here, to run repeatedly:
+  int i = 0;
+  static uint8_t color_index[8] = { 0 }; // Instantiate 8 slots all with default value of 0
+
+  int switch_one_value = digitalRead(SWITCH_ONE);
+  int switch_two_value = digitalRead(SWITCH_TWO);
+  int switch_three_value = digitalRead(SWITCH_THREE);
+
+  pixel_ring.clear();
+  for(i = 0; i < 8; i++) {
+    // This is just one way to do the condition, basic idea is bias left most on over right, remember, board is active LOW
+    color_index[i] = switch_one_value == LOW ? 0 : switch_two_value == LOW   ? 1
+                                                         : switch_three_value == LOW ? 2
+                                                                                     : color_index[pixel_index];
+    pixel_ring.setPixelColor(i, color_grid[color_index[i]]);
+  }
+  pixel_ring.show();
+}
+```
+
+Here, we make a static array of size 8 to hold our value at every LED index, and assess whichc color to assign it based off of which button is being pressed by reading in whether it is actively being pressed using digitalRead. This code can be slightly altered when doing the room selector to only change the color of the selected room rather than having a loop to change all of the LEDs to the selected color. That's it for the Smart Lighting!
