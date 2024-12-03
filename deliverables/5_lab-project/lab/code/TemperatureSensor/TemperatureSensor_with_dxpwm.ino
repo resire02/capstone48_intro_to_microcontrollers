@@ -1,16 +1,22 @@
+// RUN THE SKETCH AND TOUCH THE MCP8808 WITH
+// YOUR INDEX FINGER TO WATCH IT GO FROM BLUE TO RED
+
 #include <Wire.h>
+#include "Dx_PWM.h"  // Include the Dx_PWM library to handle PWM functionality on multiple pins
 
 // MCP9808 I²C address
 #define MCP9808_ADDR 0x1C
 
-// RGB LED pins
-const int RED_PIN = 13;    // Adjust to your PWM-capable pin for Red
+Dx_PWM* PWM_Instance[2];
 
-const int BLUE_PIN = 15;  // Adjust to your PWM-capable pin for Blue
+// RGB LED pins
+const int RED_PIN = PIN_PD1;    // Adjust to your PWM-capable pin for Red
+
+const int BLUE_PIN = PIN_PD3;  // Adjust to your PWM-capable pin for Blue
 
 // Temperature range
-const float TEMP_MIN = 0.0;   // Minimum temperature for blue
-const float TEMP_MAX = 40.0;  // Maximum temperature for red
+const float TEMP_MIN = 25.0;   // Minimum temperature for blue
+const float TEMP_MAX = 30.0;  // Maximum temperature for red
 
 void setup() {
   Wire.begin(); // Initialize I²C communication
@@ -19,8 +25,12 @@ void setup() {
 
   // Initialize RGB pins
   pinMode(RED_PIN, OUTPUT);
- 
+
   pinMode(BLUE_PIN, OUTPUT);
+
+  PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
+  PWM_Instance[0] = new Dx_PWM(RED_PIN, 0.0f, 100.0f);
+  PWM_Instance[1] = new Dx_PWM(BLUE_PIN, 0.0f, 100.0f);
 
   // Initialize MCP9808 sensor
   Wire.beginTransmission(MCP9808_ADDR);
@@ -38,7 +48,7 @@ void loop() {
 
   // Update LED color based on temperature
   updateLEDColor(temperature);
-  
+
   delay(1000); // Delay 1 second
 }
 
@@ -69,15 +79,15 @@ void updateLEDColor(float temperature) {
   float factor = (temperature - TEMP_MIN) / (TEMP_MAX - TEMP_MIN);
 
   // Calculate RGB values (blue to red)
-  int redValue = int(factor * 255);   // From 0 (cold) to 255 (hot)
-  int blueValue = int((1 - factor) * 255); // From 255 (cold) to 0 (hot)
- 
-  Serial.print("Red");
+  float redValue = factor * 99.9;
+  float blueValue = (1.0 - factor) * 99.9;
+
+  Serial.print("Red: ");
   Serial.println(redValue);
-  Serial.print("Blue");
+  Serial.print("Blue: ");
   Serial.println(blueValue);
   // Set the RGB LED using PWM
-  analogWrite(RED_PIN, redValue);
-  analogWrite(BLUE_PIN, blueValue);
+  PWM_Instance[0]->setPWM(RED_PIN, 100.0f, redValue);
+  PWM_Instance[1]->setPWM(BLUE_PIN, 100.0f, blueValue);
   delay(1000);
 }
