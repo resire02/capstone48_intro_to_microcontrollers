@@ -11,7 +11,6 @@ Dx_PWM* PWM_Instance[2];
 
 // RGB LED pins
 const int RED_PIN = PIN_PD1;    // Adjust to your PWM-capable pin for Red
-
 const int BLUE_PIN = PIN_PD3;  // Adjust to your PWM-capable pin for Blue
 
 // Temperature range
@@ -25,7 +24,6 @@ void setup() {
 
   // Initialize RGB pins
   pinMode(RED_PIN, OUTPUT);
-
   pinMode(BLUE_PIN, OUTPUT);
 
   PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
@@ -48,8 +46,6 @@ void loop() {
 
   // Update LED color based on temperature
   updateLEDColor(temperature);
-
-  delay(1000); // Delay 1 second
 }
 
 float readTemperature() {
