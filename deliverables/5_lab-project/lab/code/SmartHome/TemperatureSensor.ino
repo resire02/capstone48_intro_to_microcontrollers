@@ -17,7 +17,7 @@ const int BLUE_PIN = PIN_PD3;  // Adjust to your PWM-capable pin for Blue
 const float TEMP_MIN = 25.0;   // Minimum temperature for blue
 const float TEMP_MAX = 30.0;  // Maximum temperature for red
 
-void setup() {
+void initializeTemperature() {
   Wire.begin(); // Initialize I²C communication
   Serial.swap(3);
   Serial.begin(115200); // Initialize serial communication
@@ -38,12 +38,18 @@ void setup() {
   Wire.endTransmission();
 }
 
-void loop() {
-  float temperature = readTemperature();
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
+float prev_temperature = -1000.0;
 
+void temperatureLoop() {
+  float temperature = readTemperature();
+  if (temperature - prev_temperature > 1.0) {
+      Serial.print("Temperature: ");
+      Serial.print(temperature);
+      Serial.println(" °C");
+
+      // Update the previous temperature
+      prev_temperature = temperature;
+  }
   // Update LED color based on temperature
   updateLEDColor(temperature);
 }
@@ -78,10 +84,6 @@ void updateLEDColor(float temperature) {
   float redValue = factor * 99.9;
   float blueValue = (1.0 - factor) * 99.9;
 
-  Serial.print("Red: ");
-  Serial.println(redValue);
-  Serial.print("Blue: ");
-  Serial.println(blueValue);
   // Set the RGB LED using PWM
   PWM_Instance[0]->setPWM(RED_PIN, 100.0f, redValue);
   PWM_Instance[1]->setPWM(BLUE_PIN, 100.0f, blueValue);
