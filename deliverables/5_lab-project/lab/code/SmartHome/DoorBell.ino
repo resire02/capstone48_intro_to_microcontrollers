@@ -4,9 +4,7 @@
 #include "Adafruit_MCP23008.h"
 /**
   Requires remapping 
-  -> PWM4 to Speaker AMP-IN 
-  -> 26 (IO 2) to TS4 Sensor (logo touch sensor)
-  -> 27 (IO 2) to SW 2 (middle touch sensor) (if capacitive touch button not working)
+  -> PWM4 to Speaker AMP-IN
 **/
 
 Adafruit_MCP23008 doorBell;
