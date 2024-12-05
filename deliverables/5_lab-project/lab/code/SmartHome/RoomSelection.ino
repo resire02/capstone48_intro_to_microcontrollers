@@ -40,7 +40,7 @@ void roomLoop() {
       // put your main code here, to run repeatedly:
   static uint8_t color_index[8] = { 0 };
   int readValue = analogRead(POTMETERPIN);
-  uint8_t pixel_index = map(readValue, 0, 1023, 0, 7);  // Map to pixel index (0-7)
+  uint8_t pixel_index = map(readValue, 0, 1000, 0, 7);  // Map to pixel index (0-7)
 
   // Check if the pixel index has changed
   if (pixel_index != previousPixelIndex) {
