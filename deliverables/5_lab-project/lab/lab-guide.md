@@ -405,3 +405,80 @@ void loop() {
 ```
 
 Here, we make a static array of size 8 to hold our value at every LED index, and assess whichc color to assign it based off of which button is being pressed by reading in whether it is actively being pressed using digitalRead. This code can be slightly altered when doing the room selector to only change the color of the selected room rather than having a loop to change all of the LEDs to the selected color. That's it for the Smart Lighting!
+
+# Code Walkthrough for Room Selector and joystick 
+Objective: 
+This program connects the potentiometer's read value to determine the selected index (1-8) on the neo pixel ring
+
+This walkthrough will be very closely tied to the SmartLighting one, and will give you the basics to modify the SmartLighting to include room selection. So if some of the steps or imports seem familiar, that's why! We will start by importing our necessary libraries, with 2 real notable ones being the definition for the Potentiometer pin, which in this case was 19 per the pins_arduino.h for the Curiosity Nano/32DD series boards; And the other being the Adafruit_MCP23008.h, which we will be using to get the Joystick input. If you remember the amber LEDs from previous labs, this component is the similar looking one on the right of the Amber LED MCP23008. 
+
+```
+#define POTMETERPIN 19
+#include "Adafruit_MCP23008.h"
+#include <tinyNeoPixel.h>
+
+Adafruit_MCP23008 joystick;
+tinyNeoPixel pixel_ring = tinyNeoPixel(8, PIN_PC3, NEO_GRB + NEO_KHZ800);
+unsigned long color_grid[3] = { 0x00007f, 0x007f00, 0x7f0000 };
+```
+
+In our setup function, we do a few things, firstly, we use Serial.swap and Serial.begin to allow us to print to the UART, this is primarily just for showing the input from the joystick. Next we again begin the pixel_ring connection, and finally we begin the joystick at the given I2C address (found printed above the component on the board) and enable all of the Joystick pins as input so we can get data in from them. NOTE: the joystick.pullUp call is optional but helps to reset the position after letting go of whatever direction you are pointing the joystick. Without this, after pushing up it is likely to keep saying you are pushing up even after letting go.
+
+```
+void setup() {
+  Serial.swap(3);
+  Serial.begin(115200);
+
+  pixel_ring.begin();
+
+  uint8_t pin_id;
+  joystick.begin(0x24);
+  for (pin_id = 0; pin_id < 5; pin_id++) {
+    joystick.pinMode(pin_id, INPUT);
+    joystick.pullUp(pin_id, HIGH);
+  }
+}
+```
+
+Finally our large loop function, in this case, we will only be using the 'Red' value, but if you have the SmartLighting code functioning you can mix it with this to get it to function such that you can swap the color at any specific LED instance. From the top, we start by defining an unsigned integer to hold what LED we want to be lit up, defining the default as 0. We then read in the value of the Potentiometer (a value between 0-1024, as per analogRead's function), and split it into 8 separate sections. To accomplish this, I repeatedly subtract 128 until I can't anymore (again since 128 is 1/8 of 1024), giving us 8 sections or ranges that our potentiometer value can fall in. That gives us which index to light up, which all we have to do then is clear whatever is currently shown on the pixel ring (to ensure the previous one is turned off when changing) and set the led at the correct pixel_index to red, and show it. Moving to the joystick code, its fairly simple, just read in using digitalRead at the correct index (labeled on the component, with appropriate meaning such as Jleft being 1) and if it comes back as true then we display that text. 
+
+```
+void loop() {
+  uint8_t pixel_index = 0;
+
+  int readValue = analogRead(POTMETERPIN);
+
+  while (readValue > 128) {
+    readValue = readValue - 128;
+    pixel_index++;
+  }
+
+  pixel_ring.clear();
+  pixel_ring.setPixelColor(pixel_index, color_grid[0]); // Always Red
+  pixel_ring.show();
+
+  bool jUp = !joystick.digitalRead(0); 
+  bool jLeft = !joystick.digitalRead(1);
+  bool jDown = !joystick.digitalRead(2);
+  bool jRight = !joystick.digitalRead(3);
+  bool jIn = !joystick.digitalRead(4);
+
+  if(jUp){
+    Serial.println("Pushing up!");
+  }
+  if(jLeft){
+    Serial.println("Pushing Left!");
+  }
+  if(jDown){
+    Serial.println("Pushing Down!");
+  }
+  if(jRight){
+    Serial.println("Pushing Right!");
+  }
+  if(jIn){
+    Serial.println("Pushing In!");
+  }
+}
+```
+
+That's it for the room selector and joystick! The joystick code can basically stay on its own, but this room selector can be easily merged with the SmartLighting to change the color of any specific LED between Red, Green, and Blue and also store what it was set to for when you manuever back to that LED! Give it a try!  
