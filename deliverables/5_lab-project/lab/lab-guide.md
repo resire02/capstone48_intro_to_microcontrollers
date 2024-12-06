@@ -511,7 +511,7 @@ void loop() {
 
 That's it for the room selector and joystick! The joystick code can basically stay on its own, but this room selector can be easily merged with the SmartLighting to change the color of any specific LED between Red, Green, and Blue and also store what it was set to for when you manuever back to that LED! Give it a try!  
 
-# Code walkthroug for Proximity sensor triggoring the Amber LEDs
+# Code walkthrough for Proximity sensor triggering the Amber LEDs
 
 Objective
 This program demonstrates how to use the VCNL4200 proximity sensor to detect the proximity of an object and trigger an array of amber LEDs controlled by the MCP23008 GPIO expander. The number of LEDs illuminated corresponds to the proximity data read from the sensor.
