@@ -156,120 +156,148 @@ various home automation and monitoring tasks.
 Objective
 This program demonstrates how to read temperature data from the MCP9808 sensor via I²C communication and visualize it using an RGB LED. The LED color transitions smoothly from blue (indicating cold) to red (indicating hot) based on the temperature range.
 
-Include the necessary library for I²C communication:
+1. Include Libraries
+
+To enable I²C communication and PWM control, we need to include the necessary libraries:
 
     #include <Wire.h>
+    #include "Dx_PWM.h"  // Include the Dx_PWM library to handle PWM functionality on              multiple pins
+        
+The Wire.h library establishes I²C communication, and the Dx_PWM.h library provides PWM functionality for controlling the LED brightness on multiple pins.
 
-The Wire.h library is essential for establishing I²C communication between the Curiosity Nano and the MCP9808 temperature sensor.
-Define the I²C address of the MCP9808 temperature sensor:
+2. Define Constants
 
-    #define MCP9808_ADDR 0x1C
+Next, we define the I²C address for the MCP9808 sensor and configure the RGB LED pins for PWM output:
 
-The sensor's default I²C address (0x1C) is stored as a constant for convenience.
-Assign pins for the RGB LED and define the temperature range:
+    #define MCP9808_ADDR 0x1C  // MCP9808 I²C address
+    
+    Dx_PWM* PWM_Instance[2];  // Array to store PWM instances for Red and Blue LEDs
+    
+    // RGB LED pins (ensure they are PWM-capable pins)
+    const int RED_PIN = PIN_PD1;    // Adjust to your PWM-capable pin for Red
+    const int BLUE_PIN = PIN_PD3;  // Adjust to your PWM-capable pin for Blue
+    
+    // Temperature range for LED color interpolation
+    const float TEMP_MIN = 25.0;   // Minimum temperature for blue
+    const float TEMP_MAX = 30.0;   // Maximum temperature for red
+    
+We use Dx_PWM to handle PWM on the LED pins. The TEMP_MIN and TEMP_MAX constants define the temperature range over which the LED color transitions from blue to red.
 
-    const int RED_PIN = 13;   // Pin for red LED
-    const int BLUE_PIN = 15;  // Pin for blue LED
-    const float TEMP_MIN = 0.0;   // Minimum temperature for blue
-    const float TEMP_MAX = 40.0;  // Maximum temperature for red
+3. Setup Function
 
-These constants set up the hardware configuration and specify the temperature range for color interpolation.
-Setup Function
-Initialize I²C and UART Communication:
+The setup() function initializes I²C communication, serial communication, and the RGB LED pins. It also configures the MCP9808 sensor to continuously measure temperature.
+
 
     void setup() {
-      Wire.begin(); // Initialize I²C communication
+      Wire.begin();  // Initialize I²C communication
       Serial.swap(3);
-      Serial.begin(115200); // Initialize UART communication
+      Serial.begin(115200);  // Initialize serial communication for debugging
+    
+      // Initialize RGB LED pins for PWM control
+      pinMode(RED_PIN, OUTPUT);
+      pinMode(BLUE_PIN, OUTPUT);
+    
+      // Set up PWM instances for the LEDs
+      PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
+      PWM_Instance[0] = new Dx_PWM(RED_PIN, 0.0f, 100.0f);  // Red LED PWM
+      PWM_Instance[1] = new Dx_PWM(BLUE_PIN, 0.0f, 100.0f);  // Blue LED PWM
+    
+      // Configure MCP9808 for continuous conversion mode
+      Wire.beginTransmission(MCP9808_ADDR);
+      Wire.write(0x01);  // Access configuration register
+      Wire.write(0x00);  // Set continuous conversion mode
+      Wire.write(0x00);
+      Wire.endTransmission();
     }
+    
+In this function:
 
-Wire.begin() sets up I²C communication.
-Serial.begin(115200) initializes serial communication for debugging purposes. Serial.swap(3) reassigns UART to alternate pins.
-Configure the RGB LED Pins:
+Wire.begin() starts I²C communication.
+The serial port is initialized for debugging.
+PWM pins are configured for the RGB LED.
+The MCP9808 sensor is set to continuous conversion mode, allowing it to update its temperature readings automatically.
+4. Main Loop
 
-    pinMode(RED_PIN, OUTPUT);
-    pinMode(BLUE_PIN, OUTPUT);
+The loop() function continuously reads the temperature from the MCP9808 sensor and updates the RGB LED color based on the temperature value.
 
-Sets the red and blue pins as outputs to control the RGB LED.
-Set MCP9808 to Continuous Conversion Mode:
-
-    Wire.beginTransmission(MCP9808_ADDR);
-    Wire.write(0x01); // Access the configuration register
-    Wire.write(0x00); // Set continuous conversion mode
-    Wire.write(0x00);
-    Wire.endTransmission();
-
-Continuous conversion mode allows the sensor to measure temperature continuously and update its registers with the latest data.
-Loop Function
-Read Temperature and Update LED Colors:
-
+    
     void loop() {
-      float temperature = readTemperature();
+      float temperature = readTemperature();  // Read the current temperature
       Serial.print("Temperature: ");
       Serial.print(temperature);
       Serial.println(" °C");
     
-      updateLEDColor(temperature); // Adjust the LED based on temperature
-      delay(1000); // Delay for 1 second
+      // Update LED color based on the temperature value
+      updateLEDColor(temperature);
     }
+    
+Here:
 
-The loop() function continuously reads the temperature using the readTemperature() function and updates the LED color using the updateLEDColor() function. The delay(1000) ensures the temperature is updated once per second.
-Reading Temperature
+readTemperature() fetches the current temperature from the MCP9808.
+updateLEDColor() adjusts the RGB LED color based on the temperature.
+5. Read Temperature
 
+The readTemperature() function reads the raw temperature data from the MCP9808 sensor, processes it, and returns the temperature in Celsius.
+
+    
     float readTemperature() {
       Wire.beginTransmission(MCP9808_ADDR);
-      Wire.write(0x05); // Access the temperature register
+      Wire.write(0x05);  // Temperature register address
       Wire.endTransmission();
-      
-      // Request two bytes of temperature data
+    
+      // Request two bytes of temperature data from the sensor
       Wire.requestFrom(MCP9808_ADDR, 2);
       byte msb = Wire.read();
       byte lsb = Wire.read();
-      
-      // Combine and convert the data
-      int temp = ((msb & 0x1F) << 8) | lsb; // Extract temperature value
-      if (msb & 0x10) { // Check for negative temperatures
+    
+      // Combine bytes to form raw temperature data
+      int temp = ((msb & 0x1F) << 8) | lsb;
+      if (msb & 0x10) {  // Check for negative temperatures
         temp -= 4096;
       }
-      return temp * 0.0625; // Convert to Celsius
+    
+      // Convert to Celsius (MCP9808 conversion factor: 0.0625°C per unit)
+      return temp * 0.0625;
     }
+    
+This function:
 
-Function Purpose: This function reads the temperature data from the MCP9808 and processes it to return a value in Celsius.
-How It Works:
-Requests data from the temperature register (0x05).
-Reads two bytes and combines them to form the raw temperature value.
-Converts the raw value to a temperature in Celsius using the MCP9808's conversion factor (0.0625°C per unit).
-Updating the RGB LED
+Accesses the temperature register (0x05) of the MCP9808.
+Combines two bytes of data to form the raw temperature value.
+Converts the raw data to Celsius using the MCP9808's conversion factor of 0.0625°C per unit.
+6. Update LED Color
+
+The updateLEDColor() function adjusts the RGB LED color based on the current temperature. The LED color interpolates from blue at the minimum temperature to red at the maximum temperature.
 
     void updateLEDColor(float temperature) {
       // Clamp temperature to the defined range
       if (temperature < TEMP_MIN) temperature = TEMP_MIN;
       if (temperature > TEMP_MAX) temperature = TEMP_MAX;
-      
+    
       // Calculate interpolation factor (0.0 to 1.0)
       float factor = (temperature - TEMP_MIN) / (TEMP_MAX - TEMP_MIN);
-      
-      // Determine RGB values
-      int redValue = int(factor * 255);    // Red intensity increases with temperature
-      int blueValue = int((1 - factor) * 255); // Blue intensity decreases with temperature
-      
-      // Debugging output
+    
+      // Compute RGB values based on the interpolation factor
+      float redValue = factor * 99.9;   // Red increases with temperature
+      float blueValue = (1.0 - factor) * 99.9;  // Blue decreases with temperature
+    
       Serial.print("Red: ");
       Serial.println(redValue);
       Serial.print("Blue: ");
       Serial.println(blueValue);
-      
-      // Update LED color using PWM
-      analogWrite(RED_PIN, redValue);
-      analogWrite(BLUE_PIN, blueValue);
+    
+      // Update the RGB LED using PWM
+      PWM_Instance[0]->setPWM(RED_PIN, 100.0f, redValue);   // Set red LED brightness
+      PWM_Instance[1]->setPWM(BLUE_PIN, 100.0f, blueValue);  // Set blue LED brightness
+      delay(50);  // Small delay for smooth transitions
     }
+    
+This function:
 
-Function Purpose: This function adjusts the RGB LED color based on the current temperature.
-How It Works:
-Clamping: Ensures the temperature stays within the defined range (TEMP_MIN to TEMP_MAX).
-Interpolation: Calculates a factor to linearly interpolate between the minimum and maximum temperature range.
-Color Adjustment: Sets red and blue intensities based on the interpolation factor. Cooler temperatures favor blue, while warmer temperatures favor red.
-PWM Control: Sends the calculated values to the LED using analogWrite().
+Clamps the temperature within the defined range (TEMP_MIN to TEMP_MAX).
+Calculates an interpolation factor to linearly map the temperature to a color.
+Adjusts the PWM duty cycle for the red and blue LEDs accordingly, transitioning from blue (cold) to red (hot).
+
 
 # Door Bell Walkthrough
 Objective: Implement a functioning doorbell using PWM and capacitive touch sensor in the middle.
@@ -482,3 +510,87 @@ void loop() {
 ```
 
 That's it for the room selector and joystick! The joystick code can basically stay on its own, but this room selector can be easily merged with the SmartLighting to change the color of any specific LED between Red, Green, and Blue and also store what it was set to for when you manuever back to that LED! Give it a try!  
+
+# Code walkthrough for Proximity sensor triggering the Amber LEDs
+
+Objective
+This program demonstrates how to use the VCNL4200 proximity sensor to detect the proximity of an object and trigger an array of amber LEDs controlled by the MCP23008 GPIO expander. The number of LEDs illuminated corresponds to the proximity data read from the sensor.
+
+Required Libraries
+
+    #include "Adafruit_VCNL4200.h"  // Library for VCNL4200 sensor
+    #include <SPI.h>  // SPI library for communication (used with MCP23008)
+    #include <Wire.h>  // I2C communication library
+    #include "Adafruit_MCP23008.h"  // Library for MCP23008 GPIO expander
+The required libraries for I2C and SPI communication are included. The Adafruit_VCNL4200 library allows communication with the proximity sensor, while the Adafruit_MCP23008 library handles the MCP23008 GPIO expander.
+
+Global Object Instances
+
+    Adafruit_MCP23008 mcp_leds;  // Instance of MCP23008 for controlling LEDs
+    Adafruit_VCNL4200 vcnl4200;  // Instance of VCNL4200 proximity sensor
+Instances of the MCP23008 and VCNL4200 objects are created to interact with the respective hardware components.
+
+Setup Function
+
+    void setup() {
+      Serial.swap(3);  // Platform-specific swap for TX/RX pins
+      Serial.begin(115200);  // Initialize serial communication
+    
+      if (!vcnl4200.begin()) {
+        Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+        while (1) { delay(10); }  // Wait here if sensor is not found
+      }
+      
+      vcnl4200.setALSshutdown(true);  // Disable ambient light sensor
+      vcnl4200.setProxShutdown(false);  // Enable proximity sensor
+      vcnl4200.setProxHD(false);  // Disable high-definition mode
+      vcnl4200.setProxLEDCurrent(VCNL4200_LED_I_200MA);  // Set proximity LED current
+      vcnl4200.setProxIntegrationTime(VCNL4200_PS_IT_8T);  // Set proximity integration time
+    
+      uint8_t pin_id, status;
+      status = mcp_leds.begin(0x25);  // Initialize MCP23008 with I2C address 0x25
+      
+      // Set all 8 MCP23008 GPIO pins as output and turn off LEDs
+      for (pin_id = 0; pin_id < 8; pin_id++) {
+        mcp_leds.pinMode(pin_id, OUTPUT);  // Set pin mode to output
+        mcp_leds.digitalWrite(pin_id, HIGH);  // Turn off LED (HIGH is off for MCP23008)
+      }
+    }
+    
+In the setup() function, the serial communication is initialized, and the VCNL4200 proximity sensor is configured for use. If the sensor is not found, the program enters an infinite loop and waits for corrections. The MCP23008 GPIO expander is also initialized, and all its pins are set as outputs with the LEDs initially turned off.
+
+Main Loop Function
+
+    void loop() {
+      uint16_t proxData = vcnl4200.readProxData();  // Read proximity data from VCNL4200
+      Serial.print("Prox Data: ");  // Output proximity data to the serial monitor
+      Serial.println(proxData);
+      
+      LEDs(proxData);  // Call LEDs function to update LED states based on proximity data
+      delay(100);  // Wait 100ms before reading data again
+    }
+In the loop() function, the proximity data is read from the VCNL4200 sensor and printed to the serial monitor. The LEDs() function is then called, passing the proximity data to determine how many LEDs to light up based on the detected proximity.
+
+LEDs Control Function
+
+    void LEDs(uint16_t proxData) {
+      static unsigned long prox_timer = 0UL;  // Timer to control LED effect timing
+      unsigned long now = millis();  // Get the current time in milliseconds
+    
+      if (now - prox_timer > 200UL) {  // Update LEDs every 200ms
+        prox_timer = now;  // Update the timer value
+        
+        uint8_t numLEDs = map(proxData, 0, 4095, 0, 8);  // Map proximity data to LED count (0 to 8 LEDs)
+        
+        // Loop through each of the 8 LEDs and turn them on/off based on proximity data
+        for (uint8_t i = 0; i < 8; i++) {
+          if (i < numLEDs) {
+            mcp_leds.digitalWrite(i, LOW);  // Turn on LED (LOW turns on MCP23008 pin)
+          } else {
+            mcp_leds.digitalWrite(i, HIGH);  // Turn off LED (HIGH turns off MCP23008 pin)
+          }
+        }
+      }
+    }
+    
+The LEDs() function controls the lighting of the amber LEDs based on proximity data. It uses the map() function to convert the proximity data into a number between 0 and 8, which corresponds to the number of LEDs to light up. The LEDs are updated every 200ms using a timer to create a smooth transition in the LED pattern. The MCP23008 expander controls the LEDs, with LOW turning the LEDs on and HIGH turning them off.
