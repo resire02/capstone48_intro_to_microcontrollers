@@ -1,5 +1,13 @@
 ## Lab Walk Through
 
+### Home Control Visualization Program
+
+This lab is packaged with an optional executable file to better visualize the home control system in a top-down home interior. The program is designed to scan for the specific UART messages as listed in the requirements.
+
+Important points to note about the program:
+- The program cannot connect to the Explorer board if Arduino IDE is open. This is because Arduino IDE's Serial Monitor is using the port.
+- The program only scans for ports during startup. If you do not see the Arduino port, ensure that the board is connected and rerun the executable.
+
 # Code Walkthrough for Password Entry
 
 This code is designed to handle the password entry for a smart lock system. The password is either set by a new user 
