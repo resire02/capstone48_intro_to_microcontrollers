@@ -40,13 +40,22 @@ void roomLoop() {
       // put your main code here, to run repeatedly:
   static uint8_t color_index[8] = { 0 };
   int readValue = analogRead(POTMETERPIN);
-  uint8_t pixel_index = map(readValue, 0, 1000, 0, 7);  // Map to pixel index (0-7)
+  uint8_t pixel_index = map(readValue, 0, 1010, 0, 7);  // Map to pixel index (0-7)
 
   // Check if the pixel index has changed
   if (pixel_index != previousPixelIndex) {
     previousPixelIndex = pixel_index;  // Update the previous pixel index
-    Serial.print("Moving to room ");
-    Serial.println(pixel_index);  // Print the new room (pixel index)
+    Serial.printf("Moving to room %d with color ", pixel_index);
+    switch(color_index[pixel_index]) {
+      case 1:
+        Serial.println(F("green"));
+        break;
+      case 2:
+        Serial.println(F("red"));
+        break;
+      default:
+        Serial.println(F("blue"));
+    }
   }
 
   bool jUp = !joystick.digitalRead(0); 
@@ -71,9 +80,16 @@ void roomLoop() {
   int switch_two_value = digitalRead(SWITCH_TWO);
   int switch_three_value = digitalRead(SWITCH_THREE);
 
-  color_index[pixel_index] = switch_one_value == LOW ? 0 : switch_two_value == LOW   ? 1
-                                                         : switch_three_value == LOW ? 2
-                                                         : color_index[pixel_index];
+  if (switch_one_value == LOW && color_index[pixel_index] != 0) {
+    Serial.println(F("Changing room color to blue"));
+    color_index[pixel_index] = 0;
+  } else if (switch_two_value == LOW && color_index[pixel_index] != 1) {
+    Serial.println(F("Changing room color to green"));
+    color_index[pixel_index] = 1;
+  } else if (switch_three_value == LOW && color_index[pixel_index] != 2) {
+    Serial.println(F("Changing room color to red"));
+    color_index[pixel_index] = 2;
+  }
 
   pixel_ring.clear();
   pixel_ring.setPixelColor(pixel_index, color_grid[color_index[pixel_index]]);
