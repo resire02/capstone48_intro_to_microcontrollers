@@ -1,15 +1,16 @@
 #include <tinyNeoPixel.h>
 #include "Adafruit_MCP23008.h"
 
-#define SPEAKER_PIN PIN_PA1
+#define SPEAKER_PIN PIN_PA7
 /**
   Requires remapping 
-  -> PA1 to Speaker AMP-IN
+  -> PA7 to Speaker AMP-IN
 **/
 
 Adafruit_MCP23008 doorBell;
 
 void initializeDoorBell() {
+  PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
   uint8_t pin_id;
   doorBell.begin(0x24);
   for (pin_id = 0; pin_id < 5; pin_id++) {
