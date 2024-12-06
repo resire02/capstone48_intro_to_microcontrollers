@@ -274,11 +274,16 @@ def arduino_update_ui(text_input, serial_port):
         elif (match := re.search(r"prox data: (\d+)", text_input_lowered)) is not None:
             proximity = int(match.group(1))
             update_proximity(proximity)
+        elif (match := re.search(r"proximity: (\d+)", text_input_lowered)) is not None:
+            proximity = int(match.group(1))
+            update_proximity(proximity)
         elif (match := re.search(r"pushing|released", text_input_lowered)) is not None:
             update_message_label(text_input)
         elif (match := re.search(r"password found.", text_input_lowered)) is not None:
             create_input_popup(text_input, serial_port)
         elif (match := re.search(r"try again.", text_input_lowered)) is not None:
+            create_input_popup(text_input, serial_port)
+        elif (match := re.search(r"no password found.", text_input_lowered)) is not None:
             create_input_popup(text_input, serial_port)
     except Exception as e:
         print('An error occurred while parsing: ', e)
