@@ -594,3 +594,56 @@ LEDs Control Function
     }
     
 The LEDs() function controls the lighting of the amber LEDs based on proximity data. It uses the map() function to convert the proximity data into a number between 0 and 8, which corresponds to the number of LEDs to light up. The LEDs are updated every 200ms using a timer to create a smooth transition in the LED pattern. The MCP23008 expander controls the LEDs, with LOW turning the LEDs on and HIGH turning them off.
+
+# Combining the Subsystems
+
+To combine the interactive subsystems into one Smart Home system, follow these steps:
+1. Organize Files:
+   1. Move all the previous .ino sketches into a folder named SmartHome.
+   2. Create a new file in this folder named SmartHome.ino.
+2. Refactor Subsystem Sketches:
+   1. For each subsystem, rename the setup() function to initializeSystem(), where System is the name of the subsystem 
+   2. Rename the loop() function in each sketch to systemLoop(). For example, If the sketch was for the room temperature selection control system:
+
+```
+  // Before
+  void setup() {
+      // Room selection setup code
+  }
+  void loop() {
+      // Room selection loop code
+  }
+  // After
+  void initializeRoom() {
+      // Room selection setup code
+  }
+  void roomLoop() {
+      // Room selection loop code
+  }
+```
+
+3. Modify SmartHome.ino:
+   1. In SmartHome.ino, you do not need to include all the subsystem files using #include directives.
+   2. In the setup() function, call the initializeSystem() function for each subsystem.
+   3. In the loop() function, call the systemLoop() function for each subsystem.
+
+```
+  void setup() {
+    initializePassword();
+    initializeRoom();
+    initializeTemperature();
+    initializeDoorBell();
+    initializeProximity();
+  }
+  void loop() {
+    roomLoop();
+    temperatureLoop();
+    doorBellLoop();
+    proximityLoop();
+  }
+```
+
+4. Debugging:
+   1. Verify that there are no duplicate global variable or function names across subsystems. If there are conflicts, rename the variables or functions to make them unique.
+   2. Test each subsystem individually and then as part of the integrated system to ensure compatibility.
+   3. HINT: You may run into conflicts while trying to output PWM signals to two different components, the temperature sensor and the doorbell. There are ways to get through it. Good luck!

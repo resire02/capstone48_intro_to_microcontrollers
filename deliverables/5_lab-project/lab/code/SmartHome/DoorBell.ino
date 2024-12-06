@@ -1,18 +1,13 @@
-#include <Dx_PWM.h>
-#include "notes.h"
 #include <tinyNeoPixel.h>
 #include "Adafruit_MCP23008.h"
+
+#define SPEAKER_PIN PIN_PA1
 /**
   Requires remapping 
   -> PA1 to Speaker AMP-IN
 **/
 
 Adafruit_MCP23008 doorBell;
-float door_notes[] = {NOTE_A6S, NOTE_F6S};
-
-#define SPEAKER_PIN PIN_PA1
-#define NOTE_PERIOD 750
-#define DOOR_NOTES_COUNT 2
 
 void initializeDoorBell() {
   uint8_t pin_id;
@@ -29,13 +24,8 @@ void initializeDoorBell() {
 }
 
 bool prev_jIn = false;
-int prev_bell_value = -1;
-int prev_speaker_index = -1;
 
 void doorBellLoop() {
-
-  uint16_t now = millis();
-
   bool jIn = !doorBell.digitalRead(4);
   if (jIn && !prev_jIn) { // Joystick pressed (rising edge)
       Serial.println("Ringing bell!");

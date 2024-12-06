@@ -27,8 +27,8 @@ void initializeTemperature() {
   pinMode(BLUE_PIN, OUTPUT);
 
   PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
-  PWM_Instance[0] = new Dx_PWM(RED_PIN, 0.0f, 100.0f);
-  PWM_Instance[1] = new Dx_PWM(BLUE_PIN, 0.0f, 100.0f);
+  PWM_Instance[0] = new Dx_PWM(RED_PIN, 0.1f, 100.0f);
+  PWM_Instance[1] = new Dx_PWM(BLUE_PIN, 0.1f, 100.0f);
 
   // Initialize MCP9808 sensor
   Wire.beginTransmission(MCP9808_ADDR);
