@@ -510,3 +510,87 @@ void loop() {
 ```
 
 That's it for the room selector and joystick! The joystick code can basically stay on its own, but this room selector can be easily merged with the SmartLighting to change the color of any specific LED between Red, Green, and Blue and also store what it was set to for when you manuever back to that LED! Give it a try!  
+
+# Code walkthroug for Proximity sensor triggoring the Amber LEDs
+
+Objective
+This program demonstrates how to use the VCNL4200 proximity sensor to detect the proximity of an object and trigger an array of amber LEDs controlled by the MCP23008 GPIO expander. The number of LEDs illuminated corresponds to the proximity data read from the sensor.
+
+Required Libraries
+
+    #include "Adafruit_VCNL4200.h"  // Library for VCNL4200 sensor
+    #include <SPI.h>  // SPI library for communication (used with MCP23008)
+    #include <Wire.h>  // I2C communication library
+    #include "Adafruit_MCP23008.h"  // Library for MCP23008 GPIO expander
+The required libraries for I2C and SPI communication are included. The Adafruit_VCNL4200 library allows communication with the proximity sensor, while the Adafruit_MCP23008 library handles the MCP23008 GPIO expander.
+
+Global Object Instances
+
+    Adafruit_MCP23008 mcp_leds;  // Instance of MCP23008 for controlling LEDs
+    Adafruit_VCNL4200 vcnl4200;  // Instance of VCNL4200 proximity sensor
+Instances of the MCP23008 and VCNL4200 objects are created to interact with the respective hardware components.
+
+Setup Function
+
+    void setup() {
+      Serial.swap(3);  // Platform-specific swap for TX/RX pins
+      Serial.begin(115200);  // Initialize serial communication
+    
+      if (!vcnl4200.begin()) {
+        Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+        while (1) { delay(10); }  // Wait here if sensor is not found
+      }
+      
+      vcnl4200.setALSshutdown(true);  // Disable ambient light sensor
+      vcnl4200.setProxShutdown(false);  // Enable proximity sensor
+      vcnl4200.setProxHD(false);  // Disable high-definition mode
+      vcnl4200.setProxLEDCurrent(VCNL4200_LED_I_200MA);  // Set proximity LED current
+      vcnl4200.setProxIntegrationTime(VCNL4200_PS_IT_8T);  // Set proximity integration time
+    
+      uint8_t pin_id, status;
+      status = mcp_leds.begin(0x25);  // Initialize MCP23008 with I2C address 0x25
+      
+      // Set all 8 MCP23008 GPIO pins as output and turn off LEDs
+      for (pin_id = 0; pin_id < 8; pin_id++) {
+        mcp_leds.pinMode(pin_id, OUTPUT);  // Set pin mode to output
+        mcp_leds.digitalWrite(pin_id, HIGH);  // Turn off LED (HIGH is off for MCP23008)
+      }
+    }
+    
+In the setup() function, the serial communication is initialized, and the VCNL4200 proximity sensor is configured for use. If the sensor is not found, the program enters an infinite loop and waits for corrections. The MCP23008 GPIO expander is also initialized, and all its pins are set as outputs with the LEDs initially turned off.
+
+Main Loop Function
+
+    void loop() {
+      uint16_t proxData = vcnl4200.readProxData();  // Read proximity data from VCNL4200
+      Serial.print("Prox Data: ");  // Output proximity data to the serial monitor
+      Serial.println(proxData);
+      
+      LEDs(proxData);  // Call LEDs function to update LED states based on proximity data
+      delay(100);  // Wait 100ms before reading data again
+    }
+In the loop() function, the proximity data is read from the VCNL4200 sensor and printed to the serial monitor. The LEDs() function is then called, passing the proximity data to determine how many LEDs to light up based on the detected proximity.
+
+LEDs Control Function
+
+    void LEDs(uint16_t proxData) {
+      static unsigned long prox_timer = 0UL;  // Timer to control LED effect timing
+      unsigned long now = millis();  // Get the current time in milliseconds
+    
+      if (now - prox_timer > 200UL) {  // Update LEDs every 200ms
+        prox_timer = now;  // Update the timer value
+        
+        uint8_t numLEDs = map(proxData, 0, 4095, 0, 8);  // Map proximity data to LED count (0 to 8 LEDs)
+        
+        // Loop through each of the 8 LEDs and turn them on/off based on proximity data
+        for (uint8_t i = 0; i < 8; i++) {
+          if (i < numLEDs) {
+            mcp_leds.digitalWrite(i, LOW);  // Turn on LED (LOW turns on MCP23008 pin)
+          } else {
+            mcp_leds.digitalWrite(i, HIGH);  // Turn off LED (HIGH turns off MCP23008 pin)
+          }
+        }
+      }
+    }
+    
+The LEDs() function controls the lighting of the amber LEDs based on proximity data. It uses the map() function to convert the proximity data into a number between 0 and 8, which corresponds to the number of LEDs to light up. The LEDs are updated every 200ms using a timer to create a smooth transition in the LED pattern. The MCP23008 expander controls the LEDs, with LOW turning the LEDs on and HIGH turning them off.
