@@ -211,14 +211,18 @@ canvas.grid(row=1, column=0, sticky=(tk.N,tk.E,tk.W), pady=10)
 # labels
 room_var = tk.StringVar(main_frame, 'Selected Room:')
 temperature_var = tk.StringVar(main_frame, 'Temperature:')
-info_message_var = tk.StringVar(main_frame, '')
+proximity_var = tk.IntVar(main_frame, value=0)
+info_var = tk.StringVar(main_frame, 'Message:')
 
+proximity_indicator = ttk.Progressbar(main_frame, variable=proximity_var)
+proximity_indicator.grid(row=2, column=0, padx=10, pady=10)
 room_label = ttk.Label(main_frame, textvariable=room_var, font=info_font)
-room_label.grid(row=2, column=0, sticky=(tk.W), padx=10)
+room_label.grid(row=3, column=0, sticky=(tk.W), padx=10)
 temp_label = ttk.Label(main_frame, textvariable=temperature_var, font=info_font)
-temp_label.grid(row=3, column=0, sticky=(tk.W), padx=10)
-info_label = ttk.Label(main_frame, textvariable=info_message_var, font=info_font)
-info_label.grid(row=6, column=0, padx=10)
+temp_label.grid(row=4, column=0, sticky=(tk.W), padx=10)
+info_label = ttk.Label(main_frame, textvariable=info_var, font=info_font)
+info_label.grid(row=5, column=0, sticky=(tk.W), padx=10)
+
 
 # draw canvas and set values
 draw_home_layout(canvas, active=None)
@@ -242,6 +246,15 @@ def update_selected_room(room, color):
         draw_home_layout(canvas, active=ROOMS[ROOM_INDEX], color=COLOR_BLUE)
     room_var.set(f'Selected Room: {ROOMS[ROOM_INDEX]}')
 
+def update_message_label(message):
+    global info_var
+    info_var.set(f'Message: {message}')
+
+def update_proximity(value):
+    global proximity_var
+    progress = round(value / 4095 * 100)
+    proximity_var.set(progress)
+
 def arduino_update_ui(text_input, serial_port):
     print('Received Data:', text_input)
     text_input_lowered = text_input.lower()
@@ -258,6 +271,11 @@ def arduino_update_ui(text_input, serial_port):
             color = str(match.group(1))
             if color in {'blue', 'green', 'red'}:
                 update_selected_room(None, color)
+        elif (match := re.search(r"prox data: (\d+)", text_input_lowered)) is not None:
+            proximity = int(match.group(1))
+            update_proximity(proximity)
+        elif (match := re.search(r"pushing|released", text_input_lowered)) is not None:
+            update_message_label(text_input)
         elif (match := re.search(r"password found.", text_input_lowered)) is not None:
             create_input_popup(text_input, serial_port)
         elif (match := re.search(r"try again.", text_input_lowered)) is not None:
