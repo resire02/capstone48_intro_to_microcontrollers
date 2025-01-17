@@ -159,6 +159,8 @@ various home automation and monitoring tasks.
       // Functionality for home monitoring and automation. 
     }
 
+📌 The full source code for this sketch is located at [5_lab-project/SmartLock/SmartLock.ino](../../../deliverables/5_lab-project/lab/code/SmartLock/SmartLock.ino)
+
 # Code Walkthrough for MCP9808 Temperature Sensor with RGB LED
 
 Objective
@@ -306,6 +308,7 @@ Clamps the temperature within the defined range (TEMP_MIN to TEMP_MAX).
 Calculates an interpolation factor to linearly map the temperature to a color.
 Adjusts the PWM duty cycle for the red and blue LEDs accordingly, transitioning from blue (cold) to red (hot).
 
+📌 The full source code for this sketch is located at [5_lab-project/TemperatureSensor/TemperatureSensor.ino](../../../deliverables/5_lab-project/lab/code/TemperatureSensor/TemperatureSensor.ino)
 
 # Door Bell Walkthrough
 Objective: Implement a functioning doorbell using PWM and capacitive touch sensor in the middle.
@@ -380,6 +383,8 @@ Then, the speaker index is updated to 0 and the first note is played from the no
 
 The capacitive touch sensor and speaker need to be connected via pin remapping, so we will reroute PIN_PC3 to the capacitive touch button's TS4 sensor pin and the PIN_PD2 to the AMP_IN pin to the right of the speaker.
 
+📌 The full source code for this sketch is located at [5_lab-project/DoorBell/DoorBell.ino](../../../deliverables/5_lab-project/lab/code/DoorBell/DoorBell.ino)
+
 # Code Walkthrough for Smart Lighting
 Objective: 
 This program demonstrates how to wire the bottom-left switches to the curiosity nano and utilize them to change the color of the Neo Pixel LEDs.
@@ -441,6 +446,8 @@ void loop() {
 ```
 
 Here, we make a static array of size 8 to hold our value at every LED index, and assess whichc color to assign it based off of which button is being pressed by reading in whether it is actively being pressed using digitalRead. This code can be slightly altered when doing the room selector to only change the color of the selected room rather than having a loop to change all of the LEDs to the selected color. That's it for the Smart Lighting!
+
+📌 The full source code for this sketch is located at [5_lab-project/RoomSelection/RoomSelection.ino](../../../deliverables/5_lab-project/lab/code/RoomSelection/RoomSelection.ino)
 
 # Code Walkthrough for Room Selector and joystick 
 Objective: 
@@ -518,6 +525,8 @@ void loop() {
 ```
 
 That's it for the room selector and joystick! The joystick code can basically stay on its own, but this room selector can be easily merged with the SmartLighting to change the color of any specific LED between Red, Green, and Blue and also store what it was set to for when you manuever back to that LED! Give it a try!  
+
+📌 The full source code for this sketch is located at [5_lab-project/RoomSelection/RoomSelection.ino](../../../deliverables/5_lab-project/lab/code/RoomSelection/RoomSelection.ino)
 
 # Code walkthrough for Proximity sensor triggering the Amber LEDs
 
@@ -603,6 +612,8 @@ LEDs Control Function
     
 The LEDs() function controls the lighting of the amber LEDs based on proximity data. It uses the map() function to convert the proximity data into a number between 0 and 8, which corresponds to the number of LEDs to light up. The LEDs are updated every 200ms using a timer to create a smooth transition in the LED pattern. The MCP23008 expander controls the LEDs, with LOW turning the LEDs on and HIGH turning them off.
 
+📌 The full source code for this sketch is located at [5_lab-project/ProximityLED/ProximityLED.ino](../../../deliverables/5_lab-project/lab/code/ProximityLED/ProximityLED.ino)
+
 # Combining the Subsystems
 
 To combine the interactive subsystems into one Smart Home system, follow these steps:
@@ -655,3 +666,5 @@ To combine the interactive subsystems into one Smart Home system, follow these s
    1. Verify that there are no duplicate global variable or function names across subsystems. If there are conflicts, rename the variables or functions to make them unique.
    2. Test each subsystem individually and then as part of the integrated system to ensure compatibility.
    3. HINT: You may run into conflicts while trying to output PWM signals to two different components, the temperature sensor and the doorbell. There are ways to get through it. Good luck!
+
+📌 The full source code for this sketch is located at [5_lab-project/SmartHome/](../../../deliverables/5_lab-project/lab/code/SmartHome/)
