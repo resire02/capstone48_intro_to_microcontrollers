@@ -13,7 +13,7 @@ Controlling components on the Curiosity Nano board using input from the computer
 
 # Calculator example
 
-In the setup phase, you'll need to configure the UART and swap the default Arduino UART pins to the correct ones for the Curiosity Nano. 
+In the setup phase, you'll need to configure the UART and swap the default Arduino UART pins to the correct ones for the Curiosity Nano. This sketch can be found under Lab 3/UART_Calculator.
 
 1. Pin Setup: Since we're using the Curiosity Nano, swap the default UART pins to the appropriate ones with:
 
@@ -126,7 +126,7 @@ In the main loop, we’ll read user input from the UART buffer, split it into tw
 
 # LED Control example
 
-In this example, we'll use UART communication to control the built-in LED on the Curiosity Nano, which is the same LED used in the "Blink LED" lab. The setup is very similar to both the UART calculator example above and the Blink LED lab.
+In this example, we'll use UART communication to control the built-in LED on the Curiosity Nano, which is the same LED used in the "Blink LED" lab. The setup is very similar to both the UART calculator example above and the Blink LED lab. This sketch can be found under Lab 3/UART_LED.
 
 First, let's look at the setup() function:
 
@@ -227,7 +227,7 @@ To further understand this concept, we will be using the on board potentiometer 
 
 ### ADC Demonstration Sketch
 
-In order to see how the board takes outside (analog) input and translates it into digital values, we will create a small sketch that will do two main things: read in analog input from the potentiometer and display it to see how it is digitized. 
+In order to see how the board takes outside (analog) input and translates it into digital values, we will create a small sketch that will do two main things: read in analog input from the potentiometer and display it to see how it is digitized. This sketch can be found under Lab 3/PotentiometerLED.
 
 To accomplish this, we will be using the AmberLEDs from the previous lab, as well as the UART to print the digitized value to the serial monitor. 
 
@@ -438,6 +438,8 @@ voltage is controlled by adjusting the duty cycle of the signal. For example, a 
 the time and LOW for the other half) simulates half the maximum voltage. If the pin is connected to a device like an 
 LED or a motor, the rapid switching is perceived as a dimmer LED or a slower motor speed because of the averaging effect.
 
+This sketch can be found under Lab 3/PWM_AnalogWrite.
+
 In Arduino, the `analogWrite` function is used to output a PWM signal to a specified pin with a certain duty cycle.
 
 The graphic below illustrates how analogWrite() uses a value in the range of 0 to 255 to control the duty cycle. 
@@ -512,6 +514,8 @@ The sketch continuously reads the analog value from the potentiometer connected 
 It uses the map() function to scale the unsigned 10-bit input value (0-1023) to an unsigned 8-bit value (0-255), which
 corresponds to the PWM duty cycle for controlling the LED's brightness. 
 
+This sketch can be found under Lab 3/PWM_PotDimming.
+
 For debugging purposes, the raw potentiometer value (`sensorValue`) and the mapped PWM output value (`outputValue`)
 are printed to the Serial Monitor. This allows you to observe the changes in brightness as the potentiometer is adjusted.
 
@@ -581,6 +585,8 @@ This sketch uses the **Dx_PWM** library to control the brightness of a white lig
 on three pins (PD1, PD2, and PD3) simultaneously. By adjusting the duty cycle of the PWM signals for each color (Red, 
 Green, and Blue), it gradually increases and decreases the brightness of the combined white light. The sketch allows 
 for precise control of the white light intensity and prints the pin information and duty cycle to the serial monitor.
+
+This sketch can be found under Lab 3/PWM_AdvancedDimming.
 
 Please open the Library Manager, search for Dx PWM, and download and install the library. 
 
@@ -743,7 +749,7 @@ This section will focus on the first two peripherals: DAC and EEPROM.
 
 ### DAC Lab
 
-The DAC is used to convert digital pin values (LOW and HIGH) into an analog voltage (between 0V and 3.3V). The onboard DAC, the MCP4821, is located to the left of the Curiosity Nano. It is connected to the onboard speaker by default. Changing the voltage changes the volume of the speaker. The following steps will guide you on how to interface with the speaker using SPI.
+The DAC is used to convert digital pin values (LOW and HIGH) into an analog voltage (between 0V and 3.3V). The onboard DAC, the MCP4821, is located to the left of the Curiosity Nano. It is connected to the onboard speaker by default. Changing the voltage changes the volume of the speaker. The following steps will guide you on how to interface with the speaker using SPI. This sketch can be found under Lab 3/SpeakerDAC.
 
 1. Create a new sketch and navigate to the Library Manager on the left hand side. Search for “mcp4821” and install the MCP_DAC library by Rob Tillaart.
 
@@ -799,7 +805,7 @@ The lab uses two sequential writes to create a pseudo wave in order to generate 
 
 ### EEPROM Lab
 
-The EEPROM is a read-only memory device located to the left of the Curiosity Nano. It has 2048 pages, or  continuous blocks of memory, with each page having 256 bytes of memory, also referred to as cells. The memory is non volatile, meaning that disconnecting the power will not erase the memory. The EEPROM has a limited number of writes that can be performed before it starts to fail, which ranges from 10,000 to 100,000. The following steps will guide you through using the EEPROM.
+The EEPROM is a read-only memory device located to the left of the Curiosity Nano. It has 2048 pages, or  continuous blocks of memory, with each page having 256 bytes of memory, also referred to as cells. The memory is non volatile, meaning that disconnecting the power will not erase the memory. The EEPROM has a limited number of writes that can be performed before it starts to fail, which ranges from 10,000 to 100,000. The following steps will guide you through using the EEPROM. This sketch can be found under Lab 3/SpiEEPROM.
 
 1. Create a new sketch and import the EEPROM library<sup>1</sup>. This library is already built into Arduino.
 
@@ -859,7 +865,7 @@ Serial.println(F("Squaring the first 10 cells!"));
 
 ### Speaker with PWM (Bonus Section)
 
-In the DAC lab section, we interfaced with the speaker using the onboard Digital to Analog Converter (DAC). However, we were unable to control the frequency (pitch) of the speaker. Using Pulse Width Modulation (PWM) allows us to control the frequency of the speaker, which will allow us to play specific pitches (notes). The following steps will guide you through connecting PWM to the speaker.
+In the DAC lab section, we interfaced with the speaker using the onboard Digital to Analog Converter (DAC). However, we were unable to control the frequency (pitch) of the speaker. Using Pulse Width Modulation (PWM) allows us to control the frequency of the speaker, which will allow us to play specific pitches (notes). The following steps will guide you through connecting PWM to the speaker. This sketch can be found under Lab 3/PWN_BasicSpeaker.
 
 1. On your Curiosity Explorer board, remap the PWM-A pin to the AMP-IN pin located next to the speaker.
 
