@@ -1,3 +1,9 @@
+---
+You are reading the markdown version of Lab 2: Introduction to Curiosity Nano Explorer Board
+
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+---
+
 # Lab 2: Introduction to Curiosity Nano Explorer Board
 
 ## Required Materials
@@ -7,6 +13,8 @@ This lab requires the following materials:
 - AVR64DD32 Curiosity Nano
 - EV58G97A Curiosity Explorer Board
 - Standard USB to Micro USB cable
+
+This lab was designed to work with Windows operating systems. For other operating systems, steps may differ from what is listed in this lab manual.
 
 ## Learning Objectives
 
@@ -106,7 +114,7 @@ To test this component, we will be creating a small sketch that "bounces" a ligh
 
 To start our sketch, we will import a few basic libraries that will allow us to easily communicate to the IO-Expander 1. This sketch can be found under Lab 2/AmberDisplays.
 
-```
+```arduino
 #include <SPI.h>
 #include <Wire.h>
 #include "Adafruit_MCP23008.h"
@@ -114,13 +122,13 @@ To start our sketch, we will import a few basic libraries that will allow us to 
 
 Here, we are getting the basic libraries for communication over I2C, and the specific Adafruit library for communicating to the MCP23008.
 
-```
+```arduino
 Adafruit_MCP23008 mcp_leds;
 ```
 
 Next, outside of our setup or loop functions, we will create a variable to hold the reference to our LEDs. This holds the necessary methods we need to interact with the LEDs.
 
-```
+```arduino
 void setup() {
   uint8_t pin_id, status;
 
@@ -137,7 +145,7 @@ Inside of our setup function, we define a variable for pin_id, which we use to i
 
 Now, instead of putting all of our code into our loop function, since it might be a bit long, we will create a separate method for it
 
-```
+```arduino
 void loop() {
   cylon();
 }
@@ -192,7 +200,7 @@ And finally,
 
 Now we have all the necessary values we need to determine how to manipulate the LEDs to match our pattern of bouncing back and forth.
 
-```
+```arduino
 if (led_state) {
   led_state = false;
   mcp_leds.digitalWrite(led_index, HIGH);
@@ -204,7 +212,7 @@ if (led_state) {
 
 Our first if statement is what turns on or off our LED at this location, if it is on, it is turned off, and if it is off it is turned on. This is done through the "digitalWrite" method on the mcp_leds instance we made earlier, and the led_index we created at the start of this method. Note again that the Curiosity Nano Explorer is low-activated, meaning that mcp_leds.digitalWrite(led_index, LOW); turns the LED on.
 
-```
+```arduino
 if (led_state == false) {
   if (led_dir) {
     led_index++;
@@ -229,7 +237,7 @@ And that's it! We now have a working program for bouncing an LED from one side t
 
 ## Working with the Digital Addressable LEDs
 
-The Curiosity Nano Explorer Board features eight WS2812B RGB LEDs, manufactured by Luckilight, which are serially addressable and mapped to pin PC3 on the Curiosity Nano Evaluation Kit. These LEDs each have independent addresses and are known for their vibrant colors.
+The Curiosity Nano Explorer Board features eight WS2812B RGB LEDs, which are serially addressable and mapped to pin PC3 on the Curiosity Nano Evaluation Kit. These LEDs each have independent addresses and are known for their vibrant colors.
 
 ![WS2812B RGB LEDs](images/WS2812B_RGB_1.jpg)
 
@@ -242,7 +250,7 @@ On the next page, you will find a script designed to animate a ring chase on the
 
 Transfer this snippet of code into a new sketch. The directive #include <tinyNeoPixel.h> adds support for controlling WS2812 LEDs. This sketch is available under Lab2/WS2812B_RingCycle in the source code.
 
-```
+```arduino
 #include <tinyNeoPixel.h>
 
 tinyNeoPixel pixel_ring = tinyNeoPixel(8, PIN_PC3, NEO_GRB + NEO_KHZ800);
@@ -279,7 +287,7 @@ For additional animations, check out the example sketches at **File -> Examples 
 
 In this case, use the following settings:
 
-```
+```arduino
 #define PIN PIN_PC3
 #define NUM_LEDS 8
 ```
@@ -296,7 +304,7 @@ The SSD1306 is connected to the I2C-SDA and I2C-SCL hookups. The SDA is used for
 
 Working with the SSD1306 requires the Adafruit GFX and SSD1306 libraries, along with their dependency libraries:
 
-```
+```arduino
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -305,7 +313,7 @@ Working with the SSD1306 requires the Adafruit GFX and SSD1306 libraries, along 
 
 To interact with the display, we need to create an instance of the Adafruit_SSD1306 library with a few values:
 
-```
+```arduino
 #define SCREEN_WIDTH 128      // OLED display width, in pixels
 #define SCREEN_HEIGHT 64      // OLED display height, in pixels
 #define OLED_RESET -1         // Reset pin, set to -1 to share Arduino reset pin
@@ -315,7 +323,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 We now have a global variable named display. Then, in the setup() function, we need to add the following code to ready up the display:
 
-```
+```arduino
 void setup() {
   delay(1000); // Wait for the display to ready
 
@@ -340,13 +348,13 @@ This allows us to use the library's functions to draw pixels on the screen. The 
 
 The OLED display will display the Adafruit logo by default, we need to call clearDisplay() to clear it off before doing any draw operations:
 
-```
+```arduino
 display.clearDisplay(); // clear the Adafruit logo
 ```
 
 When drawing on the SSD1306, calling draw functions will not automatically show up on the display. To fix this, we need to follow up the draw function with display(). (Calling display() multiple times will not visibly do anything, unless additional draw operations are used)
 
-```
+```arduino
 display.fillRect(0, 0, 40, 20, 1);  // Draws a 40px by 20px rectangle at (0,0)
 display.drawPixel(80, 40, 1);       // Draws a pixel at (80, 40)
 display.drawCircle(80, 40, 20, 1);  // Draws a circle with 20px radius at (80, 40)
@@ -363,7 +371,7 @@ This generates the following visual on the OLED display. This sketch can be foun
 
 1. Open Arduino IDE and create a new sketch with the following code:
 
-```
+```arduino
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -408,14 +416,14 @@ void loop() {
 10. Scroll to the bottom and change Code Output Format to "Arduino code, single bitmap". Then, click on Generate Code. This should generate a code snippet (PROGMEM tells the micro-controller to store the variable in flash memory instead of in program memory. This is usually applied to variables that do not change at all during a program's execution and take up a notable amount of memory). Copy and paste this code snippet into the sketch before the setup() function.
 11. Directly after the image array, define width and height constants to store the dimensions of the image. This will be used to tell the library how tall and wide our image is.
 
-```
+```arduino
 #define IMAGE_WIDTH <your image width in pixels>
 #define IMAGE_HEIGHT <your image height in pixels>
 ```
 
 12. In the setup() function, call drawBitmap() after the display has been initialized. We will draw the image from the top left corner so that no part of the image is cut off.
 
-```
+```arduino
 void setup() {
   drawBitmap(0, 0, <name of image array>, IMAGE_WIDTH, IMAGE_HEIGHT, 1)
 }

@@ -1,3 +1,9 @@
+---
+You are reading the markdown version of Lab 4: Interactive Home Automation and Monitoring System
+
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+---
+
 # Lab 4: Interactive Home Automation and Monitoring System
 
 
