@@ -33,7 +33,7 @@ The Explorer Board offers the following key features:
 - *Connectivity Options*:
   - Offers Grove I2C, mikroBUS, Qwiic I2C connectors, and a MicroSD card slot, providing flexibility in connectivity for external devices and modules.
 - *Power Supply*:
-  - Powered via an onboard USB Type-C connector, with external power options and various power management ICs to support diverse power requirements. In this lab, we will explore the setup of the Explorer Board and learn how to use I2C to control LEDs, NeoPixels, and an LCD screen, building a foundation for understanding microcontroller-based systems.
+  - Powered via an onboard USB Type-C connector, with external power options and various power management ICs to support diverse power requirements. In this lab, we will explore the setup of the Explorer Board and learn how to use I2C to control LEDs, digitally addressable LEDs, and an LCD screen, building a foundation for understanding microcontroller-based systems.
 
 ## Setting Up and Working with the Explorer Board
 
