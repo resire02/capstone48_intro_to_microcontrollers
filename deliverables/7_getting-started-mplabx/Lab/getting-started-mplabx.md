@@ -36,13 +36,9 @@ tutorials, videos, source code and other resources for microcontroller devices.
 
     <img src="images/d.png" alt="d" width="500"/>
 
-2. This will open the Discover Portal.
+2. This will open the Discover Portal. In the search bar, you can search for AVR64DD32 to find resources for the microcontroller.
 
     <img src="images/d_2.png" alt="d_2" width="500"/>
-
-3. In the search bar, you can search for AVR64DD32 to find resources for the microcontroller.
-
-   <img src="images/d_3.png" alt="d_3" width="500"/>
 
 ## Content Manager
 
