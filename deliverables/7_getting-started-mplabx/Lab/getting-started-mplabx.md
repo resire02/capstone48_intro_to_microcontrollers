@@ -13,11 +13,11 @@ In this section of the course, we will be learning how to use another embedded p
 ## Why use MPLAB X IDE over Arduino IDE?
 Leading up to this lab, you have been developing relatively simple programs using Arduino IDE. So why switch over to MPLAB X IDE? The reason ultimately comes down to differences in features:
 
-- MPLAB X IDE's debugger offers deeper manipulation of embedded code including the ability to directly modify chip register values
-- MPLAB X IDE's project based development makes it easier to build out multi file programs than Arduino IDE's sketch based development.
-- MPLAB X IDE is often regarded as a more professional developer environment as opposed to Arduino IDE
+- MPLAB X IDE’s debugger offers deeper control of the chip’s embedded system with features such as register bit manipulation, breakpoints, call stack, memory monitoring, - application profiling, and pin manager
+- MPLAB X IDE’s project based development makes it easier to build out multi file programs than Arduino IDE’s sketch based development.
+- MPLAB X IDE’s Microchip Code Configurator simplifies adding peripherals to the project instead of relying on third party libraries to configure peripherals
 
-
+Ultimately, MPLAB X presents a more well rounded developer experience with professional features for greater control over the microcontroller.
 
 ## Installation Walkthrough
 
