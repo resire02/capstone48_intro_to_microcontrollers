@@ -139,6 +139,30 @@ By understanding this structured organization, developers can efficiently naviga
      
      ![p_3.png](images/p_3.png)
 
+## MPLAB Code Configurator
+
+The MPLAB Code Configurator (MCC) provides a visual interface to add and configure peripherals within our projects. The MCC interface mainly consists of three views: the Resource Management Area, the Composer, and the Application Builder. The MCC view can be opened by clicking on the MCC icon on the main toolbar. **Keep in mind that in order to open MPLAB Code Configurator, there needs to be an active project.**
+
+![](./images/mcc_1.png)
+
+* Resource Management Area (Top Left Panel) – An interface to view available and currently used resources in the project
+   * Project Resources – Used to configure interrupts, pins, and system functions including clock and configuration bits. The “Generate” button is used to create project code from the configuration.
+   * Device Resources – Displays all hardware peripherals and system modules compatible with the target device (AVR64DD32 in our instance). Clicking on the plus icon next to the resource adds the selected resource to both the Project Resources and Application Builder.
+
+* Application Builder (Top Middle Panel) – A high level view of the application where dependencies from Project Resources are visualized as a tree structure. The “Add Component” button is a windowed view to add and manage resources, similar to the Resource Management Area.
+   * Application – represents user-created project resources, most prominently main.c
+   * System Drivers – represents system functionality such as clock, interrupt, and pins
+   * Device – lists the available hardware peripherals on the target device (AVR64DD32). The number represents the number of instances available to the project.
+
+* Composer (Right Panel) – A hidden panel that can be accessed by clicking on the gear icon next to resources on the Application Builder or by clicking on resources within Project Resources. Displays configuration options for the selected resource.
+
+* Pin Package View (Bottom Left Panel) – A hardware level view of available and allocated pins on the (AVR64DD32) microcontroller. Clicking on a pin displays available functions to that pin.
+   * Grey pins – the pin is not available.
+   * Blue pins – the pin is available.
+   * Light green pins – the pin is currently in use in the project.
+
+* Pin Grid View (Bottom Center Panel) – Visualizes the available pins organized by GPIO port on the (AVR64DD32) microcontroller. Similar to how we used pinMode() in Arduino, we can configure a pin as input or output by clicking in the grid.
+
 ## Understanding the Code: Blinking an LED on PORTF Pin 5
 
 This program configures pin 5 on PORTF as an output and toggles an LED in a loop with delays. Below is a step-by-step breakdown of the key parts.
