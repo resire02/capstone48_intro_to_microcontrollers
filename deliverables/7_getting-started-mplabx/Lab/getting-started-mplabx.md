@@ -38,6 +38,28 @@ tutorials, videos, source code and other resources for microcontroller devices.
 
     <img src="images/d_2.png" alt="d_2" width="500"/>
 
+## Configuration
+
+This section covers a few important configurations for using MPLAB X. Some of these configurations are recommendations and do not need to be changed.
+
+# Setting the Color Theme and Font
+
+The default theme for MPLAB X is very bright and can be hard on the eyes, so many users prefer to change it. To adjust the theme:
+
+1. Navigate to Tools → Options → Fonts & Colors.
+2. Under Profile, select the theme you prefer. The recommended theme is Norway Today.
+3. To change the font, locate the Font section and click on the three dots.
+4. Select your desired font and size. The recommended font is Cascadia Code, as it matches the one used in Visual Studio Code.
+
+# Managing Embedded Toolchains
+
+The necessary toolchains should be added automatically when MPLAB X is installed. However, you can manage them manually if needed:
+
+1. Go to Tools → Options → Embedded.
+2. Within the Embedded options, select Building Tools.
+3. You should see the XC8 compiler listed, which is the compiler we will use.
+
+
 ## Content Manager
 
 In this section, we will open the MCC Content Manager to update all libraries, drivers, and peripheral code 
