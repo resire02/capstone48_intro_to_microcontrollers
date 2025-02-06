@@ -85,6 +85,63 @@ After executing the I2C program, it compiled successfully, but the LEDs on the C
         
         Programming complete
         ```
+
+#### Lab 1 Meeting Recording Notes
+
+UART
+
+- Open MCC.
+- In order for the UART Example to work correctly
+    - Example Selection: UART Write String.
+    - Example Implementation: Polled
+- Those options were not showing last meeting because there's a UART and there's a USART peripheral and this is where things get a little confusing.
+    - UART is a driver
+    - USART0 is a peripheral driver
+- We added a UART but it is a driver, so we needed to specify high level names. We needed to select a dependency called the UART PLIB, which is a thin layer between the UART driver and the bare metal.
+    - We pick USART 0. Why? The reason is USART0 has access to ports 4 and 5.
+    - Ports 4 and 5 are the UART pairs that talk to the onboard debugger on that Curiosity Nano board. So essentially, this is where the serial USB comes through, just like the serial in serial swap.
+    - Those are the top level definitions.
+        - Custom Name: UART
+        - Requested Baudrate: 115200
+        - Parity: None
+        - Data Size: 8
+        - Stop Bits: 1
+        - Flow Control Mode: None
+        - Dependency Selector: PLIB
+    - Now options become available.
+
+Timer0
+
+- Set up a timer.
+- Call it Timer0, enable it, and set it to interrupt driven.
+- Under Dependency Selector choose TCB0
+- I have an abstraction called timer 0. Which particular driver do I want? Well, I want to use TCB 0, which happens to be the same timer instance that the delay in the millis function in the Arduino core uses.
+- Type B timers are very well suited for system ticks
+- One millisecond is the same speed that the millis timer uses in Arduino. It tends to be fairly popular. Faster systems might use 500 microseconds, but the problem is, if you’re doing tasks, you’re down to some tight coding. For general brushless DC motor control, 1000 Hertz tends to be quick enough. Mechanical systems have resonant frequencies that are generally lower than a millisecond or kilohertz.
+- **CLCKCTRL**: 4 MHz from bare metal to 24 MHz without worrying about power consumption.
+- **Global Interrupts** Enabled
+- **Configuration Bits**: Bits that are programmed in a special part of the flash that defines the personality of the part when it wakes up.  Bootloader and code space both set to 0.
+- **Reset Pin Configuration**
+    - Reset pin must be explicitly set (default is GPIO mode, which disables reset functionality).
+- **Pin Configuration**
+    - Pin 5 set as an output (referencing a bare-metal example).
+    - MCC-generated files automatically handle file management.
+
+Project: Blocking vs. Non Blocking
+
+- **Clicking Generate** automatically creates mcc_generated files
+    - Under examples/UART_Example you will find commented out code with examples for your main.c file in your project.
+- Blocking and non blocking instances of both an LED blink and a UART
+- system_initialize() makes calls to setup routines
+    - Clock
+    - Pin manager for P5
+    - Timer B0
+    - UART
+    - Global and cleanups for CPU interrupts
+- Timer0.TimeoutCallbackRegister(tcb_softtimer)
+    - Every time the interrupt fires at 1 millisecond, Timer 0 triggers callback tcb_softtimer
+    - tcb_softtimer handles timers using atomic operations
+
 ### What went well during the learning process?
 
 - I was able to successfully execute programs from GitHub repositories by setting the correct configurations.
@@ -101,3 +158,5 @@ After executing the I2C program, it compiled successfully, but the LEDs on the C
 ### If you encountered any issues while working with MPLABX, were you able to fix them? If so, what steps did you take to fix the issues you encountered?
 
 - No issues were encountered during the process.
+
+### 
