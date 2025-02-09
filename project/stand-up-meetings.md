@@ -30,3 +30,9 @@
 | Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                         | 
 |-------------|--------------|----------------|--------------------------------------------------------------------------------------------------------------------|
 | 4           | 12/03/2024   | GA, FL, TW, KL | Assigned tasks to verify the functionality of the combined sketch with the Python UI and discussed lab formatting. |
+
+### Sprint 6
+
+| Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                                             | 
+|-------------|--------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --          | --           | --           | For this sprint, we chose to work asynchronously in our project, considering that the requirements were clearly defined and straightforward to follow. |
