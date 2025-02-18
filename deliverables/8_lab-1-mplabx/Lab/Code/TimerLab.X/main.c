@@ -37,33 +37,38 @@
 #include <stdio.h>
 #include <util/delay.h>
 
+#define F_CPU 4000000
+
 /*
     Main application
 */
 
-char string_buffer[80];
+char uart_string[80];
 volatile uint32_t timer = 0;
 
 void UART_WriteString(const char *message);
 uint32_t read_timer(void);
 void clear_timer(void);
 void tcb_softtimer(void);
-void timer_reader(void);
+void non_blocking(void);
+void blocking(void);
 void blink_led(void);
 
 int main(void)
 {
     SYSTEM_Initialize();
-
-    Timer0.TimeoutCallbackRegister(tcb_softtimer);
-    clear_timer();
+    PORTF_set_pin_level(5, 1);
     UART_WriteString("Program is starting...\r\n");
     
     _delay_ms(1000);
     
+    Timer0.TimeoutCallbackRegister(tcb_softtimer);
+    clear_timer();
+    
     while(1)
     {
-        timer_reader();
+//        non_blocking();
+        blocking();
     }    
 }
 
@@ -71,6 +76,10 @@ void UART_WriteString(const char *message)
 {
     for(int i = 0; i < (int)strlen(message); i++)
     {
+        while(!UART0.IsTxReady())
+        {
+            
+        };
         (void) UART0.Write(message[i]);
     }
 }
@@ -98,24 +107,34 @@ void tcb_softtimer(void)
     sei();
 }
 
-void timer_reader(void)
+void non_blocking(void)
 {
     static unsigned int loop_count = 0;
     
-    if (read_timer() > 10001u)
+    if (read_timer() > 1001)
     {
-        clear_timer();
         loop_count++;
-        sprintf(string_buffer, "Loop count: %u\r\n", loop_count);
-        UART_WriteString(string_buffer);
+        sprintf(uart_string, "Loop count: %u\r\n", loop_count);
+        UART_WriteString(uart_string);
         blink_led();
     }
 }
 
-void blink_led(void) 
+void blocking(void)
+{
+    static unsigned int loop_count = 0;
+    loop_count++;
+    sprintf(uart_string, "Loop count: %u\r\n", loop_count);
+    UART_WriteString(uart_string);
+    blink_led();
+    _delay_ms(1000);
+}
+
+void blink_led(void)
 {
     clear_timer();
     PORTF.OUT &= ~(1 << 5);
-    while (read_timer() < 200);
+    while (read_timer() < 1000);
     PORTF.OUT |= (1 << 5);
+    clear_timer();
 }
