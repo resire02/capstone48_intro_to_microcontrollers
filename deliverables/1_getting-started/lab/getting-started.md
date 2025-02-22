@@ -1,14 +1,18 @@
-# **Quick Start Guide**
+---
+You are reading the markdown version of Lab 0: Quick Start Guide
 
-### 
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+---
+
+# Quick Start Guide
+
 
 ## Required Materials
 
 This lab requires the following materials:
-
-* Desktop or Laptop Computer (Windows is highly recommended).  
-* Web Browser (Chrome, Edge, Firefox).  
-* Access to the Internet.
+- Desktop or Laptop Computer (Windows is highly recommended).
+- Web Browser (Chrome, Edge, Firefox).
+- Access to the Internet.
 
 This lab was designed to work with Windows operating systems. For other operating systems, steps may differ from what is listed in this lab manual.
 
@@ -22,8 +26,8 @@ This guide will provide you with a foundation for learning electrical circuits a
 
 ## Installation Walkthrough
 
-1. Go to the Arduino Software page ([https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)).  
-2. Download and run the MSI Installer (Windows).  
+1. Go to the Arduino Software page (https://www.arduino.cc/en/software).
+2. Download and run the MSI Installer (Windows).
 3. The IDE should be immediately installed. Run it and allow it some time to install dependencies.
 
 ![image info](./images/download.png)
@@ -31,12 +35,12 @@ This guide will provide you with a foundation for learning electrical circuits a
 4. Go to File \-\> Preferences and under the Settings tab, check **'compile'** and **'upload'** to enable verbose output.  
 5. Under the same tab, click on the icon next to 'Additional Board Manager URLs'  
 6. Copy and paste the following URL into the text box and click OK.  
-   * [http://drazzy.com/package\_drazzy.com\_index.json](http://drazzy.com/package_drazzy.com_index.json) [^1]
+  - [http://drazzy.com/package\_drazzy.com\_index.json](http://drazzy.com/package_drazzy.com_index.json) (Enables access to external microcontroller libraries not included in the default setup)
 
 ![image info](./images/preferences.png)
 
 7. Go to the Board Manager by clicking on the second icon from top to bottom on the left panel.  
-8. Type 'DxCore' and click INSTALL. This installs the primary support package.[^2]
+8. Type 'DxCore' and click INSTALL. This installs the primary support package. (Arduino had general libraries to support sensors, but as vendors started making boards, board-specific libraries became an independent category of libraries known as core libraries)
 
 ![image info](./images/dxcorev3.png)
 
@@ -60,7 +64,3 @@ Instructions to show hidden files in Windows
 2. Select Options from the dropdown menu.  
 3. In the Folder Options window, go to the View tab.  
 4. Scroll down and select *Show hidden files, folders, and drives* under 'Advanced settings'.
-
-[^1]:  Enables access to external microcontroller libraries not included in the default setup.
-
-[^2]:  Arduino had general libraries to support sensors, but as vendors started making boards, board-specific libraries became an independent category of libraries known as core libraries
