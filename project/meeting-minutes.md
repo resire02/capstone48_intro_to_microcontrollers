@@ -10,3 +10,4 @@
 | 12/05/2024 | https://docs.google.com/document/d/1aI8idy4KSd5BTG-O176qnue3Xgf9IvbgMlOb6CQUnNc/edit?usp=drive_link |
 | 01/22/2025 | https://docs.google.com/document/d/14-BBVUdxcmZZYQ5AmptW2Av9jMfZmrWIH1ZUqeXctNQ/edit?usp=drive_link |
 | 02/05/2025 | https://docs.google.com/document/d/1eh4kvomZaeU3AQHbRi6nA_6ARaDAiLI1YvEWEwEmxAQ/edit?usp=drive_link |
+| 02/19/2025 | https://docs.google.com/document/d/1YQEiLbteALPKuL6-A57utRET0_8NX_PauTXwpV-qTrw/edit?usp=drive_link |

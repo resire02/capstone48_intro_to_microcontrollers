@@ -2,22 +2,22 @@
 
 ### Sprint 1
 
-|  Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                        | 
+| Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                         | 
 |-------------|--------------|--------------|------------------------------------------------------------------------------------------------------------------------------------|
 | --          | --           | --           | For this sprint, we chose to work asynchronously in our project, considering it was a short 6-day sprint to work on lab documents. |
 
 
 ### Sprint 2
 
-|  Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                        | 
-|-------------|--------------|--------------|------------------------------------------------------------------------------------------------------------------------------------|
-| 1           | 10/18/2024   | GA, FL, TW   | Discussed and edited lab deliverable formatting                                                                                    |
+| Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                      | 
+|-------------|--------------|--------------|-------------------------------------------------|
+| 1           | 10/18/2024   | GA, FL, TW   | Discussed and edited lab deliverable formatting |
 
 ### Sprint 3
 
-| Meeting No. | Meeting Date | Who Attended  | Meeting notes (very brief)                                                                                                        | 
-|-------------|--------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| 2           | 11/4/2024    | GA, FL, TW, KL | Discussed lab section order and inclusion of topics, if document needs to be split, planning for sponsor meeting                  |
+| Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                       | 
+|-------------|--------------|----------------|------------------------------------------------------------------------------------------------------------------|
+| 2           | 11/4/2024    | GA, FL, TW, KL | Discussed lab section order and inclusion of topics, if document needs to be split, planning for sponsor meeting |
 
 ### Sprint 4
 
@@ -36,3 +36,9 @@
 | Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                                             | 
 |-------------|--------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | --          | --           | --           | For this sprint, we chose to work asynchronously in our project, considering that the requirements were clearly defined and straightforward to follow. |
+
+### Sprint 7
+
+| Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                                                                                        | 
+|-------------|--------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 5           | 02/17/2025   | GA, FL, TW, KL | Discussed the spinlock inside the while (!UART0.IsTxReady()) loop and decided not to include it. Also agreed to include the blink_led function in both blocking and non-blocking implementations. |
