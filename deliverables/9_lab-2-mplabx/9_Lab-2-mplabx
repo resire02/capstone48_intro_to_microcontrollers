@@ -9,3 +9,215 @@
 * Using MCC Melody
 * Viewing pin configurations
 * Configuring and using the ADC
+
+## Code overview
+#include "mcc_generated_files/system/system.h"
+#include <string.h>
+#include <stdio.h>
+#include <util/delay.h>
+
+
+#define USR_LED 5           // on board LED PF5
+
+
+
+void UART_WriteString(const char *message);
+char uart_str[80];
+volatile uint32_t timer1, timer2, timer3 = 0UL;
+void tcb_softtimer(void);
+void clear_timer1(void);
+void clear_timer2(void);
+void clear_timer3(void);
+uint32_t read_timer1(void);
+uint32_t read_timer2(void);
+uint32_t read_timer3(void);
+void blink_led(void);
+void blocking(void);
+void non_blocking(void);
+void loop_task(void);
+void sample_voltages(void);
+
+
+
+
+int16_t adc_val;
+
+
+int main(void) 
+{
+
+    SYSTEM_Initialize();
+
+    // set soft timer callback and clear_timers
+    Timer0.TimeoutCallbackRegister(tcb_softtimer);
+    clear_timer1();
+    clear_timer2();
+    clear_timer3();
+
+    PORTF_set_pin_level(5, 1); // MCC pin control
+
+    PORTC.DIR = (1 << 3); // bare metal GPIO control
+    PORTC.OUTCLR = (1 << 3);
+
+    
+    UART_WriteString("MLAB X - MCC lab3 - ADC\r\n");
+
+    while (1) 
+    {
+
+        
+        // loop_task();            
+        sample_voltages();
+
+    }
+
+}
+
+
+void loop_task(void) 
+{
+    static unsigned int loop_count = 0;
+
+    if (read_timer1() > 1000lu) 
+    {
+
+        clear_timer1();
+        loop_count++;
+        sprintf(uart_str, "loop count %u\r\n", loop_count);
+        UART_WriteString(uart_str);
+        blink_led();
+
+    }
+
+}
+
+
+void sample_voltages(void)
+{
+    
+    static unsigned adc_sample_count = 0;
+    uint16_t chan7_cnt,chan6_cnt;
+    
+    
+    
+    if(read_timer3() > 2000lu)
+    {
+        
+        clear_timer3();
+        
+        adc_sample_count++;
+        // sample potentiometer on input on PF4/AIN20
+        chan6_cnt = ADC0_ChannelSelectAndConvert(ADC_MUXPOS_AIN6_gc);      // chan def from ioavr64dd32.h
+    
+        // sample potentiometer on input on PF5/AIN21
+        chan7_cnt = ADC0_ChannelSelectAndConvert(ADC_MUXPOS_AIN7_gc);      
+    
+        sprintf(uart_str,"sample: %d chan 6 %d chan 7 %d\r\n",adc_sample_count,chan6_cnt,chan7_cnt);
+        UART_WriteString(uart_str);
+    
+    }
+    
+}
+
+
+
+
+void blocking(void) 
+{
+
+    static unsigned int loop_count = 0;
+
+    loop_count++;
+    sprintf(uart_str, "loop count %u\r\n", loop_count);
+    UART_WriteString(uart_str);
+
+    _delay_ms(1000);
+
+
+}
+
+void UART_WriteString(const char *message)
+{
+    static uint16_t spinlock = 0;
+
+    for (int i = 0; i < (int) strlen(message); i++) {
+        while (!(UART.IsTxReady()))
+            spinlock++;
+        UART.Write(message[i]);
+    }
+}
+
+void blink_led(void) 
+{
+    clear_timer2();
+    PORTF.OUT &= ~(1 << 5);
+    while (read_timer2() < 200);
+    PORTF.OUT |= (1 << 5);
+
+}
+
+void tcb_softtimer(void)
+{
+
+    // PORTC.OUTSET = (1 << 3);
+    cli();
+    timer1++;
+    timer2++;
+    timer3++;
+    sei();
+    // PORTC.OUTCLR = (1 << 3);
+}
+
+void clear_timer1(void)
+{
+    cli();
+    timer1 = 0;
+    sei();
+}
+
+void clear_timer2(void) 
+{
+    cli();
+    timer2 = 0;
+    sei();
+}
+
+uint32_t read_timer1(void)
+{
+    uint32_t timer1_val;
+
+    cli();
+    timer1_val = timer1;
+    sei();
+    return (timer1_val);
+}
+
+uint32_t read_timer2(void) 
+{
+    uint32_t timer2_val;
+
+    cli();
+    timer2_val = timer2;
+    sei();
+
+    return (timer2_val);
+}
+
+
+void clear_timer3(void) 
+{
+    cli();
+    timer3 = 0;
+    sei();
+}
+
+uint32_t read_timer3(void) 
+{
+    uint32_t timer3_val;
+
+    cli();
+    timer3_val = timer3;
+    sei();
+    return (timer3_val);
+
+}
