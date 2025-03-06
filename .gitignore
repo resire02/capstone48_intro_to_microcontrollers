@@ -1,1 +1,4 @@
 .vscode/
+
+# python env files
+**/.venv/
