@@ -237,3 +237,25 @@ uint32_t read_timer3(void)
     return (timer3_val);
 
 }
+#3.1 
+After getting the code above to work we are going to make a few changes. We will change the sample_voltages functions.
+At the top of the function we will add and int16_t variable to store the differential ADC measurement of the two channels. 
+int16_t chan76_cnt:
+
+next we will make the add the following before the UART. 
+// Enable differential mode
+ADC0.CTRLA |= ADC_CONVMODE_DIFF_gc;
+ADC0.MUXPOS = ADC_MUXPOS_AIN7_gc;
+ADC0.MUXNEG = ADC_MUXPOS_AIN6_gc;
+
+ADC0.COMMAND |= ADC_STCONV_bm;
+
+while (!(ADC0.INTFLAGS & 0x01));
+chan76_cnt = ADC0.RES;
+
+// Disable differential mode
+ADC0.CTRLA &= ~(ADC_CONVMODE_DIFF_gc);
+THis will set up the ADC to measure the voltage difference between the two channels and will display it.
+
+# 3.2 
+
