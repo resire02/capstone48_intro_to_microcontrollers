@@ -42,3 +42,9 @@
 | Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                                                                                        | 
 |-------------|--------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 5           | 02/17/2025   | GA, FL, TW, KL | Discussed the spinlock inside the while (!UART0.IsTxReady()) loop and decided not to include it. Also agreed to include the blink_led function in both blocking and non-blocking implementations. |
+
+### Sprint 8
+
+| Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                                   | 
+|-------------|--------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| 6           | 03/03/2025   | GA, FL, TW, KL | Discussed the completion of Labs 2 and 3, agreeing to have deliverables for both by Saturday. Additionally, discussed project-related tasks. |
