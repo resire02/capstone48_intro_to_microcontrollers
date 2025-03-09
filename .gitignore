@@ -2,3 +2,39 @@
 
 # python env files
 **/.venv/
+
+# python log files
+**/*.log
+
+# MPLAB X IDE build files
+**/Lab/**/*.d
+**/Lab/**/*.pre
+**/Lab/**/*.p1
+**/Lab/**/*.lst
+**/Lab/**/*.sym
+**/Lab/**/*.obj
+**/Lab/**/*.o
+**/Lab/**/*.sdb
+**/Lab/**/*.obj.dmp
+**/Lab/**/*.mk
+**/Lab/**/*.map
+**/Lab/**/*.properties
+**/Lab/**/*.production
+**/Lab/**/*.debug
+**/Lab/**/*.log
+**/Lab/**/*.log.inx
+**/Lab/**/html/
+**/Lab/**/nbproject/private/
+**/Lab/**/nbproject/Package-*.bash
+**/Lab/**/build/
+**/Lab/**/nbbuild/
+**/Lab/**/dist/
+**/Lab/**/nbdist/
+**/Lab/**/nbactions.xml
+**/Lab/**/nb-configuration.xml
+**/Lab/**/funclist
+**/Lab/**/nbproject/Makefile-*
+**/Lab/**/disassembly/
+**/Lab/**/.generated_files/
+**/Lab/**/mcc_generated_files/
+**/Lab/**/debug/
