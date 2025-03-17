@@ -1,5 +1,7 @@
 import itertools
 from multiprocessing import Value
+from operator import mul
+import stat
 import tkinter as tk
 import serial
 import serial.tools.list_ports_windows as list_ports
@@ -16,7 +18,13 @@ import logging
 
 APP_NAME = 'ADC Live Plotter'
 logger = logging.getLogger(APP_NAME)
-logging.basicConfig(filename='adc.log', level=logging.INFO)
+logging.basicConfig(
+    filename='adc.log', 
+    level=logging.INFO, 
+    format='[%(asctime)s - %(name)s]: [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
 
 class UARTDataReader:
     def __init__(self):
@@ -61,7 +69,6 @@ class UARTDataReader:
                             channel_reads = [int(x) for x in uart_match[:2]]
                             logger.info(f'Received data: {channel_reads}')
                             if len(channel_reads) >= 2:
-                                print(channel_reads)
                                 self.channel_1.append(channel_reads[0])
                                 self.channel_2.append(channel_reads[1])
                             else:
@@ -81,11 +88,14 @@ class UARTDataReader:
     def is_connected(self):
         return self._is_connected
 
+    def stop(self):
+        self._is_connected = False
 
 class ADCApplication:
     def __init__(self):
         self.uart_reader = UARTDataReader()
         self.root = tk.Tk()
+        # configurable settings
         self._BAUDRATES = [9600, 115200]
         self._selected_port = None
         self._selected_rate = None
@@ -114,33 +124,31 @@ class ADCApplication:
             self.options_menu.entryconfig(1, label=f'Baudrate: {rate}')
         else:
             logger.warning('Cannot set baudrate, please stop the live graphing first')
-    
+
     def _init_gui(self):
         # Root config
         self.root.title(APP_NAME)
         self.root.option_add('*tearOff', tk.FALSE)
         # self.root.geometry('500x500')
         # Menubar setup
-        menubar = tk.Menu(self.root)
-        self.options_menu = tk.Menu(menubar)
+        self.menubar = tk.Menu(self.root)
+        self.options_menu = tk.Menu(self.menubar)
         self.port_options = tk.Menu(self.options_menu)
         self.rate_options = tk.Menu(self.options_menu)
         self.options_menu.add_cascade(label='Port', menu=self.port_options)
         self.options_menu.add_cascade(label='Baudrate', menu=self.rate_options)
         self.options_menu.add_command(label='Refresh Ports', command=self._refresh_menus)
-        menubar.add_cascade(menu=self.options_menu, label='Options')
-        menubar.add_command(label='Start', command=self._run_uart)
-        menubar.add_command(label='Stop', state='disabled', command=lambda: print('Stop'))
-        self.root.config(menu=menubar)
+        self.menubar.add_cascade(menu=self.options_menu, label='Options')
+        self.menubar.add_command(label='Start', command=self._run_uart)
+        self.menubar.add_command(label='Stop', state='disabled', command=self._stop_uart)
+        self.root.config(menu=self.menubar)
         # App frame setup
         app = tk.Frame(self.root)
         # TK Graph setup
-        self.chart1 = Figure(figsize=(5,5), dpi=100)
+        self.chart1 = Figure(figsize=(10,5), dpi=100)
         self.g1_axes = self.chart1.add_subplot()
-        self.graph_1_animation = animation.FuncAnimation(self.chart1, func=self.graph_1_animation_func, fargs=[self.uart_reader.channel_1], frames=1, blit=False, interval=100, repeat=True)
-        self.chart2 = Figure(figsize=(5,5), dpi=100)
+        self.chart2 = Figure(figsize=(10,5), dpi=100)
         self.g2_axes = self.chart2.add_subplot()
-        self.graph_2_animation = animation.FuncAnimation(self.chart2, func=self.graph_2_animation_func, fargs=[self.uart_reader.channel_2], frames=1, blit=False, interval=100, repeat=True)
         self.canvas1 = FigureCanvasTkAgg(figure=self.chart1, master=app)
         self.canvas2 = FigureCanvasTkAgg(figure=self.chart2, master=app)
         self.canvas1.get_tk_widget().pack()
@@ -148,21 +156,41 @@ class ADCApplication:
         app.pack()
 
     def graph_1_animation_func(self, frame_index, data):
-        print('Got:', data)
         self.g1_axes.clear()
-        sns.histplot(data=data, kde=False, ax=self.g1_axes, color='gray')
+        dataplot = sns.histplot(data=data, bins=100, kde=False, ax=self.g1_axes, color='gray')
+        dataplot.set_xlabel('Reading')
+        dataplot.set_ylabel('Count')
+        dataplot.set_title('Channel 1')
 
     def graph_2_animation_func(self, frame_index, data):
         self.g2_axes.clear()
-        sns.histplot(data=data, kde=False, ax=self.g2_axes, color='gray')
+        dataplot = sns.histplot(data=data, bins=100, kde=False, ax=self.g2_axes, color='gray')
+        dataplot.set_xlabel('Reading')
+        dataplot.set_ylabel('Count')
+        dataplot.set_title('Channel 2')
 
     def _run_uart(self):
         if not self.uart_reader.is_connected():
             self.uart_reader.start()
+            self.menubar.entryconfig(1, state='disabled')
+            self.menubar.entryconfig(2, state='normal')
+            logger.info('Started UART process.')
         else:
-            logger.error('Unable to start UART process')
+            logger.error('Unable to start UART process, is process stopped or one or more settings unset?')
+
+    def _stop_uart(self):
+        if self.uart_reader.is_connected():
+            self.uart_reader.stop()
+            self.menubar.entryconfig(1, state='normal')
+            self.menubar.entryconfig(2, state='disabled')
+            logger.info('Stopped UART process.')
+        else:
+            logger.error('Unable to stop UART process, is process running?')
 
     def run(self):
+        logger.info('Starting application...')
+        self.graph_1_animation = animation.FuncAnimation(self.chart1, func=self.graph_1_animation_func, fargs=[self.uart_reader.channel_1], frames=1, blit=False, interval=1000)
+        self.graph_2_animation = animation.FuncAnimation(self.chart2, func=self.graph_2_animation_func, fargs=[self.uart_reader.channel_2], frames=1, blit=False, interval=1000)
         self.root.mainloop()
 
 
