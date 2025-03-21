@@ -1,0 +1,239 @@
+## Required Materials
+
+* MP LAB X IDE and Compiler
+* Curiosity Nano AVR64DD32 board
+* USB to connect board to computer
+
+## Learning Objective
+
+* Using MCC Melody
+* Viewing pin configurations
+* Configuring and using the ADC
+
+## Code overview
+For this code will will use the following header files.
+
+    #include "mcc_generated_files/system/system.h"
+    #include <string.h>
+    #include <stdio.h>
+    #include <util/delay.h>
+
+We will also define the USR_LED as seen below.
+
+    #define USR_LED 5           // on board LED PF5
+
+
+We will create two global variables. The first on is the buffer for formatting the UART messages. The other one will be the software timers used for nonblocking delays. 
+
+char uart_str[80];
+volatile uint32_t timer1, timer2, timer3 = 0UL;
+
+The following functions handle timing, LED blinking, ADC sampling, UART transmission, and system tasks.
+
+void UART_WriteString(const char *message);
+void tcb_softtimer(void);
+void clear_timer1(void);
+void clear_timer2(void);
+void clear_timer3(void);
+uint32_t read_timer1(void);
+uint32_t read_timer2(void);
+uint32_t read_timer3(void);
+void blink_led(void);
+void blocking(void);
+void non_blocking(void);
+void loop_task(void);
+void sample_voltages(void);
+
+
+
+
+int16_t adc_val;
+
+For the main loop it will initialize and set up the microcontroller. It will also register a software timerback that will update the three timers. The main loop also configures the LED and the general-purpose output pin. Next it will send a startup message over UART. Onces everything is setup the main function will run the sample_voltages() function in the loop.
+
+int main(void) 
+{
+
+    SYSTEM_Initialize();
+
+    // set soft timer callback and clear_timers
+    Timer0.TimeoutCallbackRegister(tcb_softtimer);
+    clear_timer1();
+    clear_timer2();
+    clear_timer3();
+
+    PORTF_set_pin_level(5, 1); // MCC pin control
+
+    PORTC.DIR = (1 << 3); // bare metal GPIO control
+    PORTC.OUTCLR = (1 << 3);
+
+    
+    UART_WriteString("MLAB X - MCC lab3 - ADC\r\n");
+
+    while (1) 
+    {
+
+        
+        // loop_task();            
+        sample_voltages();
+
+    }
+
+}
+
+The following function uses Timer1 and sends a UART message with the loop count. It will call blink_led() function to toggle the LED.
+
+void loop_task(void) 
+{
+    static unsigned int loop_count = 0;
+
+    if (read_timer1() > 1000lu) 
+    {
+
+        clear_timer1();
+        loop_count++;
+        sprintf(uart_str, "loop count %u\r\n", loop_count);
+        UART_WriteString(uart_str);
+        blink_led();
+
+    }
+
+}
+
+This function uses timer3 for periodic ADC sampling and reads the values from ADC channel 6 and channel 7 and then formats the data and sends the results via UART.
+
+void sample_voltages(void)
+{
+    
+    static unsigned adc_sample_count = 0;
+    uint16_t chan7_cnt,chan6_cnt;
+    
+    
+    
+    if(read_timer3() > 2000lu)
+    {
+        
+        clear_timer3();
+        
+        adc_sample_count++;
+        // sample potentiometer on input on PF4/AIN20
+        chan6_cnt = ADC0_ChannelSelectAndConvert(ADC_MUXPOS_AIN6_gc);      // chan def from ioavr64dd32.h
+    
+        // sample potentiometer on input on PF5/AIN21
+        chan7_cnt = ADC0_ChannelSelectAndConvert(ADC_MUXPOS_AIN7_gc);      
+    
+        sprintf(uart_str,"sample: %d chan 6 %d chan 7 %d\r\n",adc_sample_count,chan6_cnt,chan7_cnt);
+        UART_WriteString(uart_str);
+    
+    }
+    
+}
+
+
+This functions increments loop_count, sends a message, then delays for 1 second. 
+
+void blocking(void) 
+{
+
+    static unsigned int loop_count = 0;
+
+    loop_count++;
+    sprintf(uart_str, "loop count %u\r\n", loop_count);
+    UART_WriteString(uart_str);
+
+    _delay_ms(1000);
+
+
+}
+
+This function waits for UART to be ready before sending each character. This function also uses a spinlock counter that is used for debugging.
+
+void UART_WriteString(const char *message)
+{
+    static uint16_t spinlock = 0;
+
+    for (int i = 0; i < (int) strlen(message); i++) {
+        while (!(UART.IsTxReady()))
+            spinlock++;
+        UART.Write(message[i]);
+    }
+}
+This is the function that will BLink the LED waits for 2oo ms and then turns it off.
+void blink_led(void) 
+{
+    clear_timer2();
+    PORTF.OUT &= ~(1 << 5);
+    while (read_timer2() < 200);
+    PORTF.OUT |= (1 << 5);
+
+}
+
+This function is called by Timer0 and it increments timer1, timer2, and timer3. This functions uses cli() and sei() are used to prevent the other timers interrupting and causing issues.
+
+void tcb_softtimer(void)
+{
+
+    // PORTC.OUTSET = (1 << 3);
+    cli();
+    timer1++;
+    timer2++;
+    timer3++;
+    sei();
+    // PORTC.OUTCLR = (1 << 3);
+}
+
+The Rest of the code is used to provide safe access to timer1, timer2, and timer3 using interupt locking to ensure atomic read and write operations.
+
+void clear_timer1(void)
+{
+    cli();
+    timer1 = 0;
+    sei();
+}
+
+void clear_timer2(void) 
+{
+    cli();
+    timer2 = 0;
+    sei();
+}
+
+uint32_t read_timer1(void)
+{
+    uint32_t timer1_val;
+
+    cli();
+    timer1_val = timer1;
+    sei();
+    return (timer1_val);
+}
+
+uint32_t read_timer2(void) 
+{
+    uint32_t timer2_val;
+
+    cli();
+    timer2_val = timer2;
+    sei();
+
+    return (timer2_val);
+}
+
+
+void clear_timer3(void) 
+{
+    cli();
+    timer3 = 0;
+    sei();
+}
+
+uint32_t read_timer3(void) 
+{
+    uint32_t timer3_val;
+
+    cli();
+    timer3_val = timer3;
+    sei();
+    return (timer3_val);
+
+}
