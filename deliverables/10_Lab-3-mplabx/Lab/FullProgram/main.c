@@ -51,27 +51,22 @@ void cycle_leds(void) {
 }
 
 void read_switches(void) {
-    // Requires refactoring.
+    uint8_t i2c_cmd[2] = {0x00, 0xFF};
+    size_t cmd_len = 2;
 
-    uint8_t i2c_cmd[10];
-    size_t cmd_len;
-    
-    i2c_cmd[0] = 0x00;          // iodir cmd
-    i2c_cmd[1] = 0xFF;          // all INPUTS
-    cmd_len = 2;    
     TWI0_Write(ADDR_IOEX2,&i2c_cmd[0], cmd_len);
     while(TWI0_IsBusy());
-    
-    i2c_cmd[0] = 0x06;          // gpio cmd
+
+    i2c_cmd[0] = 0x06;          // GPPU
     i2c_cmd[1] = 0xFF;
-    cmd_len = 2;
+
     TWI0_Write(ADDR_IOEX2, &i2c_cmd[0], cmd_len);
-    while(TWI0_IsBusy());        
-    
+    while(TWI0_IsBusy());
+
     while (true) {
         static uint8_t last_state = 0xFF;
         uint8_t switch_state;
-        uint8_t i2c_cmd = 0x09;          // gpio cmd
+        uint8_t i2c_cmd = 0x09;          // GPIO
         
         TWI0_Write(ADDR_IOEX2, &i2c_cmd, 1);
         while (TWI0_IsBusy());
@@ -107,5 +102,15 @@ void read_switches(void) {
             }
             UART_WriteString(uart_str);
         }   
+    }
+}
+
+void UART_WriteString(const char *message)
+{
+    for (int i = 0; i < (int) strlen(message); i++) {
+        while (!(UART.IsTxReady()))
+        {
+        };
+        (void)UART.Write(message[i]);
     }
 }
