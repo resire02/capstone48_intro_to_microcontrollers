@@ -2,6 +2,26 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: #f8f8f8;
+}
+
+img {
+    max-height: 400px;
+    width: auto;
+    display: block;
+}
+
+section {
+    display: flex;
+    margin: 1%;
+    flex-direction: column;
+    background: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
 .page-header {
     display: flex;
     justify-content: center;
@@ -11,10 +31,11 @@
     border-radius: 5px;
     font-weight: bold;
     font-size: x-large;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 
 .lab-header {
-    font-size: xx-large;
+    font-size: 3rem;
     font-weight: bold;
 }
 
@@ -26,8 +47,21 @@
     font-size: large;
 }
 
-section {
+.footer {
     display: flex;
-    padding-left: 2%;
-    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.footer a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 60px;
+    border-radius: 5px;
+    background-color: #cc242b;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
 }
