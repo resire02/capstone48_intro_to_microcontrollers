@@ -1,7 +1,7 @@
 ---
 You are reading the markdown version of Lab 0: Quick Start Guide
 
-It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio code.
 ---
 
 # Quick Start Guide

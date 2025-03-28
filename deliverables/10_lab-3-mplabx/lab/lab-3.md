@@ -28,7 +28,7 @@ In this lab, we will be communicating with both IO Expanders:
 * We will be writing to IO Expander 1 (0x25) to create a bidirectional LED chaser.  
 * We will be reading from IO Expander 2 (0x24) to detect switch presses from the MTCH1030.
 
-<img src="../Images/LabImages/0-board.jpg" alt="d" width="500"/>
+<img src="images/0-board.jpg" alt="d" width="500"/>
 
 ## 
 
@@ -301,6 +301,6 @@ Each case corresponds to a unique switch press combination, where a 0 in a bit p
 
 10. **Load Code onto Board**  
     Just like in Lab 1, save all changes to your project and click the Build for Debugging Main Project button
-    ![](../Images/LabImages/1-build.png) on the toolbar to build the project.  Then, click on the Make and Program 
-    Device Main Project button ![](../Images/LabImages/2-load.png) to send the program to the board. Navigate to 
+    ![](images/1-build.png) on the toolbar to build the project.  Then, click on the Make and Program 
+    Device Main Project button ![](images/2-load.png) to send the program to the board. Navigate to 
     Window ➡ Debugging ➡ Data Visualizer. Use the Data Visualizer to read the UART output.

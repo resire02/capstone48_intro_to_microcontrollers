@@ -1,7 +1,7 @@
 ---
 You are reading the markdown version of Lab 2: Introduction to Curiosity Nano Explorer Board
 
-It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio code.
 ---
 
 # Lab 2: Introduction to Curiosity Nano Explorer Board

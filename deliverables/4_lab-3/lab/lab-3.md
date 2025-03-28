@@ -1,7 +1,7 @@
 ---
 You are reading the markdown version of Lab 3: Important Embedded System Concepts
 
-It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio Code.
+It is recommended to read this document using a markdown supported viewer/editor such as Visual Studio code.
 ---
 
 # Lab 3: Important Embedded System Concepts

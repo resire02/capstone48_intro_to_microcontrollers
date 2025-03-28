@@ -32,7 +32,7 @@ used for the project.
 
 Another snag I ran into was finding out how to manage the pins on the board, but was able to find this after using the MCC (Microchip code configurater)
 
-![Image](../Lab/images/SelfEvalPinSettings.png)
+![Image](../lab/images/SelfEvalPinSettings.png)
 
 Here I am able to see the pins being used by the program, which will be useful going forward in any program we make with the board
 
