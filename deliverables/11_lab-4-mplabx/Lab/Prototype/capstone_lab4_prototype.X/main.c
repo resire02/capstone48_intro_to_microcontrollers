@@ -16,7 +16,7 @@
 #define VEML_IDL_CMD_REG 0x0c
 
 void UART_WriteString(const char *message);
-void cycle_leds(void);
+void read_vncl_data(void);
 void read_veml_data(void);
 
 char uart_str[80];
@@ -29,7 +29,8 @@ int main(void)
 
     while (1) 
     {
-        read_veml_data();
+        //read_veml_data();
+        read_vncl_data();
     }
 
     return 0;
@@ -99,6 +100,56 @@ void read_veml_data(void)
         
         clear_timer1();
         while(read_timer1() < 1000ul);
+    }
+}
+
+#define VNCL_I2C_ADDR 0x51
+#define VNCL_ALS_CONF_REG 0x00
+#define VNCL_PS_CONF1_CONF2_REG 0x03
+#define VNCL_DATA_PS_REG 0x08
+#define VNCL_DATA_ALS_REG 0x09
+#define VNCL_DATA_WHITE_REG 0x0a
+#define VNCL_DEVICE_INFO_REG 0x0e
+
+volatile uint16_t proximity = 0, ambient = 0, white = 0;
+
+void read_vncl_data(void)
+{
+    UART_WriteString("Setting up VNCL4200...\r\n");
+    // 0x00 enables ALS_SD in ALS_CONF_L, 0x01 is default value for ALS_CONF_H
+    uint8_t write_payload[3] = { VNCL_ALS_CONF_REG, 0x00, 0x01};
+    uint8_t read_payload[2] = { 0x00, 0x00 };
+    
+    // initialize ALS_CONF register
+    while(TWI0_IsBusy());
+    TWI0_Write(VNCL_I2C_ADDR, write_payload, 3);
+    
+    // turn on proximity sensor through PS_CONF1
+    write_payload[0] = VNCL_PS_CONF1_CONF2_REG;
+    write_payload[1] = 0x00; // PS_CONF1
+    write_payload[2] = 0x00; // PS_CONF2
+    while(TWI0_IsBusy());
+    TWI0_Write(VNCL_I2C_ADDR, write_payload, 3);
+    
+    while (1)
+    {
+        // grab MP Version from ID_L register, also doesn't work if not the only code in the loop
+        //write_payload[0] = VNCL_DEVICE_INFO_REG;
+        //while(TWI0_IsBusy());
+        //TWI0_WriteRead(VNCL_I2C_ADDR, write_payload, 1, read_payload, 2);
+        //sprintf(uart_str, "This value should be 88: %d\n\r", read_payload[0]);
+        //UART_WriteString(uart_str);
+        
+        // read proximity data from 
+        write_payload[0] = VNCL_DATA_PS_REG;
+        TWI0_WriteRead(VNCL_I2C_ADDR, write_payload, 1, read_payload, 2);
+        proximity = (read_payload[1] << 8) | read_payload[0];
+        
+        sprintf(uart_str, "PROX: %u\n\r", proximity);
+        UART_WriteString(uart_str);
+        
+        clear_timer1();
+        while(read_timer1() < 100ul);
     }
 }
 

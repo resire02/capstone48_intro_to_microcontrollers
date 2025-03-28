@@ -46,6 +46,7 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>systimer.h</itemPath>
+      <itemPath>vcnl.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
