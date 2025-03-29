@@ -1,30 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Arduino: Intro to Curiosity Explorer</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="globals.css">
-    </head>
-    <body>
-        <header>
-            <h1>Introduction to Microcontrollers</h1>
-        </header>
-        <main>
-            <h1>Introduction to Curiosity Nano Explorer Board</h1>
-            <section>
-                <h2>Subsection</h2>
-                <p>text</p>
-            </section>
-        </main>
-        <footer>
-            <div>
-                <p>Previous Lab:</p>
-                <a href="arduino_lab_1.html">Blink an LED</a>
-            </div>
-            <div>
-                <p>Next Lab:</p>
-                <a href="arduino_lab_3.html">Embedded System Concepts</a>
-            </div>
-        </footer>
-    </body>
+
+<head>
+    <title>Arduino: Intro to Curiosity Explorer</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../globals.css">
+</head>
+
+<body>
+    <header class="page-header">
+        <h1>Introduction to Microcontrollers</h1>
+    </header>
+    <main>
+        <h1 class="lab-header">Getting Started</h1>
+        <section>
+            <h2 class="section-header-title">Required Materials</h2>
+            <p>
+                This lab requires the following materials:
+            <ul class="bullet-list">
+                <li>A computer with Arduino IDE installed (with DXCore libraries)</li>
+                <li>AVR64DD32 Curiosity Nano</li>
+                <li>EV58G97A Curiosity Explorer Board</li>
+                <li>Standard USB to Micro USB cable</li>
+            </ul>
+
+            This lab was designed to work with Windows operating systems. For other operating systems, steps may
+            differ from what is listed in this lab manual.
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Learning Objective</h2>
+            <p>
+                This lab will introduce you to the Curiosity Nano Explorer board, starting with an in-depth look at
+                three essential components:
+
+            <ol class="bullet-list">
+                <li>The <b>Amber LEDs</b> (MCP23008).</li>
+                <li>The <b>Digital Addressable LEDs</b> (WS2812 RGB).</li>
+                <li>The <b>OLED Display</b> (SSD1306).</li>
+            </ol>
+
+            By the end of this lab, you will be familiar with setting up and interacting with each of these components
+            on the Curiosity Explorer.
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Intro to Curiosity Nano Explorer Board</h2>
+            <p>
+                The Curiosity Nano Explorer Board is a versatile development platform designed for rapid prototyping
+                and learning. It supports all Curiosity Nano boards and features a variety of onboard components, making
+                it easier for users to learn how to control microcontrollers and interface them with sensors,
+                peripherals,
+                and output devices. This board is ideal for students, hobbyists, and developers seeking hands-on
+                experience
+                in embedded systems and IoT applications.
+
+                The Explorer Board offers the following key features:
+
+            <ul class="bullet-list">
+                <li><i>Remappable Pinout</i>:</li>
+                <ul>
+                    <li>Allows flexible configuration of pin assignments to adapt to various project requirements.</li>
+                </ul>
+                <li><i>On-Board Peripherals</i>:</li>
+                <ul>
+                    <li>Communication: USB-to-UART/I2C bridge and I2C I/O expanders for reliable data transmission.</li>
+                    <li>Power Management: Includes a power monitor, voltage references, and power switches to manage and
+                        monitor power usage efficiently.</li>
+                    <li>Sensors: Features a temperature sensor, microphone, touch controller, and light sensor for
+                        environmental data collection and interaction.</li>
+                </ul>
+                <li><i>Output Devices</i>:</li>
+                <ul>
+                    <li>Equipped with LEDs, an OLED display, a speaker, digital-to-analog converters, and servo motor
+                        drivers,
+                        allowing users to create interactive outputs.</li>
+                </ul>
+                <li><i>Connectivity Options</i>:</li>
+                <ul>
+                    <li>Offers Grove I2C, mikroBUS, Qwiic I2C connectors, and a MicroSD card slot, providing flexibility
+                        in connectivity for external devices and modules.</li>
+                </ul>
+                <li><i>Power Supply</i>:</li>
+                <ul>
+                    <li>Powered via an onboard USB Type-C connector, with external power options and various power
+                        management ICs to support diverse power requirements.
+                        In this lab, we will explore the setup of the Explorer Board and learn how to use I2C to control
+                        LEDs, digitally addressable LEDs, and an LCD screen, building a foundation for understanding
+                        microcontroller-based systems.</li>
+                </ul>
+            </ul>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Setting Up and Working with the Explorer Board</h2>
+            <p>
+                Setting up your Curiosity Nano Explorer Board is a straightforward process.
+
+            <ul class="bullet-list">
+                <li><i>Installing the Curiosity Nano</i>:</li>
+                <ul>
+                    <li>Align the Boards: Place your Curiosity Nano board at the top of the Explorer Board, ensuring the
+                        USB connector faces the top edge.</li>
+                    <li>Align the Pins: Align the pins of the Curiosity Nano with the topmost female header pins on the
+                        Explorer Board.</li>
+                    <li>Secure the Connection: Gently push the Curiosity Nano onto the header pins to establish a secure
+                        connection.</li>
+                    <img src="../../deliverables/3_lab-2/lab/images/boardpositioning.png">
+                </ul>
+                <li><i>Understanding the Pin Connections</i>:</li>
+                <ul>
+                    <li>Peripheral Connections: The Explorer Board connects the Curiosity Nano's pins to various
+                        peripherals. Refer to the markings on either side of the female header pins to identify these
+                        connections.</li>
+                    <li>Pin Jumpers: The pin jumpers link peripherals to the Curiosity Nano.</li>
+                    <img src="../../deliverables/3_lab-2/lab/images/boardpinconnections.png">
+                </ul>
+                <li><i>Remapping Pins</i>:</li>
+                <ul>
+                    <li><i>If you need to use a peripheral that doesn't have a direct connection to your Curiosity Nano,
+                            you can remap pins.</i>:</li>
+                    <ul>
+                        <li>Disconnect the Jumper: Remove the pin jumper from the peripheral you want to remap.</li>
+                        <li>Connect the Wire: Use a jumper wire to connect the desired pin on the Curiosity Nano to the
+                            corresponding pin on the peripheral.</li>
+                    </ul>
+                </ul>
+                <img src="../../deliverables/3_lab-2/lab/images/CNANORemap.png">
+            </ul>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Serial Communication - I2C</h2>
+            <p>
+                The Explorer features an I2C bus with several attached devices and external connectivity options. All
+                connected devices are compatible with Standard Mode
+                (100 kHz) and Fast Mode (400 kHz) I2C. The bus is designed to meet the rise-time requirements for both
+                modes. The SDA and SCL signals are connected to the COM section of the CNANO socket.
+
+                Two components in this lab can be controlled via the I2C Bus.
+            <ul class="bullet-list">
+                <li>The Amber LED Row can be controlled from the I/O Expander 1 via the I2C Bus.</li>
+                <li>The OLED Display is directly connected to the I2C Bus.</li>
+            </ul>
+            </p>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="../index.html">
+            Home
+        </a>
+        <a href="arduino_lab_1.html">
+            Next
+        </a>
+    </footer>
+</body>
+
 </html>
