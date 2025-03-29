@@ -35,12 +35,11 @@
 #include "mcc_generated_files/system/system.h"
 #include <string.h>
 #include <stdio.h>
-#include "simpletimer.h"
+#include "systimer.h"
 #include "vcnl4200.h"
 #include "mcp23008.h"
 #include "veml3328.h"
 
-#define UART UART0
 #define PROXIMITY_THRESHOLD 100
 
 void UART_WriteString(const char *message);
@@ -96,10 +95,10 @@ void UART_WriteString(const char *message)
     static uint16_t spinLock = 0;
     for(int i = 0; i < (int)strlen(message); i++)
     {
-        while(!UART.IsTxReady())
+        while(!UART0.IsTxReady())
         {
             spinLock++;
         };
-        (void) UART.Write(message[i]);
+        (void) UART0.Write(message[i]);
     }
 }

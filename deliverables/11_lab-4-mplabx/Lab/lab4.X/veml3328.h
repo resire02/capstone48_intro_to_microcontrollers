@@ -1,8 +1,5 @@
-/* 
- * File:   veml3328.h
- * Author: howfe
- *
- * Created on March 29, 2025, 2:58 AM
+/*
+ * VEML3328 Driver
  */
 
 #ifndef VEML3328_H

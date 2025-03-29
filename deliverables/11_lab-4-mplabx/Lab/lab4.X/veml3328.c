@@ -7,7 +7,6 @@
 #define VEML_GRN_CMD_REG 0x06
 #define VEML_BLU_CMD_REG 0x07
 #define VEML_IFR_CMD_REG 0X08
-#define VEML_IDL_CMD_REG 0x0c
 
 static uint8_t read_data[2] = { 0x00, 0x00 };
 

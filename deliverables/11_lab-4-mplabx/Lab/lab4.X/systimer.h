@@ -1,5 +1,9 @@
-#ifndef SIMPLETIMER_H
-#define	SIMPLETIMER_H
+/*
+ * Interrupt based timer
+ */
+
+#ifndef SYSTIMER_H
+#define	SYSTIMER_H
 
 #ifdef	__cplusplus
 extern "C" {
@@ -13,5 +17,5 @@ uint32_t read_timer();
 }
 #endif
 
-#endif	/* SIMPLETIMER_H */
+#endif	/* SYSTIMER_H */
 

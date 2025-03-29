@@ -1,3 +1,7 @@
+/*
+ * VCNL4200 Driver
+ */
+
 #ifndef VCNL4200_H
 #define	VCNL4200_H
 
