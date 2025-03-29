@@ -38,6 +38,7 @@
 #include "simpletimer.h"
 #include "vcnl4200.h"
 #include "mcp23008.h"
+#include "veml3328.h"
 
 #define UART UART0
 #define PROXIMITY_THRESHOLD 100
@@ -52,6 +53,7 @@ int main(void)
     Timer0.TimeoutCallbackRegister(timer_callback);
     vcnl_init();
     mcp_leds_init();
+    veml_init();
 
     UART_WriteString("Starting Program...\n\r");
     clear_timer();
@@ -59,12 +61,15 @@ int main(void)
     
     uint16_t proximity = 0;
     uint8_t led = 0, write_led = 0, i;
+    uint16_t color[3] = { 0x00, 0x00, 0x00 };
     
     while(1)
     {
+        // read proximity value
         proximity = vncl_read_ps();
         led = (uint8_t) (proximity / MCP_LED_CHUNK_SIZE);
         
+        // enable expander IO LEDs based on proximity value
         write_led = proximity > PROXIMITY_THRESHOLD ? 0x80 : 0x00;
         for (i = 0; i < led; i++)
         {
@@ -73,11 +78,14 @@ int main(void)
         }
         mcp_write_leds(write_led);
         
-        sprintf(uart_str, "PROXIMITY: %u\n\r", proximity);
-        UART_WriteString(uart_str);
-        
-        clear_timer();
-        while(read_timer() < 10);
+        // read color values every 100ms
+        if (read_timer() > 100)
+        {
+            clear_timer();
+            veml_read_colors(color);
+            sprintf(uart_str, "R: %u\tG: %u\tB: %u\t\n\r", color[0], color[1], color[2]);
+            UART_WriteString(uart_str);
+        }
     }
 }
 

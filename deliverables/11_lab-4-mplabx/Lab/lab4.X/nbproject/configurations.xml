@@ -48,6 +48,7 @@
       <itemPath>simpletimer.h</itemPath>
       <itemPath>vcnl4200.h</itemPath>
       <itemPath>mcp23008.h</itemPath>
+      <itemPath>veml3328.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -102,6 +103,7 @@
       <itemPath>simpletimer.c</itemPath>
       <itemPath>vcnl4200.c</itemPath>
       <itemPath>mcp23008.c</itemPath>
+      <itemPath>veml3328.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
