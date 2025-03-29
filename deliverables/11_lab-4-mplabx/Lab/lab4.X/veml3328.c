@@ -13,11 +13,11 @@ static uint8_t read_data[2] = { 0x00, 0x00 };
 
 void veml_init()
 {
-    static uint8_t write_payload[3] = { 0x00, 0x00, 0x00 };
+    static uint8_t write_data[3] = { 0x00, 0x00, 0x00 };
     
     // write default values into VEML3328
     while(TWI0_IsBusy());
-    TWI0_Write(VEML_I2C_ADDR, write_payload, 3);
+    TWI0_Write(VEML_I2C_ADDR, write_data, 3);
 }
 
 void veml_read_colors(uint16_t* color)
@@ -41,4 +41,21 @@ void veml_read_colors(uint16_t* color)
     while(TWI0_IsBusy());
     TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
     color[2] = (read_data[1] << 8) | read_data[0];
+}
+
+void veml_read_brightness(uint16_t* brightness)
+{
+    static uint8_t write_cmd;
+    
+    // read C_LSB and C_MSB registers
+    write_cmd = VEML_CLR_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    brightness[0] = (read_data[1] << 8) | read_data[0];
+    
+    // read IR_LSB and IR_MSB
+    write_cmd = VEML_IFR_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    brightness[1] = (read_data[1] << 8) | read_data[0];
 }

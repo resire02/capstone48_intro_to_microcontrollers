@@ -55,13 +55,14 @@ int main(void)
     mcp_leds_init();
     veml_init();
 
-    UART_WriteString("Starting Program...\n\r");
+    UART_WriteString("MPLAB X Lab 4\n\r");
     clear_timer();
     while(read_timer() < 100);
     
     uint16_t proximity = 0;
     uint8_t led = 0, write_led = 0, i;
     uint16_t color[3] = { 0x00, 0x00, 0x00 };
+    uint16_t light[2] = { 0x00, 0x00 };
     
     while(1)
     {
@@ -83,7 +84,8 @@ int main(void)
         {
             clear_timer();
             veml_read_colors(color);
-            sprintf(uart_str, "R: %u\tG: %u\tB: %u\t\n\r", color[0], color[1], color[2]);
+            veml_read_brightness(light);
+            sprintf(uart_str, "R: %u\tG: %u\tB: %u\tBRT: %u\tIFR: %u\n\r", color[0], color[1], color[2], light[0], light[1]);
             UART_WriteString(uart_str);
         }
     }
