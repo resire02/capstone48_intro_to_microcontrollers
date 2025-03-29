@@ -3,28 +3,121 @@
     <head>
         <title>Arduino: Blink an LED</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="globals.css">
+        <link rel="stylesheet" href="../globals.css">
     </head>
     <body>
-        <header>
+        <header class="page-header">
             <h1>Introduction to Microcontrollers</h1>
         </header>
         <main>
-            <h1>Blink an LED!</h1>
+            <h1 class="lab-header">Lab1: Blink an LED!</h1>
             <section>
-                <h2>Subsection</h2>
-                <p>text</p>
+                <h2 class="section-header-title">Required Materials</h2>
+                <p>
+                    This lab requires the following materials:
+                <ul class="bullet-list">
+                    <li>A desktop or laptop computer</li>
+                    <li>Arduino IDE (Go to <a href="https://www.arduino.cc/en/software">https://www.arduino.cc/en/software</a>
+                        if not installed already)</li>
+                    <li>DXCore support library</li>
+                    <li>AVR64DD32 Curiosity Nano Evaluation Kit</li>
+                    <li>Standard USB to Micro USB cable (or a Micro-AB cable) with data transfer support</li>
+                </ul>
+                    This lab was designed to work with Windows operating systems. For other operating systems, steps
+                    may differ from what is listed in this lab manual.
+            </section>
+            <section>
+                <h2 class="section-header-title">Learning Objectives</h2>
+                <p>
+                    This lab is intended to give you an understanding of how to deploy a basic program to your Curiosity
+                    Nano board. Along the way, you will learn:
+                <ul>
+                    <li>How to identify pins on the Curiosity Nano board (and their associated number in code)</li>
+                    <li>A few basic methods common to almost all programs run on the board</li>
+                    <li>How to blink an on-board LED.</li>
+                </ul>
+                Throughout this lab, you will gain a greater understanding of how to work with the board through Arduino
+                IDE, deploy code to the Curiosity Nano board, and identify features on the board.
+            </section>
+            <section>
+                <h2 class="section-header-title">The "Sketch" File</h2>
+                <p>
+                    A “sketch” file is a program that is uploaded onto an Arduino board by Arduino IDE. Sketch files
+                    contain functions, which are grouped lines of code that can be called from anywhere in the program.
+                    A function contains a header, which details the function name and what values it requires, and a
+                    body, that details what code should be run when the function is called.
+                <p>
+                    <img src="../../deliverables/2_lab-1/lab/images/sketch-functions-visual-explanation.png">
+                <p>
+                    There are 5 functions that are available to all Arduino sketches:
+                <ul>
+                    <li><b>setup</b> – runs once during program execution.</li>
+                    <li><b>loop</b> – runs infinitely during program execution.</li>
+                    <li><b>pinMode</b> – labels a specific pin as a source to read from (input) or as a source to write to (output).</li>
+                    <li><b>digitalWrite</b> – sets a pin’s voltage to either LOW (0V) or HIGH (5V or 3.3V).</li>
+                    <li><b>delay</b> – tells the sketch to wait a specified number of milliseconds before running the next line.</li>
+                </ul>
+                <p>
+                    The <b>setup</b> and <b>loop</b> functions need to be defined with a function body, while the
+                    <b>pinMode</b>, <b>digitalWrite</b>, and <b>delay</b> functions can be called without defining
+                    a function body. This is because setup and loop are special functions that are called by the
+                    Arduino program and contain the main functionality of the sketch.
+            </section>
+            <section>
+                <h2 class="section-header-title">Pin Basics</h2>
+                <p>
+                    The Curiosity Nano board we are using for this lab has 28 pins that can be controlled by the
+                    Arduino. Each pin serves different functions. In Lab 1, we will focus on GPIO pins. GPIO stands for
+                    <b>General-Purpose Input/Output</b>. These pins can either send or read binary values (1's and 0's),
+                    which allows them to control devices like LEDs, read button states, or communicate with external devices.
+                <p>
+                    Of the 28 pins, 25 can function as GPIO pins, with pin PF5 tied to an onboard LED, making it usable
+                    only as an output pin. The GPIO pins are shown in gray in the pinout image below.
+                <p>
+                    <img src="../../deliverables/2_lab-1/lab/images/pinout.png">
+                <p>
+                    When using GPIO pins in Arduino, we need to define each pin before using it. Since Arduino can
+                    program various boards, each pin is assigned a number. For our board, the pins are numbered 0 to 27.
+                    The corresponding pin numbers can be seen below:
+                <p>
+                    #define PIN_PA0 (0)<br>
+                    #define PIN_PA1 (1)<br>
+                    #define PIN_PA2 (2)<br>
+                    #define PIN_PA3 (3)<br>
+                    #define PIN_PA4 (4)<br>
+                    #define PIN_PA5 (5)<br>
+                    #define PIN_PA6 (6)<br>
+                    #define PIN_PA7 (7)<br>
+                    #define PIN_PC0 (8)<br>
+                    #define PIN_PC1 (9)<br>
+                    #define PIN_PC2 (10)<br>
+                    #define PIN_PC3 (11)<br>
+                    #define PIN_PD0 (12) // NOT_A_PIN<br>
+                    #define PIN_PD1 (13)<br>
+                    #define PIN_PD2 (14)<br>
+                    #define PIN_PD3 (15)<br>
+                    #define PIN_PD4 (16)<br>
+                    #define PIN_PD5 (17)<br>
+                    #define PIN_PD6 (18)<br>
+                    #define PIN_PD7 (19)<br>
+                    #define PIN_PF0 (20)<br>
+                    #define PIN_PF1 (21)<br>
+                    #define PIN_PF2 (22)<br>
+                    #define PIN_PF3 (23)<br>
+                    #define PIN_PF4 (24)<br>
+                    #define PIN_PF5 (25)<br>
+                    #define PIN_PF6 (26) // RESET<br>
+                    #define PIN_PF7 (27) // UPDI<br>
+
             </section>
         </main>
-        <footer>
-            <div>
-                <p>Previous Lab:</p>
-                <a href="arduino_lab_0.html">Getting Started</a>
-            </div>
-            <div>
-                <p>Next Lab:</p>
-                <a href="arduino_lab_2.html">Intro to Curiosity Explorer</a>
-            </div>
+        <footer class="footer">
+            <a href="arduino_lab_0.html">
+                Back
+            </a>
+            <a href="arduino_lab_2.html">
+                Next
+            </a>
         </footer>
     </body>
 </html>
