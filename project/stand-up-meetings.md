@@ -48,3 +48,15 @@
 | Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                                   | 
 |-------------|--------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | 6           | 03/03/2025   | GA, FL, TW, KL | Discussed the completion of Labs 2 and 3, agreeing to have deliverables for both by Saturday. Additionally, discussed project-related tasks. |
+
+### Sprint 9
+
+| Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                | 
+|-------------|--------------|--------------|---------------------------------------------------------------------------|
+| --          | --           | --           | For this sprint, we only had 3 days to work asynchronously on our project |
+
+### Sprint 10
+
+| Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                                                                                                                            | 
+|-------------|--------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 7           | 03/29/2025   | GA, FL, KL   | Discussed the need to modify sponsor code in Lab 2 and improve the explanation, as well as migrating it to Google Docs. Also addressed issues with migrating old lab projects to new projects in MPLABX, noting that it isn’t working |
