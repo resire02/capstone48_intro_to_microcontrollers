@@ -1,3 +1,24 @@
+## Project Setup
+This section will briefly describe how to set up the project resources for this lab.
+
+1. In the top left corner of MPLAB X IDE, click on File 🠖 New Project. Select Microchip Embedded and Application Project(s) then click on Next. Ensure that the device is set to AVR64DD32 and the tool is set to the Curiosity Nano then click Next. Select the latest XC8 compiler and click Next. Type “mplab_lab4” for the Project Name and click Finish.
+
+2. On the MPLAB X IDE toolbar, click on the MCC icon to open the Code Configurator.Using the Device Resources tab, add the following resources:
+  - UART – set to USART0 and change the Baudrate to 115200
+  - UART Example – select UART Write String and set it to Polled
+  - Timer – set the timer to TCB0
+  - I2C_Host – leave everything as default
+
+![](./images/setup.png)
+
+3. Click on the settings icon next to the Interrupt Manager, then enable Global Interrupt Enable.
+
+4. In the Pin Grid View, lock TWI0 SCL & SDA for Port A pins 2 & 3 and lock USART0 RXD & TXD for Port D pins 4 & 5.
+
+![](./images/pin_view.png)
+
+5. In the Project Resources Tab, click on Generate to create the system resource files.
+
 ## Programming the VEML3328 and VCNL4200
 This section will walk through the programming section of the lab. The project can be found in <PUT_PATH_HERE> in the project files.
 
