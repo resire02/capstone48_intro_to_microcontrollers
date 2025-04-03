@@ -38,3 +38,5 @@
 **/Lab/**/.generated_files/
 **/Lab/**/mcc_generated_files/
 **/Lab/**/debug/
+
+.idea/**
