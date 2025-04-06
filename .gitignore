@@ -1,42 +1,22 @@
-.vscode/
+# Visual Studio Code local configuration files
+.vscode/settings.json
 
-# python env files
+# Python Virtual Environments
 **/.venv/
 
-# python log files
+# Log files
 **/*.log
 
-# MPLAB X IDE build files
-**/Lab/**/*.d
-**/Lab/**/*.pre
-**/Lab/**/*.p1
-**/Lab/**/*.lst
-**/Lab/**/*.sym
-**/Lab/**/*.obj
-**/Lab/**/*.o
-**/Lab/**/*.sdb
-**/Lab/**/*.obj.dmp
-**/Lab/**/*.mk
-**/Lab/**/*.map
-**/Lab/**/*.properties
-**/Lab/**/*.production
-**/Lab/**/*.debug
-**/Lab/**/*.log
-**/Lab/**/*.log.inx
-**/Lab/**/html/
-**/Lab/**/nbproject/private/
-**/Lab/**/nbproject/Package-*.bash
-**/Lab/**/build/
-**/Lab/**/nbbuild/
-**/Lab/**/dist/
-**/Lab/**/nbdist/
-**/Lab/**/nbactions.xml
-**/Lab/**/nb-configuration.xml
-**/Lab/**/funclist
-**/Lab/**/nbproject/Makefile-*
-**/Lab/**/disassembly/
-**/Lab/**/.generated_files/
-**/Lab/**/mcc_generated_files/
-**/Lab/**/debug/
+# MPLAB X IDE build artifacts
+**/[Cc]ode/**/.generated_files
+**/[Cc]ode/**/build
+**/[Cc]ode/**/debug
+**/[Cc]ode/**/dist
+**/[Cc]ode/**/motorbench
+**/[Cc]ode/**/nbproject/Makefile-*
+**/[Cc]ode/**/nbproject/Package-*
+**/[Cc]ode/**/nbproject/private
+**/[Cc]ode/**/defmplabxtrace.log*
 
+# IntelliJ IDEA files
 .idea/**
