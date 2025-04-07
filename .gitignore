@@ -17,6 +17,7 @@
 **/[Cc]ode/**/nbproject/Package-*
 **/[Cc]ode/**/nbproject/private
 **/[Cc]ode/**/defmplabxtrace.log*
+**/[Cc]ode/**/queuelogs
 
 # IntelliJ IDEA files
 .idea/**
