@@ -302,7 +302,7 @@ void loop() {
                 <p>On the Explorer Board, you will find an RGB LED connected to those PWM outputs. We will be utilizing it to evaluate the functionality of PWM generation.</p>
                 
                 <figure>
-                    <img src="./images/img.png" alt="Curiosity Nano Explorer Board">
+                    <img src="../../deliverables/4_lab-3/lab/images/img.png" alt="Curiosity Nano Explorer Board">
                     <figcaption>Curiosity Nano Explorer Board</figcaption>
                 </figure>
 
@@ -315,7 +315,7 @@ void loop() {
 
                 <p>This bit field controls the pin positions for TCA0 signals.</p>
                 <figure>
-                    <img src="./images/bit_field.png" alt="PORTMUX bit field">
+                    <img src="../../deliverables/4_lab-3/lab/images/bit_field.png" alt="PORTMUX bit field">
                     <figcaption>PORTMUX bit field</figcaption>
                 </figure>
 
@@ -326,7 +326,7 @@ void loop() {
                 <p>This sketch uses analogWrite to simulate an analog signal with PWM, where the perceived voltage is controlled by adjusting the duty cycle of the signal. For example, a 50% duty cycle (pin HIGH for half the time and LOW for the other half) simulates half the maximum voltage. If the pin is connected to a device like an LED or a motor, the rapid switching is perceived as a dimmer LED or a slower motor speed because of the averaging effect. In Arduino, the analogWrite function is used to output a PWM signal to a specified pin with a certain duty cycle. The graphic below illustrates how analogWrite() uses a value in the range of 0 to 255 to control the duty cycle.</p>
                 
                 <figure>
-                    <img src="./images/analogWrite.png" alt="analogWrite duty cycle">
+                    <img src="../../deliverables/4_lab-3/lab/images/analogWrite.png" alt="analogWrite duty cycle">
                     <figcaption>analogWrite duty cycle</figcaption>
                 </figure>
 
@@ -424,7 +424,7 @@ int outputValue = 0;</code></pre>
                 <p>Please open the Library Manager and search for Dx PWM. Download and install the library.</p>
                 
                 <figure>
-                    <img src="./images/dx_pwm_library.png" alt="Dx_PWM Library">
+                    <img src="../../deliverables/4_lab-3/lab/images/dx_pwm_library.png" alt="Dx_PWM Library">
                     <figcaption>Dx_PWM Library</figcaption>
                 </figure>
                 
@@ -516,7 +516,7 @@ char dashLine[] = "======================================";</code></pre>
                 <p>In order to translate this continuous data into digital data, 'breakpoints' are set in order to determine how to round the continuous data to fit the digital version. In the below graph you can see an example of this, where values are simply rounded up or down depending on if the value is equal to the actual breakpoint.</p>
                 
                 <figure>
-                    <img src="./images/ADC.jpg" alt="ADC example graph">
+                    <img src="../../deliverables/4_lab-3/lab/images/ADC.jpg" alt="ADC example graph">
                     <figcaption>ADC example graph (from: <a href="https://www.microcontrollerboard.com/analog-to-digital-converter.html">Microcontroller Board</a>)</figcaption>
                 </figure>
                 
@@ -675,7 +675,7 @@ Adafruit_MCP23008 mcp_leds;</code></pre>
                 <ol>
                     <li>Create a new sketch and navigate to the Library Manager on the left hand side. Search for "mcp4821" and install the MCP_DAC library by Rob Tillaart.
                         <figure>
-                            <img src="./images/mcp-dac-library-download.png" alt="MCP_DAC Library Download">
+                            <img src="../../deliverables/4_lab-3/lab/images/mcp-dac-library-download.png" alt="MCP_DAC Library Download">
                             <figcaption>MCP_DAC Library Download</figcaption>
                         </figure>
                     </li>
@@ -767,7 +767,7 @@ Adafruit_MCP23008 mcp_leds;</code></pre>
                     <li>Print the contents of the first ten cells to see the result of the previous step. Refer back to step 4 on how to do this.</li>
                     <li>Set the port to the Arduino Explorer and the programmer under Tools, and Upload Using Programmer. Go to Tools → Serial Monitor and set the rate to 115,200 to see the output of the program. Rerun the program by pressing the reset button on the Curiosity Nano.
                         <figure>
-                            <img src="./images/eeprom-lab-output.png" alt="EEPROM Lab Output">
+                            <img src="../../deliverables/4_lab-3/lab/images/eeprom-lab-output.png" alt="EEPROM Lab Output">
                             <figcaption>EEPROM Lab Output</figcaption>
                         </figure>
                     </li>
