@@ -1,33 +1,39 @@
 import logging
+import math
 import re
 import threading
 import tkinter as tk
 import matplotlib.animation as animation
+from matplotlib.ticker import LinearLocator
 import seaborn as sns
 import serial
 import serial.tools.list_ports_windows as list_ports
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-APP_NAME = "ADC Live Plotter"
+APP_NAME = "ADC Visualizer"
 logger = logging.getLogger(APP_NAME)
 logging.basicConfig(
-    filename="adc.log",
+    filename="adc_visualizer.log",
     level=logging.INFO,
     format="[%(asctime)s - %(name)s]: [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+READING_MAX = 4096
+BINS = 64
 
 
 class UARTDataReader:
     def __init__(self):
-        self._pattern = r"chan \d{1} (\d+)"
+        self._pattern = r"chan \d{1} (\d+) chan \d{1} (\d+)"
         self._baudrate = None
         self._port = None
         self.channel_1 = []
         self.channel_2 = []
         self._uart_thread = None
         self._is_connected = False
+        self.__g1_stats = None
+        self.__g2_stats = None
 
     def set_port(self, port):
         if not self._is_connected:
@@ -47,6 +53,51 @@ class UARTDataReader:
             return True
         return False
 
+    def clear_stored_data(self):
+        if not self._is_connected:
+            self.channel_1.clear()
+            self.channel_2.clear()
+
+    def __stat_init(self):
+        self.__c1_min = READING_MAX
+        self.__c1_max = 0
+        self.__c1_avg = None
+        self.__c2_min = READING_MAX
+        self.__c2_max = 0
+        self.__c2_avg = None
+
+    def __update_stats(self, c1_val, c2_val):
+        if c1_val < self.__c1_min:
+            self.__c1_min = c1_val
+        if c1_val > self.__c1_max:
+            self.__c1_max = c1_val
+        if self.__c1_avg is None:
+            self.__c1_avg = c1_val
+        else:
+            # https://stackoverflow.com/questions/12636613/how-to-calculate-moving-average-without-keeping-the-count-and-data-total
+            self.__c1_avg = (self.__c1_avg * (len(self.channel_1) - 1) + c1_val) / len(self.channel_1)
+        self.__g1_stats[0].set(f'Min: {self.__c1_min}')
+        self.__g1_stats[1].set(f'Max: {self.__c1_max}')
+        self.__g1_stats[2].set(f'Avg: {math.floor(self.__c1_avg)}')
+        logger.info(
+            f"Updated channel 1 stats: MIN: {self.__c1_min} MAX: {self.__c1_max} AVG: {self.__c1_avg}"
+        )
+        if c2_val < self.__c2_min:
+            self.__c2_min = c2_val
+        if c2_val > self.__c2_max:
+            self.__c2_max = c2_val
+        if self.__c2_avg is None:
+            self.__c2_avg = c2_val
+        else:
+            # https://stackoverflow.com/questions/12636613/how-to-calculate-moving-average-without-keeping-the-count-and-data-total
+            self.__c2_avg = (self.__c2_avg * (len(self.channel_2) - 1) + c2_val) / len(self.channel_2)
+        self.__g2_stats[0].set(f'Min: {self.__c2_min}')
+        self.__g2_stats[1].set(f'Max: {self.__c2_max}')
+        self.__g2_stats[2].set(f'Avg: {math.floor(self.__c2_avg)}')
+        logger.info(
+            f"Updated channel 2 stats: MIN: {self.__c2_min} MAX: {self.__c2_max} AVG: {self.__c2_avg}"
+        )
+        
     def read_adc_thread(self):
         try:
             logger.info(
@@ -61,21 +112,17 @@ class UARTDataReader:
                         uart_incoming_data = (
                             uart.readline().decode("utf-8").replace("\n", "")
                         )
-                        uart_match = re.findall(self._pattern, uart_incoming_data)
+                        uart_match = re.search(self._pattern, uart_incoming_data)
                         if uart_match is not None:
                             try:
-                                channel_reads = [int(x) for x in uart_match[:2]]
-                                logger.info(f"Received data: {channel_reads}")
-                                if len(channel_reads) >= 2:
-                                    self.channel_1.append(channel_reads[0])
-                                    self.channel_2.append(channel_reads[1])
-                                else:
-                                    logger.warning(
-                                        "Unable to parse channel readings, are you using the right baudrate?"
-                                    )
+                                ch1_read, ch2_read = (int(x) for x in uart_match.groups()[:2])
+                                logger.info(f"Received data: [{ch1_read}, {ch2_read}]")
+                                self.channel_1.append(ch1_read)
+                                self.channel_2.append(ch2_read)
+                                self.__update_stats(ch1_read, ch2_read)
                             except ValueError:
                                 logger.warning(
-                                    "Failed to parse channel readings, is the pattern valid?"
+                                    "Unable to parse channel readings, are you using the right baudrate?"
                                 )
         except serial.SerialException as e:
             logger.error(f"Failed to open connection to {self._port}: {e}")
@@ -83,9 +130,12 @@ class UARTDataReader:
             logger.info("Exiting ADC data thread...")
             self._is_connected = False
 
-    def start(self):
+    def start(self, g1_stats, g2_stats):
         if self._pattern is None or self._baudrate is None or self._port is None:
             raise ValueError()
+        self.__g1_stats = g1_stats
+        self.__g2_stats = g2_stats
+        self.__stat_init()
         self._uart_thread = threading.Thread(target=self.read_adc_thread, daemon=True)
         self._uart_thread.start()
 
@@ -139,6 +189,11 @@ class ADCApplication:
         else:
             logger.warning("Cannot set baudrate, please stop the live graphing first")
 
+    def __clear_graphs(self):
+        self.uart_reader.clear_stored_data()
+        self.__g1_axes.clear()
+        self.__g2_axes.clear()
+
     def __init_gui(self):
         # Root config
         self.__root.title(APP_NAME)
@@ -152,6 +207,14 @@ class ADCApplication:
         self.__options_menu.add_cascade(label="Baudrate", menu=self.__rate_options)
         self.__options_menu.add_command(
             label="Refresh Ports", command=self._refresh_menus
+        )
+        self.__options_menu.add_separator()
+        self.__options_menu.add_command(
+            label="Clear Graphs", command=self.__clear_graphs
+        )
+        self._enable_full_range = tk.BooleanVar(self.__root, value=False)
+        self.__options_menu.add_checkbutton(
+            label="Show Full Range", variable=self._enable_full_range
         )
         self.__options_menu.add_command(
             label="Set Pattern (Advanced)", command=self.__set_pattern
@@ -171,15 +234,40 @@ class ADCApplication:
         self.__g2_axes = self.__chart2.add_subplot()
         self.__canvas1 = FigureCanvasTkAgg(figure=self.__chart1, master=app)
         self.__canvas2 = FigureCanvasTkAgg(figure=self.__chart2, master=app)
+        # stat board setup
+        g1_stats_frame = tk.Frame(app)
+        self.__g1_stats = (
+            tk.StringVar(value='Min:'),
+            tk.StringVar(value='Max:'),
+            tk.StringVar(value='Avg:')
+        )
+        tk.Label(g1_stats_frame, textvariable=self.__g1_stats[0]).grid(row=0, column=0)
+        tk.Label(g1_stats_frame, textvariable=self.__g1_stats[1]).grid(row=0, column=1)
+        tk.Label(g1_stats_frame, textvariable=self.__g1_stats[2]).grid(row=0, column=2)
+        g2_stats_frame = tk.Frame(app)
+        self.__g2_stats = (
+            tk.StringVar(value='Min:'),
+            tk.StringVar(value='Max:'),
+            tk.StringVar(value='Avg:')
+        )
+        tk.Label(g2_stats_frame, textvariable=self.__g2_stats[0]).grid(row=0, column=0)
+        tk.Label(g2_stats_frame, textvariable=self.__g2_stats[1]).grid(row=0, column=1)
+        tk.Label(g2_stats_frame, textvariable=self.__g2_stats[2]).grid(row=0, column=2)
+        # populate GUI
         self.__canvas1.get_tk_widget().pack()
+        g1_stats_frame.pack()
         self.__canvas2.get_tk_widget().pack()
+        g2_stats_frame.pack()
         app.pack()
 
     def __graph_1_animation_func(self, frame_index, data):
         self.__g1_axes.clear()
         dataplot = sns.histplot(
-            data=data, bins=100, kde=False, ax=self.__g1_axes, color="gray"
+            data=data, bins=BINS, kde=True, ax=self.__g1_axes, color="red"
         )
+        if self._enable_full_range.get():
+            dataplot.xaxis.set_major_locator(LinearLocator(16, presets={'vmin': 0, 'vmax': READING_MAX}))
+            dataplot.set_xlim(0, 4095)
         dataplot.set_xlabel("Reading")
         dataplot.set_ylabel("Count")
         dataplot.set_title("Channel 1")
@@ -187,8 +275,11 @@ class ADCApplication:
     def __graph_2_animation_func(self, frame_index, data):
         self.__g2_axes.clear()
         dataplot = sns.histplot(
-            data=data, bins=100, kde=False, ax=self.__g2_axes, color="gray"
+            data=data, bins=BINS, kde=True, ax=self.__g2_axes, color="red"
         )
+        if self._enable_full_range.get():
+            dataplot.xaxis.set_major_locator(LinearLocator(16, presets={'vmin': 0, 'vmax': READING_MAX}))
+            dataplot.set_xlim(0, 4095)
         dataplot.set_xlabel("Reading")
         dataplot.set_ylabel("Count")
         dataplot.set_title("Channel 2")
@@ -207,13 +298,13 @@ class ADCApplication:
         popup = tk.Toplevel(self.__root)
         popup.title("Set Pattern (Advanced)")
         self.__pattern__message = tk.StringVar(
-            value="Enter Python Regex, UART reader will attempt to group ALL occurrences."
+            value="Enter Python Regex Expression, program will attempt to search for pattern in UART output"
         )
         self.__pattern__store = tk.StringVar(value=self.uart_reader._pattern)
         tk.Label(popup, textvariable=self.__pattern__message).grid(
             row=0, column=0, pady=(10, 0), padx=10
         )
-        tk.Entry(popup, text=self.__pattern__store).grid(row=1, column=0, pady=10)
+        tk.Entry(popup, text=self.__pattern__store, width=40).grid(row=1, column=0, pady=10)
         tk.Button(popup, text="Set Pattern", command=__pattern__on_submit).grid(
             row=2, column=0, pady=(0, 10)
         )
@@ -221,7 +312,7 @@ class ADCApplication:
     def __run_uart(self):
         if not self.uart_reader.is_connected():
             try:
-                self.uart_reader.start()
+                self.uart_reader.start(self.__g1_stats, self.__g2_stats)
                 self.__menubar.entryconfig(0, state="disabled")
                 self.__menubar.entryconfig(1, state="disabled")
                 self.__menubar.entryconfig(2, state="normal")
