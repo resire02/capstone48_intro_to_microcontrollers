@@ -60,3 +60,9 @@
 | Meeting No. | Meeting Date | Who Attended | Meeting notes (very brief)                                                                                                                                                                                                            | 
 |-------------|--------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 7           | 03/29/2025   | GA, FL, KL   | Discussed the need to modify sponsor code in Lab 2 and improve the explanation, as well as migrating it to Google Docs. Also addressed issues with migrating old lab projects to new projects in MPLABX, noting that it isn’t working |
+
+### Sprint 11
+
+| Meeting No. | Meeting Date | Who Attended   | Meeting notes (very brief)                                                                                                                               | 
+|-------------|--------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 8           | 04/07/2025   | GA, FL, TW, KL | We discussed the final lab project and reached consensus on developing a prototype of a theremin-style instrument using the board’s onboard peripherals. |
