@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MPLABX: Getting Started</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../globals.css">
+</head>
+
+<body>
+    <header class="page-header">
+        <h1>Introduction to Microcontrollers</h1>
+    </header>
+    <main>
+        <h1 class="lab-header">Getting Started</h1>
+        <section>
+            <h2 class="section-header-title">Required Materials</h2>
+            <p>
+                This lab requires the following materials:
+            <ul class="bullet-list">
+                <li>Computer capable of running MP LAB X (Windows, Linux, MacOS), further system requirements found at
+                    https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide</li>
+                <li>Curiosity Nano AVR64DD32 board</li>
+                <li>Micro USB to connect computer to board</li>
+            </ul>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Learning Objective</h2>
+            <p>
+            <ul class="bullet-list">
+                <li>How to install MP LAB X and it’s compiler</li>
+                <li>How to connect MP LAB X to the board and install necessary libraries</li>
+                <li>How to create a project and run code</li>
+            </ul>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">What is MPLAB X IDE?</h2>
+            <p>
+                In this section of the course, we will be learning how to use another embedded programming program,
+                MPLAB X IDE. MPLAB X IDE is a proprietary integrated development environment designed to work with
+                Microchip’s line of microcontrollers. It is most commonly used in professional or settings due to its
+                encompassing set of developer features.
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Why use MPLAB X IDE over Arduino IDE?</h2>
+            <p>
+                Leading up to this lab, you have been developing relatively simple programs using Arduino IDE. So why
+                switch over to MPLAB X IDE? The reason ultimately comes down to differences in features:
+
+            <ul>
+                <li>MPLAB X IDE’s debugger offers deeper control of the chip’s embedded system with features such as
+                    register bit manipulation, breakpoints, call stack, memory monitoring, application profiling, and
+                    pin manager</li>
+                <li>MPLAB X IDE’s project based development makes it easier to build out multi file programs than
+                    Arduino IDE’s sketch based development.</li>
+                <li>MPLAB X IDE’s Microchip Code Configurator simplifies adding peripherals to the project instead of
+                    relying on third party libraries to configure peripherals</li>
+            </ul>
+
+            Ultimately, MPLAB X presents a more well rounded developer experience with professional features for greater
+            control over the microcontroller.
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Installation Walkthrough (MPLAB X IDE)</h2>
+            <p>
+            <ol class="bullet-list">
+                <li>Go to the MPLAB X download page on microchips website at
+                    https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide</li>
+                <li>Download the MPLAB X IDE installer (Windows)</li>
+                <li>Open the installer once it has finished downloading and select next, read license agreements before
+                    proceeding. Leave the Use System Proxy settings and continue to the next screen.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_step_1.png">
+                </li>
+                <li>Select the MPLAB X IDE and the 32-bit MCU package, select next and begin the installation
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_step_2.png">
+                </li>
+                <li>Next, select the 32-bit device compiler to install next
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_step_3.png">
+                </li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Installation Walkthrough (MPLAB XC32 Compiler) </h2>
+            <p>
+            <ol class="bullet-list">
+                <li>The compiler install wizard should open after finishing the IDE installation process. If not, it can
+                    be found at https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc32
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_compiler_step_1.png">
+                </li>
+                <li>At the licensing page, select the free license, select next, and begin the installation.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_compiler_step_2.png">
+                </li>
+                <li>After installation has completed, select next. And with that, MP LAB X should be successfully
+                    installed for development with the Curiosity Nano.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/install_compiler_step_3.png">
+                </li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Discover Portal</h2>
+            <p>
+                In this section, we will open MPLAB Discover. It is a searchable catalog for exploring project examples,
+                documentation, tutorials, videos, source code and other resources for microcontroller devices.
+            <ol class="bullet-list">
+                <li>Locate the MPLAB Discover icon in the toolbar menu.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/d.png">
+                </li>
+                <li>This will open the Discover Portal. In the search bar, type ‘AVR64DD32’ to find resources related to
+                    the microcontroller.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/d_2.png">
+                </li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Configuration</h2>
+            <p>
+                This section covers a few important configurations for using MPLAB X. Some of these configurations are
+                recommendations and do not need to be changed.
+            <h3>Setting the Color Theme and Font</h3>
+            <p>
+                The default theme for MPLAB X is very bright and can be hard on the eyes, so many users prefer to change
+                it. To adjust the theme:
+            <ol>
+                <li>Navigate to Tools → Options → Fonts & Colors.</li>
+                <li>Under Profile, select the theme you prefer. The recommended theme is Norway Today.</li>
+                <li>To change the font, locate the Font section and click on the three dots.</li>
+                <li>Select your desired font and size. The recommended font is Cascadia Code, as it matches the one used
+                    in Visual Studio Code.</li>
+            </ol>
+            <h3>Managing Embedded Toolchains</h3>
+            <p>
+                The necessary toolchains should be added automatically when MPLAB X is installed. However, you can
+                manage them manually if needed:
+            <ol>
+                <li>Go to Tools → Options → Embedded.</li>
+                <li>Within the Embedded options, select Building Tools.</li>
+                <li>You should see the XC8 compiler listed, which is the compiler we will use.</li>
+            </ol>
+            </p>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Content Manager</h2>
+            <p>
+                In this section, we will open the MCC Content Manager to update all libraries, drivers, and peripheral
+                code related to the AVR64DD32. You need to have internet access to perform the updates.
+            <ol class="bullet-list">
+                <li>Locate the CM icon in the toolbar menu. Alternatively, access it by navigating to Tools -> MCC
+                    Content Manager
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm.png">
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm_2.png">
+                </li>
+                <li>In the search filters, open the Select Device pull down menu under Device, then type AVR64DD32 to
+                    find the microcontroller. Click on it to select.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm_3.png">
+                </li>
+                <li>Click the Select Latest Version(s) button at the top center to choose the most recent versions of
+                    the libraries.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm_4.png">
+                </li>
+                <li>After performing this selection, click on Apply.
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm_5.png">
+                </li>
+                <li>Allow a few seconds for the libraries and drivers to download and install. Plug in your board, and
+                    you should see the Curiosity Nano appear in your IDE!
+                    <img src="../../deliverables/7_getting-started-mplabx/Lab/images/cm_6.png">
+                </li>
+            </ol>
+            </p>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="../index.html">
+            Home
+        </a>
+        <a href="arduino_lab_1.html">
+            Next
+        </a>
+    </footer>
+</body>
+
+</html>

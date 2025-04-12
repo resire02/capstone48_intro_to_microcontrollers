@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Arduino: Getting Started</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../globals.css">
+    </head>
+
+    <body>
+        <header class="page-header">
+            <h1>Introduction to Microcontrollers</h1>
+        </header>
+        <main>
+            <h1 class="lab-header">Getting Started</h1>
+            <section>
+                <h2 class="section-header-title">Required Materials</h2>
+                <p>
+                    This lab requires the following materials:
+                <ul class="bullet-list">
+                    <li>Desktop or Laptop Computer (Windows is highly recommended).</li>
+                    <li>Web Browser (Chrome, Edge, Firefox).</li>
+                    <li>Access to the Internet.</li>
+                </ul>
+
+
+
+
+                This lab was designed to work with Windows operating systems. For other operating systems, steps may
+                differ from what is listed in this lab manual.
+                </p>
+            </section>
+            <section>
+                <h2 class="section-header-title">Learning Objective</h2>
+                <p>
+                    This Guide is designed to equip you with the fundamental skills that you will need while working with
+                    Arduino and Curiosity Nano. By completing this Quick Start Guide you will be able to:
+
+                <ol class="bullet-list">
+                    <li>Set up the Arduino development environment. This will include how to download and install the
+                        Arduino
+                        IDE software.</li>
+                    <li>Be able to navigate through the Arduino environment. This will include installing the needed board
+                        support package for AVR boards.</li>
+                    <li>Understand Arduino code structure. This will include the core concepts of Arduino programming such
+                        as
+                        setup(), loop(), pinMode(), digitalWrite() and delay().</li>
+                </ol>
+
+                This guide will provide you with a foundation for learning electrical circuits and prepare you for the
+                rest of the labs that you will take.
+                </p>
+            </section>
+            <section>
+                <h2 class="section-header-title">Installation Walkthrough</h2>
+                <p>
+                <ol class="bullet-list">
+                    <li>Go to the Arduino Software page (https://www.arduino.cc/en/software).</li>
+                    <li>Download and run the MSI Installer (Windows).</li>
+                    <li>The IDE should be immediately installed. Run it and allow it some time to install dependencies.</li>
+
+                    <img src="../../deliverables/1_getting-started/lab/images/download.png">
+
+                    <li>Go to File \-\> Preferences and under the Settings tab, check **'compile'** and **'upload'** to
+                        enable verbose output. </li>
+                    <li>Under the same tab, click on the icon next to 'Additional Board Manager URLs' </li>
+                    <li>Copy and paste the following URL into the text box and click OK.
+                        <ul>
+                            <li><a href="http://drazzy.com/package\_drazzy.com\_index.json">http://drazzy.com/package_drazzy.com_index.json
+                                </a>
+                                (Enables access to external microcontroller libraries not included in the default setup)
+                            </li>
+                        </ul>
+                    </li>
+
+                    <img src="../../deliverables/1_getting-started/lab/images/preferences.png">
+
+                    <li>Go to the Board Manager by clicking on the second icon from top to bottom on the left panel. </li>
+                    <li>Type 'DxCore' and click INSTALL. This installs the primary support package. (Arduino had general
+                        libraries to support sensors, but as vendors started making boards, board-specific libraries became
+                        an independent category of libraries known as core libraries)</li>
+
+                    <img src="../../deliverables/1_getting-started/lab/images/dxcorev3.png">
+
+                </ol>
+
+
+
+                </p>
+            </section>
+            <section>
+                <h2 class="section-header-title">Tour of the Source Files</h2>
+                <ul class="bullet-list">
+                    <li>Open File Explorer. Go to C:\\Users\\{YourUsername}</li>
+                    <li>Show hidden files (See Appendix) and go to
+                        AppData\\Local\\Arduino15\\packages\\DxCore\\hardware\\megaavr\\1.5.11</li>
+                    <li>This directory is the collection of C, C++, assembly, and header files that support the AVR Dx
+                        microcontroller panel.</li>
+                    <li>Go to cores\\dxcore.</li>
+                    <li>Open wiring.c with the IDE of your preference.</li>
+                    <li>In ***wiring.c*** you will find an implementation of the Wiring API specifically designed for the
+                        AVR
+                        Dx microcontrollers.</li>
+                    <li>Check out the millis() function\!</li>
+                </ul>
+
+            </section>
+            <section>
+                <h2 class="section-header-title">Appendix</h2>
+                <p>
+                    Instructions to show hidden files in Windows
+                <ol class="bullet-list">
+                    <li>In File Explorer, click the ellipsis icon on the toolbar (...). </li>
+                    <li>Select Options from the dropdown menu. </li>
+                    <li>In the Folder Options window, go to the View tab. </li>
+                    <li>Scroll down and select *Show hidden files, folders, and drives* under 'Advanced settings'.</li>
+                </ol>
+                </p>
+            </section>
+        </main>
+        <footer class="footer">
+            <a href="../index.html">
+                Home
+            </a>
+            <a href="arduino_lab_1.html">
+                Next
+            </a>
+        </footer>
+    </body>
+
+</html>
