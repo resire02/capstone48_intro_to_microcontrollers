@@ -36,8 +36,11 @@
 #include "mcc_generated_files/system/system.h"
 #include <string.h>
 #include <stdio.h>
-#include "systimer.h"           // system timers
-#include "sine_wave.h"          // sine wave data
+#include "systimer.h"
+#include "sine.h"
+#include "square.h"
+#include "triangle.h"
+#include "sawtooth.h"
 
 void UART_WriteString(const char *message);
 char uart_str[80];
@@ -56,8 +59,8 @@ void dac_init(void);
 void play_tone(void);
 
 
-inline void board_led_on(void) { do PORTF.OUTCLR = CNANO_LED; while(0);}
-inline void board_led_off(void) { do PORTF.OUTSET = CNANO_LED; while(0);}
+static inline void board_led_on(void) { do PORTF.OUTCLR = CNANO_LED; while(0);}
+static inline void board_led_off(void) { do PORTF.OUTSET = CNANO_LED; while(0);}
 
 int main(void) 
 {
@@ -75,8 +78,6 @@ int main(void)
     while (1) 
     {
        play_tone();
-       clear_timer1();
-       while(read_timer1() < 2000UL);
     }
     
 }
@@ -97,22 +98,45 @@ void dac_init()
     SPI0_Open(HOST_CONFIG);
 }
 
+enum WaveformType {
+    SAWTOOTH,
+    SQUARE,
+    TRIANGLE,
+    SINE
+};
+
+int8_t notes[4] = {2, 3, 5, 3};
+int8_t index = 0;
 
 void play_tone(void)
 {    
-    
+    static enum WaveformType current_wave = SAWTOOTH;
     static volatile int array_index, sample;  
     static volatile uint8_t high_byte,low_byte;
+    int16_t* wave_ptr;
+    
+    switch(current_wave) {
+        case SAWTOOTH:
+            wave_ptr = sawtooth_wave; break;
+        case SQUARE:
+            wave_ptr = square_wave; break;
+        case TRIANGLE:
+            wave_ptr = triangle_wave; break;
+        case SINE:
+            wave_ptr = sine_wave; break;
+    }
     
     clear_timer1();
     board_led_on();
     
-    while(read_timer1() < 100UL) // play a two second tone
+    current_wave = (current_wave + 1) % 4;
+    
+    while(read_timer1() < 200ul) // play a two second tone
     {
-        for(array_index = 0;array_index < 199;array_index += 1)       // array step 4 gets about 1.3 kHz saw tooth
+        for(array_index = 0;array_index < 199;array_index += notes[index])       // array step 4 gets about 1.3 kHz saw tooth
           {
 
-            sample = sine_wave[array_index] + 2048;       // add DC offset
+            sample = wave_ptr[array_index] + 2048;       // add DC offset
             high_byte = (uint8_t)(sample >> 8);
             high_byte |= 0x30;                            // set gain X1 bit
             low_byte = (uint8_t)(sample & 0xFF);
@@ -129,6 +153,7 @@ void play_tone(void)
     }
     
     board_led_off();
+    if (index == 3) index = 0; else index++;
     
 }
 
