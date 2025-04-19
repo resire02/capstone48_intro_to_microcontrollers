@@ -13,7 +13,7 @@
  */
 
 /*
-© [2025] Microchip Technology Inc. and its subsidiaries.
+ï¿½ [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -129,24 +129,24 @@ void play_tone(void)
     clear_timer1();
     board_led_on();
     
-    current_wave = (current_wave + 1) % 4;
+    current_wave = (current_wave + 1) % 4; // Cycle through wave types 0 to 3, wrap back to 0 after 3
     
-    while(read_timer1() < 200ul) // play a two second tone
+    while(read_timer1() < 200ul)
     {
-        for(array_index = 0;array_index < 199;array_index += notes[index])       // array step 4 gets about 1.3 kHz saw tooth
+        for(array_index = 0;array_index < 199;array_index += notes[index]) // array steps will change the frequencies by shrinking or expanding the waveform
           {
 
             sample = wave_ptr[array_index] + 2048;       // add DC offset
-            high_byte = (uint8_t)(sample >> 8);
-            high_byte |= 0x30;                            // set gain X1 bit
-            low_byte = (uint8_t)(sample & 0xFF);
+            high_byte = (uint8_t)(sample >> 8);          // high byte (lower four bits) = top 4 bits of the 12-bit value
+            high_byte |= 0x30;                           // high byte (higher four bits) = 0011 from 0x30 -> Gain bit = 1x and active bit = 1
+            low_byte = (uint8_t)(sample & 0xFF);         // low byte (all 8 bits) = lower 8-bits of the 12-bit sample
             
-            PORTC.OUTCLR = DAC_CS;
+            PORTC.OUTCLR = DAC_CS;                       // sets the DAC_CS pin to low
             
-            SPI0_ByteExchange(high_byte);
-            SPI0_ByteExchange(low_byte);
+            SPI0_ByteExchange(high_byte);                // send high byte information over SPI
+            SPI0_ByteExchange(low_byte);                 // send low byte information over SPI
             
-            PORTC.OUTSET = DAC_CS;
+            PORTC.OUTSET = DAC_CS;                       // sets the DAC_CS pin to high
             
         }
         
