@@ -1,15 +1,13 @@
 /**
- * System Driver Header File
+ * UART Write String - Polling Example Driver File
  * 
- * @file system.h
+ * @file uart_example.c
  * 
- * @defgroup systemdriver System Driver
+ * @addtogroup uart-example
  * 
- * @brief This file contains the API prototype for the System Driver.
+ * @brief This is the generated example implementation for UART Write String in Polled mode
  *
- * @version Driver Version 1.0.3
- *
- * @version Package Version 4.3.0
+ * @version UART Write String - Polled Example Version 1.0.0
 */
 /*
 © [2025] Microchip Technology Inc. and its subsidiaries.
@@ -32,34 +30,38 @@
     THIS SOFTWARE.
 */
 
+/* Use Case 2 Polled implementation. Copy this code to your project source, e.g., to main.c  */
+/* ------------------------------------------------------------------
 
-#ifndef MCC_H
-#define	MCC_H
+#include "mcc_generated_files/system/system.h"
+#include <string.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+void UART_WriteString(const char *message);
 
-#include "../system/utils/compiler.h"
-#include "config_bits.h"
-#include "../system/pins.h"
-#include "../uart/usart0.h"
-#include "../system/interrupt.h"
-#include "../system/clock.h"
-#include "../i2c_host/twi0.h"
-#include "../timer/tcb0.h"
-/**
- * @ingroup systemdriver
- * @brief Initializes the System module. This routine is called only once during system initialization, before calling any other API.
- * @param None.
- * @return None.
-*/
-void SYSTEM_Initialize(void);
-
-#ifdef __cplusplus
+void UART_WriteString(const char *message)
+{
+    for(int i = 0; i < (int)strlen(message); i++)
+    {
+        while(!UART.IsTxReady())
+        {
+            ;
+        };
+        (void) UART.Write(message[i]);
+    }
 }
-#endif
-#endif	/* MCC_H */
+
+void main(void)
+{
+    const char message[] = "Hello World!\r\n";
+    SYSTEM_Initialize();
+    (void) UART_WriteString(message); 
+
+    while(1)
+    {
+        ;
+    }    
+}
+------------------------------------------------------------------ */
 /**
  End of File
 */

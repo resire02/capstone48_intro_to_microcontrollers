@@ -4,11 +4,14 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>lab6-theremin</name>
-            <creation-uuid>178e5a89-84c5-4fb9-9753-fe4253e990e7</creation-uuid>
+            <name>lab4_16bit_i2c</name>
+            <creation-uuid>477b2af4-880f-4986-b051-db3f7d1a6b0d</creation-uuid>
             <make-project-type>0</make-project-type>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
-            <sourceRootList/>
+            <sourceRootList>
+                <sourceRootElem>.</sourceRootElem>
+            </sourceRootList>
             <confList>
                 <confElem>
                     <name>default</name>
