@@ -34,14 +34,13 @@
 */
 #include "mcc_generated_files/system/system.h"
 #include "pwm.h"
-#include <util/delay.h>
 
 int main(void)
 {
     SYSTEM_Initialize();
 
     pwm_init();
-    pwm_play_tone(440.0f, 0.05f);
+    pwm_play_tone(440.0f, 0.5f);
     
     while(1)
     {

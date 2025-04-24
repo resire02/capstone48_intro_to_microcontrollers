@@ -1,12 +1,11 @@
 #include "mcc_generated_files/system/system.h"
 #include "pwm.h"
 
-#define PWM_PIN 1
 #define CLK_PER 4000000UL
 #define PRESCALER 4
 
 void pwm_init(){
-    PORTD.DIRSET = (1 << PWM_PIN);
+    PORTD.DIRSET = PIN1_bm;
     PORTMUX.TCAROUTEA = PORTMUX_TCA0_PORTD_gc;
     TCA0.SINGLE.CTRLB = TCA_SINGLE_CMP1EN_bm            /* enable compare channel 1 */
                       | TCA_SINGLE_WGMODE_DSBOTTOM_gc;  /* set dual-slope PWM mode */
