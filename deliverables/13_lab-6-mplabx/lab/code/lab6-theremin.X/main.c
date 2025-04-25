@@ -13,7 +13,7 @@
  */
 
 /*
-© [2025] Microchip Technology Inc. and its subsidiaries.
+ï¿½ [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -44,44 +44,66 @@
 #include <math.h>
 
 void UART_WriteString(const char *message);
-
+void read_sensor_and_play(int scale_index, float duty_cycle);
 char uart_str[80];
 
 int main(void) {
     SYSTEM_Initialize();
     pwm_init();
     vcnl_init();
+    int current_scale_index = 0;
+    
+    // Simulated joystick input for testing
+    bool joystick_right = true;
+    bool joystick_left = false;
+    if (joystick_right) {
+        current_scale_index = (current_scale_index + 1) % num_scales;
+    }
+    else if (joystick_left) {
+        current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
+    }
+    
+    // Simulated duty cycle
+    float duty_cycle = 0.50f;
+
+    while (1) {
+        // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
+        
+        // Print scale index to UART
+        sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
+        UART_WriteString(uart_str);        
+        
+        // Read sensor and set theremin to chosen scale and duty cycle
+        read_sensor_and_play(current_scale_index, duty_cycle);        
+    }
+}
+
+void read_sensor_and_play(int scale_index, float duty_cycle) {
+    // Initialize variable for proximity reading
     uint16_t proximity = 0;
-    
-    // Assign the ScaleBank to the variable 'bank', which contains different scales.
-    ScaleBank bank = scale_bank;
-    
+
     // Select the desired scale from the ScaleBank (in this case, the C Major scale).
-    Scale chosen_scale = bank.c_major;
-    
+    Scale chosen_scale = scale_bank[scale_index];
+
     // Get the length of the chosen scale (number of notes).
     int scale_length = chosen_scale.length;
     
-    while (1) {
-        // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
+    // Read proximity value from the sensor.
+    proximity = vncl_read_ps();
 
-        // Read proximity value from the sensor.
-        proximity = vncl_read_ps();
-        
-        // Logarithmically calculate the index based on proximity value.
-        // This accounts for the nonlinear proximity sensor readings, mapping them to the scale length.
-        // The equation was determined through a log regression process with Excel to best fit the data.
-        float log_value = 0.9f * logf((float) proximity) - 1.5f;
-        int index = (int) roundf(log_value);
-        index = index < 0 ? 0 : (index >= scale_length ? scale_length - 1 : index);
-        
-        // Play the tone corresponding to the calculated index in the chosen scale.
-        pwm_play_tone(chosen_scale.notes[index], 0.50f);
-        
-        // Print value to UART
-        sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
-        UART_WriteString(uart_str);
-    }
+    // Logarithmically calculate the index based on proximity value.
+    // This accounts for the nonlinear proximity sensor readings, mapping them to the scale length.
+    // The equation was determined through a log regression process with Excel to best fit the data.
+    float log_value = 0.9f * logf((float) proximity) - 1.5f;
+    int index = (int) roundf(log_value);
+    index = index < 0 ? 0 : (index >= scale_length ? scale_length - 1 : index);
+
+    // Play the tone corresponding to the calculated index in the chosen scale.
+    pwm_play_tone(chosen_scale.notes[index], duty_cycle);
+
+    // Print value to UART
+    sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
+    UART_WriteString(uart_str);    
 }
 
 void UART_WriteString(const char *message) {

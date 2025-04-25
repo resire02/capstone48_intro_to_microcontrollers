@@ -11,20 +11,20 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
+#define C_MINOR_PENTATONIC {NOTE_C4, NOTE_DS4, NOTE_F4, NOTE_G4, NOTE_AS4}
+#define C_MAJOR_PENTATONIC {NOTE_C4, NOTE_D4, NOTE_E4, NOTE_G4, NOTE_A4}
+#define C_MAJOR {NOTE_C4, NOTE_D4, NOTE_E4, NOTE_F4, NOTE_G4, NOTE_A4, NOTE_B4}    
+#define C_MINOR {NOTE_C4, NOTE_D4, NOTE_DS4, NOTE_F4, NOTE_G4, NOTE_GS4, NOTE_AS4}
     
 typedef struct {
-    float notes[10];
+    float notes[12];
     int length;
 } Scale;
     
-typedef struct {
-    Scale c_minor_pentatonic;
-    Scale c_major_pentatonic;
-    Scale c_major;
-    Scale c_minor;
-} ScaleBank;
+extern Scale scale_bank[];
 
-extern const ScaleBank scale_bank;
+extern int num_scales;
     
 #ifdef	__cplusplus
 }
