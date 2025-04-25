@@ -10,9 +10,10 @@ static uint8_t read_data[2] = { 0x00, 0x00 };
 void vcnl_init()
 {
     // enable proximity sensor through PS_CONF1
+    // You can also choose these settings to increase the sensor's detection range
     // write_data[1]: PS_CONF1, turns on PS, using 9T: 0x0A
     // write_data[2]: PS_CONF1, HD mode enabled: 0x08
-    static uint8_t write_data[3] = { VNCL_PS_CONF1_CONF2_REG, 0x0A, 0x08};
+    static uint8_t write_data[3] = { VNCL_PS_CONF1_CONF2_REG, 0x06, 0x00};
 
     while(TWI0_IsBusy());
     TWI0_Write(VNCL_I2C_ADDR, write_data, 3);
