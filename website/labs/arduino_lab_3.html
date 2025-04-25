@@ -3,16 +3,16 @@
     <head>
         <title>Arduino: Embedded System Concepts</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="globals.css">
+        <link rel="stylesheet" href="../globals.css">
     </head>
     <body>
-        <header>
+        <header class="page-header">
             <h1>Introduction to Microcontrollers</h1>
         </header>
         <main>
-            <h1>Important Embedded System Concepts</h1>
+            <h1 class="lab-header">Important Embedded System Concepts</h1>
             <section>
-                <h2>Required Materials</h2>
+                <h2 class="section-header-title">Required Materials</h2>
                 <p>This lab requires the following materials:</p>
                 <ul>
                     <li>A computer with Arduino IDE installed (with DXCore libraries)</li>
@@ -24,9 +24,9 @@
             </section>
 
             <section id="learning-objectives">
-                <h2>Learning Objectives</h2>
+                <h2 class="section-header-title">Learning Objectives</h2>
                 <p>This lab will introduce you to important embedded system concepts using the Curiosity Nano Explorer board. After completing this lab you should be able to:</p>
-                <ul>
+                <ul class="bullet-list">
                     <li>Explain what an UART is and understand how to work with the Curiosity Nano's UART.</li>
                     <li>Describe the purpose of an analog-to-digital converter and understand how to work with the onboard potentiometer.</li>
                     <li>Explain what pulse width modulation is and understand how to work with the onboard RGB LED.</li>
@@ -35,14 +35,14 @@
             </section>
 
             <section>
-                <h2>UART (Universal Asynchronous Receiver-Transmitter)</h2>
+                <h2 class="section-header-title">UART (Universal Asynchronous Receiver-Transmitter)</h2>
                 <p>UART is a communication protocol that enables serial data exchange between two devices without requiring a clock signal. It allows data to be sent and received asynchronously, meaning that data bits are transmitted sequentially over a single wire. This protocol is commonly used for serial communication with microcontrollers and computers.</p>
                 
                 <p>In the Curiosity Nano, UART allows the board to connect with a computer through a serial communication interface. The Curiosity Nano has a built-in USB-to-UART converter that translates UART signals into USB signals. When the board is connected to a computer via USB, the computer sees it as a virtual COM port, enabling data transfer through serial communication tools like a terminal emulator. This setup allows you to send data to and receive data from the Curiosity Nano for debugging or data exchange.</p>
 
                 <h3>Using the UART</h3>
                 <p>Setting up UART is straightforward. In the following examples, I'll demonstrate two use cases:</p>
-                <ul>
+                <ul class="bullet-list">
                     <li>Creating a simple calculator that takes user input from the computer and returns the result.</li>
                     <li>Controlling components on the Curiosity Nano board using input from the computer.</li>
                 </ul>
@@ -257,7 +257,7 @@ void loop() {
             </section>
 
             <section>
-                <h2>Pulse Width Modulation</h2>
+                <h2 class="section-header-title">Pulse Width Modulation</h2>
                 <p>Digital signals are binary (0 or 1), while analog signals have a continuous range of values. To convert analog input into a digital format, we use an Analog-to-Digital Converter (ADC). To control analog devices with a digital signal, a Digital-to-Analog Converter (DAC) is typically used to generate true analog signals. Pulse Width Modulation (PWM) offers a cost-effective alternative to a DAC by mimicking analog behavior with a digital signal. PWM can control devices like motors and lights, producing an analog-like signal instead of a true analog output.</p>
 
                 <h3>How PWM Works</h3>
@@ -508,7 +508,7 @@ char dashLine[] = "======================================";</code></pre>
             </section>
 
             <section>
-                <h2>ADC (Analog-To-Digital) Converters</h2>
+                <h2 class="section-header-title">ADC (Analog-To-Digital) Converters</h2>
                 <p>An Analog-To-Digital (ADC) converter is a tool that takes real world reading from a sensor (analog) and converts it into a value that can be understood by a program (digital).</p>
                 
                 <p>Generally speaking, analog data comes in through sensors or other peripherals, and is continuous in nature; This means that it is not set to certain breakpoints or restrictions like variables in code are, think things like voltage or temperature.</p>
@@ -525,7 +525,7 @@ char dashLine[] = "======================================";</code></pre>
                 <p>To further understand this concept, we will be using the on board potentiometer on the Curiosity Nano Explorer board, pictured below.</p>
                 
                 <figure>
-                    <img src="./images/Potentiometer.jpg" alt="Curiosity Nano Explorer Potentiometer">
+                    <img src="../../deliverables/04_lab-3/lab/images/Potentiometer.jpg" alt="Curiosity Nano Explorer Potentiometer" style="width:300px; height:auto">
                     <figcaption>Curiosity Nano Explorer Potentiometer</figcaption>
                 </figure>
 
@@ -782,7 +782,7 @@ Adafruit_MCP23008 mcp_leds;</code></pre>
                 <ol>
                     <li>On your Curiosity Explorer board, remap the PWM-A pin to the AMP-IN pin located next to the speaker.
                         <figure>
-                            <img src="./images/pwm_speaker_remapping.png" alt="Remapping PWM for Speaker">
+                            <img src="../../deliverables/04_lab-3/lab/images/pwm_speaker_remapping.png" alt="Remapping PWM for Speaker" style="width:800px; height:auto">
                             <figcaption>Remapping PWM for Speaker</figcaption>
                         </figure>
                     </li>
@@ -831,15 +831,13 @@ void setup() {
                 <p>Check out <code>Lab 3/PWN_AdvancedSpeaker</code> for a more complex example.</p>
             </section>
         </main>
-        <footer>
-            <div>
-                <p>Previous Lab:</p>
-                <a href="arduino_lab_2.html">Intro to Curiosity Explorer</a>
-            </div>
-            <div>
-                <p>Next Lab:</p>
-                <a href="arduino_lab_4_project_requirements.html">Lab Project</a>
-            </div>
+        <footer class="footer">
+            <a href="arduino_lab_2.html">
+                Back
+            </a>
+            <a href="arduino_lab_4_project_requirements.html">
+                Next
+            </a>
         </footer>
     </body>
 </html>
