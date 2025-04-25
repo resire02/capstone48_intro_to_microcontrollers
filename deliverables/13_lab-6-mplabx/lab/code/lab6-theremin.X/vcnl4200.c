@@ -10,11 +10,9 @@ static uint8_t read_data[2] = { 0x00, 0x00 };
 void vcnl_init()
 {
     // enable proximity sensor through PS_CONF1
-    // write_data[1]: PS_CONF1, turns on PS, using 4T PS_IT
-    //      1T: 0x00    1.5T: 0x02  2T: 0x04    4T: 0x06
-    //      using 2T as it has ideal sample rate for motion detection
-    // write_data[2]: PS_CONF1, default value 0x00
-    static uint8_t write_data[3] = { VNCL_PS_CONF1_CONF2_REG, 0x06, 0x00};
+    // write_data[1]: PS_CONF1, turns on PS, using 9T: 0x0A
+    // write_data[2]: PS_CONF1, HD mode enabled: 0x08
+    static uint8_t write_data[3] = { VNCL_PS_CONF1_CONF2_REG, 0x0A, 0x08};
 
     while(TWI0_IsBusy());
     TWI0_Write(VNCL_I2C_ADDR, write_data, 3);
