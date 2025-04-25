@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lab 3: I2C with IO Expanders</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../globals.css">
+    </head>
+
+    <body>
+        <header class="page-header">
+            <h1>Advanced Microcontroller Programming</h1>
+        </header>
+        <main>
+            <h1 class="lab-header">Lab 3: I2C with IO Expanders</h1>
+            
+            <section>
+                <h2 class="section-header-title">Required Materials</h2>
+                <ul class="bullet-list">
+                    <li>MPLAB X IDE and Compiler</li>
+                    <li>Curiosity Nano AVR64DD32 board</li>
+                    <li>USB to connect board to computer</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">Learning Objectives</h2>
+                <ul class="bullet-list">
+                    <li>Using MCC Melody</li>
+                    <li>Viewing pin configurations</li>
+                    <li>Configuring and using the I2C</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">I2C Explanation</h2>
+                <p>
+                    I2C (I-squared-C), or sometimes referred to as IIC, is a common communication protocol found on microcontroller and embedded systems. The basic idea is that it allows multiple peripherals to communicate with each other using only 2 data lines:
+                </p>
+                <ul class="bullet-list">
+                    <li>SDA (serial data pin) - for the data itself</li>
+                    <li>SCL (serial clock pin) - for the clock</li>
+                </ul>
+                <p>
+                    Controller(s) is involved that manages sending data to peripherals or other devices. As two devices communicate over only one data line, they take turns sending data rather than sending concurrently.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">IO Expanders on the Curiosity Nano</h2>
+                <p>
+                    The Curiosity Nano Explorer Board is equipped with two MCP23008 I/O Expanders:
+                </p>
+                <ul class="bullet-list">
+                    <li>IO Expander 1: Located at I2C hardware address 0x25</li>
+                    <li>IO Expander 2: Located at I2C hardware address 0x24</li>
+                </ul>
+                <img src="images/0-board.jpg" alt="Curiosity Nano Board" width="500">
+                <p>
+                    In this lab, we will:
+                </p>
+                <ul class="bullet-list">
+                    <li>Write to IO Expander 1 (0x25) to create a bidirectional LED chaser</li>
+                    <li>Read from IO Expander 2 (0x24) to detect switch presses from the MTCH1030</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">I2C-Based Bidirectional LED Chaser</h2>
+                <h3>Overview</h3>
+                <p>
+                    This walkthrough explains how the <strong>cycle_leds()</strong> function can control the amber LEDs in sequence using an I2C GPIO Expander (MCP23008) on MPLABX.
+                </p>
+                <p>
+                    We will use IO Expander 1 on the Curiosity Nano Explorer Board to illuminate the amber LEDs sequentially from right to left, one at a time, until reaching the last LED. Then, the sequence reverses, moving back from left to right, creating a back-and-forth sweeping effect.
+                </p>
+                <p>
+                    <strong>📌 This lab can be found in Lab3/Code/mplab_lab3.X</strong>
+                </p>
+
+                <h3>Necessary Directives and Definitions</h3>
+                <pre><code>#include "mcc_generated_files/system/system.h"
+#include "systimer.h"
+
+#define ADDR_IOEX1   0x25
+
+void cycle_leds(void);</code></pre>
+                <ul class="bullet-list">
+                    <li><strong>system.h</strong> - Includes our hardware-specific configuration</li>
+                    <li><strong>systimer.h</strong> - Imports soft timer functionality</li>
+                    <li><strong>ADDR_IOEX1</strong> - I2C address for IO Expander 1</li>
+                </ul>
+
+                <h3>Initialization</h3>
+                <pre><code>int main(void) {
+    SYSTEM_Initialize();    
+    Timer0.TimeoutCallbackRegister(tcb_softtimer);
+    while (1) {          
+        cycle_leds();
+    }
+}</code></pre>
+
+                <h3>Program Execution</h3>
+                <ol class="bullet-list">
+                    <li>Variable Declarations
+                        <pre><code>void cycle_leds(void){        
+    uint8_t i2c_cmd[2] = { 0x00, 0x00 };
+    size_t cmd_len = 2;</code></pre>
+                    </li>
+                    <li>Initial I2C Write
+                        <pre><code>TWI0_Write(ADDR_IOEX1, &i2c_cmd[0], cmd_len);
+while(TWI0_IsBusy());</code></pre>
+                    </li>
+                    <li>Configure Initial GPIO State
+                        <pre><code>i2c_cmd[0] = 0x09;
+i2c_cmd[1] = 0xFE; // 8-bit binary: 0b11111110</code></pre>
+                    </li>
+                    <li>Initialize Direction
+                        <pre><code>bool incr = true;</code></pre>
+                    </li>
+                    <li>Initial Delay
+                        <pre><code>clear_timer1();
+while(read_timer1() < 500);</code></pre>
+                    </li>
+                    <li>Main LED Cycling Loop
+                        <pre><code>while(true) {
+    TWI0_Write(ADDR_IOEX1,&i2c_cmd[0], cmd_len);
+    while(TWI0_IsBusy());</code></pre>
+                    </li>
+                    <li>Shifting LED Pattern
+                        <pre><code>if (incr) i2c_cmd[1] = (i2c_cmd[1] << 1) | 0x01;            
+else i2c_cmd[1] = (i2c_cmd[1] >> 1) | 0x80;</code></pre>
+                    </li>
+                    <li>Direction Reversal
+                        <pre><code>if (i2c_cmd[1] == 0x7F || i2c_cmd[1] == 0xFE) incr = !incr;</code></pre>
+                    </li>
+                    <li>Delay Before Next Iteration
+                        <pre><code>clear_timer1();
+while(read_timer1() < 500); }</code></pre>
+                    </li>
+                </ol>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">I2C-Based Switch Reading</h2>
+                <h3>Overview</h3>
+                <p>
+                    This function reads switch press states from IO Expander 2 (hardware address 0x24), which is connected to three push buttons (SW1, SW2, and SW3) and interfaces with the MTCH1030 capacitive touch controller.
+                </p>
+
+                <h3>Modifying Main for Switch Reading</h3>
+                <pre><code>#include <string.h>
+#include <stdio.h>
+
+#define ADDR_IOEX2   0x24
+
+void UART_WriteString(const char *message);
+char uart_str[80];
+void read_switches(void);
+
+int main(void) {   
+    SYSTEM_Initialize();   
+    while (1) {        
+        read_switches();
+    }
+}</code></pre>
+
+                <h3>Program Execution</h3>
+                <ol class="bullet-list">
+                    <li>Initial Configuration
+                        <pre><code>void read_switches(void) {    
+    uint8_t i2c_cmd[2] = {0x00, 0xFF};
+    size_t cmd_len = 2;</code></pre>
+                    </li>
+                    <li>Initial I2C Write
+                        <pre><code>TWI0_Write(ADDR_IOEX2,&i2c_cmd[0], cmd_len);    
+while(TWI0_IsBusy());</code></pre>
+                    </li>
+                    <li>Configuring Pull-Up Resistors
+                        <pre><code>i2c_cmd[0] = 0x06; // GPPU register    
+i2c_cmd[1] = 0xFF; // Enable pull-ups on all pins.    
+TWI0_Write(ADDR_IOEX2, &i2c_cmd[0], cmd_len);   
+while(TWI0_IsBusy());</code></pre>
+                    </li>
+                    <li>Main Loop
+                        <pre><code>while (true) {        
+    static uint8_t last_state = 0xFF;
+    uint8_t switch_state;
+    uint8_t i2c_cmd = 0x09;
+
+    TWI0_Write(ADDR_IOEX2, &i2c_cmd, 1);
+    while (TWI0_IsBusy());
+
+    TWI0_Read(ADDR_IOEX2, &switch_state, 1);
+    while (TWI0_IsBusy());</code></pre>
+                    </li>
+                    <li>Switch State Detection
+                        <pre><code>if (switch_state != last_state && switch_state != 0xFF) {
+    last_state = switch_state;                        
+    switch (switch_state) {
+        case 0b01111111: // Left switch pressed   
+            sprintf(uart_str,"Left switch pressed\r\n");
+            break;                
+        case 0b10111111: // Middle switch pressed   
+            sprintf(uart_str,"Middle switch pressed\r\n");      
+            break;                
+        case 0b11011111: // Right switch pressed  
+            sprintf(uart_str,"Right switch pressed\r\n");       
+            break;          
+        case 0b00111111: // Left & Middle pressed    
+            sprintf(uart_str, "Left and Middle switches\r\n");    
+            break;              
+        case 0b01011111: // Left & Right pressed        
+            sprintf(uart_str, "Left & Right switches\r\n");     
+            break;               
+        case 0b10011111: // Middle & Right pressed  
+            sprintf(uart_str, "Middle & Right switches\r\n");     
+            break;                
+        case 0b00011111: // All three switches pressed     
+            sprintf(uart_str, "All switches pressed\r\n");  
+            break;           
+    } 
+    UART_WriteString(uart_str);  
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h3>UART WriteString</h3>
+                <pre><code>void UART_WriteString(const char *message)
+{
+    for (int i = 0; i < (int) strlen(message); i++) {
+        while (!(UART.IsTxReady())) {}      
+        (void)UART.Write(message[i]);   
+    }
+}</code></pre>
+
+                <h3>Load Code onto Board</h3>
+                <ol class="bullet-list">
+                    <li>Click the Build for Debugging Main Project button <img src="../../deliverables/10_lab-3-mplabx/lab/images/1-build.png" alt="Build button"></li>
+                    <li>Click on the Make and Program Device Main Project button <img src="../../deliverables/10_lab-3-mplabx/lab/images/2-load.png" alt="Load button"></li>
+                    <li>Navigate to Window → Debugging → Data Visualizer</li>
+                </ol>
+            </section>
+        </main>
+        <footer class="footer">
+            <a href="../index.html">
+                Home
+            </a>
+            <a href="mplab_lab4.html">
+                Next
+            </a>
+        </footer>
+    </body>
+</html>
