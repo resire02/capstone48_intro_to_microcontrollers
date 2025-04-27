@@ -42,6 +42,7 @@
 #include "vcnl4200.h"
 #include "scales.h"
 #include <math.h>
+#include "joystick.h"
 
 void UART_WriteString(const char *message);
 void read_sensor_and_play(int scale_index, float duty_cycle);
@@ -51,30 +52,29 @@ int main(void) {
     SYSTEM_Initialize();
     pwm_init();
     vcnl_init();
+    joystick_init();
     int current_scale_index = 0;
-    
-    // Simulated joystick input for testing
-    bool joystick_right = true;
-    bool joystick_left = false;
-    if (joystick_right) {
-        current_scale_index = (current_scale_index + 1) % num_scales;
-    }
-    else if (joystick_left) {
-        current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
-    }
-    
+
     // Simulated duty cycle
     float duty_cycle = 0.50f;
 
     while (1) {
+        // Simulated joystick input for testing
+        bool joystick_right_pressed = joystick_right();
+        bool joystick_left_pressed = joystick_left();
+        if (joystick_right_pressed) {
+            current_scale_index = (current_scale_index + 1) % num_scales;
+        } else if (joystick_left_pressed) {
+            current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
+        }
         // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
-        
+
         // Print scale index to UART
         sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
-        UART_WriteString(uart_str);        
-        
+        UART_WriteString(uart_str);
+
         // Read sensor and set theremin to chosen scale and duty cycle
-        read_sensor_and_play(current_scale_index, duty_cycle);        
+        read_sensor_and_play(current_scale_index, duty_cycle);
     }
 }
 
@@ -87,7 +87,7 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
 
     // Get the length of the chosen scale (number of notes).
     int scale_length = chosen_scale.length;
-    
+
     // Read proximity value from the sensor.
     proximity = vncl_read_ps();
 
@@ -103,7 +103,7 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
 
     // Print value to UART
     sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
-    UART_WriteString(uart_str);    
+    UART_WriteString(uart_str);
 }
 
 void UART_WriteString(const char *message) {
