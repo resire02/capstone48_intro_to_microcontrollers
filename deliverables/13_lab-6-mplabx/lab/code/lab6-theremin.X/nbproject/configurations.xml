@@ -50,8 +50,8 @@
       <itemPath>pwm.h</itemPath>
       <itemPath>pwm_notes.h</itemPath>
       <itemPath>scales.h</itemPath>
-      <itemPath>mcp23008.h</itemPath>
       <itemPath>joystick.h</itemPath>
+      <itemPath>mcp23008.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -107,8 +107,8 @@
       <itemPath>systimer.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>scales.c</itemPath>
-      <itemPath>mcp23008.c</itemPath>
       <itemPath>joystick.c</itemPath>
+      <itemPath>mcp23008.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

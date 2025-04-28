@@ -42,7 +42,6 @@
 #include "vcnl4200.h"
 #include "scales.h"
 #include <math.h>
-#include "joystick.h"
 #include "mcp23008.h"
 
 void UART_WriteString(const char *message);
@@ -53,56 +52,45 @@ float current_divisor = 1.0;
 int main(void) {
     SYSTEM_Initialize();
     pwm_init();
-    vcnl_init();
+    vcnl_init();  
     mcp23008_init();
-//    joystick_init();
+
     int current_scale_index = 0;
 
     // Simulated duty cycle
     float duty_cycle = 0.50f;
-    
-    static uint8_t last_state = 0xFF;
-    uint8_t switch_state; 
 
     while (1) {
         // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
-        uint8_t i2c_cmd = 0x09;          // GPIO
-
-        TWI0_Write(0x24, &i2c_cmd, 1);
-        while (TWI0_IsBusy());
-
-        TWI0_Read(0x24, &switch_state, 1);
-        while (TWI0_IsBusy());
-        
-        bool previously_released = (last_state & 0b00011111) == 0b00011111;
-        bool now_pressed = (switch_state & 0b00011111) != 0b00011111;
-
-        if (previously_released && now_pressed) {
-            switch (switch_state) {
-                case 0b11111101: // Left switch pressed
-                    sprintf(uart_str,"Left joystick pressed\r\n");
-                    current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
-                    break;
-                case 0b11110111: // Right switch pressed
-                    sprintf(uart_str,"Right joystick pressed\r\n");
-                    current_scale_index = (current_scale_index + 1) % num_scales; // Increment scale index   
-                    break;
-                case 0b11111110:
-                    sprintf(uart_str,"Up joystick pressed \r\n");
-                    if (current_divisor > 0.25) current_divisor = current_divisor / 2.0;
-                    break;
-                case 0b11111011:
-                    sprintf(uart_str,"Down joystick pressed \r\n");
-                    if (current_divisor < 8.0) current_divisor = current_divisor * 2.0;
-                    break;
-            }
-            UART_WriteString(uart_str);
+        mcp23008_read_joystick();
+        if (mcp23008_is_joystick_left())
+        {
+//            sprintf(uart_str,"Left joystick pressed \r\n");
+//            UART_WriteString(uart_str);
+            current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
         }
-        last_state = switch_state;
-
+        else if (mcp23008_is_joystick_right())
+        {
+//            sprintf(uart_str,"Right joystick pressed \r\n");
+//            UART_WriteString(uart_str);
+            current_scale_index = (current_scale_index + 1) % num_scales;
+        }
+        else if (mcp23008_is_joystick_up())
+        {
+//            sprintf(uart_str,"Up joystick pressed \r\n");
+//            UART_WriteString(uart_str);
+            if (current_divisor > 0.25) current_divisor /= 2.0;
+        }
+        else if (mcp23008_is_joystick_down())
+        {
+//            sprintf(uart_str,"Down joystick pressed \r\n");
+//            UART_WriteString(uart_str);
+            if (current_divisor < 8.0) current_divisor *= 2.0;
+        }
+        
         // Print scale index to UART
-        sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
-        UART_WriteString(uart_str);
+//        sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
+//        UART_WriteString(uart_str);
 
         // Read sensor and set theremin to chosen scale and duty cycle
         read_sensor_and_play(current_scale_index, duty_cycle);
@@ -130,14 +118,14 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
     index = index < 0 ? 0 : (index >= scale_length ? scale_length - 1 : index);
 
     // Update LEDs with current note
-//    mcp23008_write_leds(1 << (7 - index < 0 ? 0 : 7 - index));
+    mcp23008_write_leds(1 << (7 - index < 0 ? 0 : 7 - index));
     
     // Play the tone corresponding to the calculated index in the chosen scale.
     pwm_play_tone(chosen_scale.notes[index] / current_divisor, duty_cycle);
 
     // Print value to UART
-    sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
-    UART_WriteString(uart_str);
+//    sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
+//    UART_WriteString(uart_str);
 }
 
 void UART_WriteString(const char *message) {

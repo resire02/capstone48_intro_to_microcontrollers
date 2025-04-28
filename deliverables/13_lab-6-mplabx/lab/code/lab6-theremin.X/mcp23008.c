@@ -21,11 +21,11 @@
 #define JOYSTICK_RIGHT (1 << 3)
 #define JOYSTICK_PRESSED (1 << 4)
 
-#define JOYSTICK_TIMEOUT 500UL
-
 static uint8_t write_data[2] = {0, 0};
 static volatile uint8_t joystick_read = 0;
 static uint8_t ioex2_state = 0;
+
+//volatile unsigned char joystick_debug = 0;
 
 /* initializes the MCP23008 IO Expander LEDs */
 void mcp23008_init(void)
@@ -33,28 +33,31 @@ void mcp23008_init(void)
     /* Joystick initialization */
     write_data[0] = MCP23008_REG_IODIR; /* select direction register */
     write_data[1] = 0xFF; /* set joystick pins as input */
-    while (TWI0_IsBusy());
     TWI0_Write(ADDR_IOEX2, write_data, 2);
+    while (TWI0_IsBusy());
     write_data[0] = MCP23008_REG_GPPU; /* select pull-up register */
     write_data[1] = 0xFF; /* enable pull-ups for joystick pins */
-    while (TWI0_IsBusy());
     TWI0_Write(ADDR_IOEX2, write_data, 2);
+    while (TWI0_IsBusy());
     
     /* LED initialization */
-//    write_data[0] = MCP23008_REG_IODIR; /* select direction register */
-//    write_data[1] = 0x00; /* set all LEDs as output */
-//    while (TWI0_IsBusy());
-//    TWI0_Write(ADDR_IOEX1, write_data, 2);
-//    write_data[0] = MCP23008_REG_PORT; /* set default register to port */
-//    mcp23008_write_leds(0x00); /* clear off LEDs */
+    write_data[0] = MCP23008_REG_IODIR; /* select direction register */
+    write_data[1] = 0x00; /* set all LEDs as output */
+    while (TWI0_IsBusy());
+    TWI0_Write(ADDR_IOEX1, write_data, 2);
+    mcp23008_write_leds(0);
+    
+    /* Timer initialization for timeout */
+    timer_init();
 }
 
 /* sets the LEDs on/off */
 void mcp23008_write_leds(uint8_t state)
 {
+    write_data[0] = MCP23008_REG_PORT;
     write_data[1] = ~state;
-    while (TWI0_IsBusy());
-    TWI0_Write(ADDR_IOEX1, write_data, 2);
+    TWI0_Write(ADDR_IOEX1, &write_data[0], 2);
+    while(TWI0_IsBusy());
 }
 
 void mcp23008_read_joystick(void)
@@ -63,12 +66,14 @@ void mcp23008_read_joystick(void)
     uint8_t read_in;
     
     /* request to read */
-    while (TWI0_IsBusy());
     TWI0_Write(ADDR_IOEX2, &joystick_cmd, 1);
+    while (TWI0_IsBusy());
     
     /* read joystick data */
-    while (TWI0_IsBusy());
     TWI0_Read(ADDR_IOEX2, &read_in, 1);
+    while (TWI0_IsBusy());
+
+    //joystick_debug = read_in;
     
     /* update state if different */
     if (joystick_read != read_in)
