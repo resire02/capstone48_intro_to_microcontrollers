@@ -51,6 +51,7 @@
       <itemPath>pwm_notes.h</itemPath>
       <itemPath>scales.h</itemPath>
       <itemPath>mcp23008.h</itemPath>
+      <itemPath>joystick.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -107,6 +108,7 @@
       <itemPath>pwm.c</itemPath>
       <itemPath>scales.c</itemPath>
       <itemPath>mcp23008.c</itemPath>
+      <itemPath>joystick.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -1253,7 +1255,7 @@
         <property key="communication.speed" value="0.500"/>
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
-        <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>

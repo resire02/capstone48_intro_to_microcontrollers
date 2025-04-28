@@ -55,7 +55,7 @@ void mcp23008_write_leds(uint8_t state)
 
 void mcp23008_read_joystick(void)
 {
-    uint8_t joystick_cmd = MCP23008_REG_PORT;
+    static uint8_t joystick_cmd = MCP23008_REG_PORT;
     uint8_t read_in;
     
     /* request to read */
