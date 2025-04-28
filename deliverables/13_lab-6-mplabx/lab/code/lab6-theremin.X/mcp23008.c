@@ -41,15 +41,12 @@ void mcp23008_init(void)
     TWI0_Write(ADDR_IOEX2, write_data, 2);
     
     /* LED initialization */
-    write_data[0] = MCP23008_REG_IODIR; /* select direction register */
-    write_data[1] = 0x00; /* set all LEDs as output */
-    while (TWI0_IsBusy());
-    TWI0_Write(ADDR_IOEX1, write_data, 2);
-    write_data[0] = MCP23008_REG_PORT; /* set default register to port */
-    mcp23008_write_leds(0x00); /* clear off LEDs */
-    
-    /* Timer initialization for timeout */
-    timer_init();
+//    write_data[0] = MCP23008_REG_IODIR; /* select direction register */
+//    write_data[1] = 0x00; /* set all LEDs as output */
+//    while (TWI0_IsBusy());
+//    TWI0_Write(ADDR_IOEX1, write_data, 2);
+//    write_data[0] = MCP23008_REG_PORT; /* set default register to port */
+//    mcp23008_write_leds(0x00); /* clear off LEDs */
 }
 
 /* sets the LEDs on/off */

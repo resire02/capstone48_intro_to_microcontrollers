@@ -48,35 +48,57 @@
 void UART_WriteString(const char *message);
 void read_sensor_and_play(int scale_index, float duty_cycle);
 char uart_str[80];
+float current_divisor = 1.0;
 
 int main(void) {
     SYSTEM_Initialize();
     pwm_init();
     vcnl_init();
     mcp23008_init();
-    //joystick_init();
+//    joystick_init();
     int current_scale_index = 0;
-    
+
     // Simulated duty cycle
     float duty_cycle = 0.50f;
+    
+    static uint8_t last_state = 0xFF;
+    uint8_t switch_state; 
 
     while (1) {
-        // Simulated joystick input for testing
-        mcp23008_read_joystick();
-        if (mcp23008_is_joystick_right()) 
-        {
-            current_scale_index = (current_scale_index + 1) % num_scales;
-            sprintf(uart_str, "Switching to next scale...\r\n");
-            UART_WriteString(uart_str);
-        } 
-        else if (mcp23008_is_joystick_left()) 
-        {
-            current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
-            sprintf(uart_str, "Switching to previous scale...\r\n");
+        // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
+        uint8_t i2c_cmd = 0x09;          // GPIO
+
+        TWI0_Write(0x24, &i2c_cmd, 1);
+        while (TWI0_IsBusy());
+
+        TWI0_Read(0x24, &switch_state, 1);
+        while (TWI0_IsBusy());
+        
+        bool previously_released = (last_state & 0b00011111) == 0b00011111;
+        bool now_pressed = (switch_state & 0b00011111) != 0b00011111;
+
+        if (previously_released && now_pressed) {
+            switch (switch_state) {
+                case 0b11111101: // Left switch pressed
+                    sprintf(uart_str,"Left joystick pressed\r\n");
+                    current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
+                    break;
+                case 0b11110111: // Right switch pressed
+                    sprintf(uart_str,"Right joystick pressed\r\n");
+                    current_scale_index = (current_scale_index + 1) % num_scales; // Increment scale index   
+                    break;
+                case 0b11111110:
+                    sprintf(uart_str,"Up joystick pressed \r\n");
+                    if (current_divisor > 0.25); current_divisor = current_divisor / 2.0;
+                    break;
+                case 0b11111011:
+                    sprintf(uart_str,"Down joystick pressed \r\n");
+                    if (current_divisor < 8.0); current_divisor = current_divisor * 2.0;
+                    break;
+            }
             UART_WriteString(uart_str);
         }
-        
-        // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
+        last_state = switch_state;
 
         // Print scale index to UART
         sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
@@ -99,14 +121,6 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
 
     // Read proximity value from the sensor.
     proximity = vncl_read_ps();
-
-    // Stop playing if nothing detected
-    if (proximity < 6) /* Arbitrary value, feel free to change */
-    {
-        pwm_play_tone(0, duty_cycle);
-        mcp23008_write_leds(0);
-        return;
-    }
     
     // Logarithmically calculate the index based on proximity value.
     // This accounts for the nonlinear proximity sensor readings, mapping them to the scale length.
@@ -116,10 +130,10 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
     index = index < 0 ? 0 : (index >= scale_length ? scale_length - 1 : index);
 
     // Update LEDs with current note
-    mcp23008_write_leds(1 << (7 - index < 0 ? 0 : 7 - index));
+//    mcp23008_write_leds(1 << (7 - index < 0 ? 0 : 7 - index));
     
     // Play the tone corresponding to the calculated index in the chosen scale.
-    pwm_play_tone(chosen_scale.notes[index], duty_cycle);
+    pwm_play_tone(chosen_scale.notes[index] / current_divisor, duty_cycle);
 
     // Print value to UART
     sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
