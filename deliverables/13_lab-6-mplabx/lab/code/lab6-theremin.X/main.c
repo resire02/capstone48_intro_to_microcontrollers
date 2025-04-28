@@ -62,6 +62,7 @@ int main(void) {
 
     while (1) {
         // Simulated joystick input for testing
+        mcp23008_read_joystick();
         if (mcp23008_is_joystick_right()) 
         {
             current_scale_index = (current_scale_index + 1) % num_scales;
