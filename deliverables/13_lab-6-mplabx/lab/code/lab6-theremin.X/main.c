@@ -88,6 +88,16 @@ int main(void) {
             if (current_divisor < 8.0) current_divisor *= 2.0;
         }
         
+        else if (mcp23008_is_left_switch())
+        {
+            if (duty_cycle != 0.50f) duty_cycle = 0.50;
+        }
+        
+        else if (mcp23008_is_right_switch())
+        {
+            if (duty_cycle != 0.05f) duty_cycle = 0.05;
+        }
+        
         // Print scale index to UART
 //        sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
 //        UART_WriteString(uart_str);

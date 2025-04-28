@@ -12,7 +12,7 @@
 extern "C" {
 #endif
    
-#define JOYSTICK_TIMEOUT 250UL
+#define IOEX2_TIMEOUT 250UL
     
 /* initializes the MCP23008 IO Expander LEDs */
 void mcp23008_init(void);
@@ -38,6 +38,10 @@ bool mcp23008_is_joystick_right(void);
 /* returns 1 if joystick is pressed, returns 0 if joystick is not pressesd or timeout period has not expired */
 bool mcp23008_is_joystick_pressed(void);
 
+bool mcp23008_is_left_switch(void);
+
+bool mcp23008_is_right_switch(void);
+
 //extern volatile unsigned char joystick_debug;
 
 #ifdef	__cplusplus
@@ -45,4 +49,5 @@ bool mcp23008_is_joystick_pressed(void);
 #endif
 
 #endif	/* MCP23008_H */
+
 

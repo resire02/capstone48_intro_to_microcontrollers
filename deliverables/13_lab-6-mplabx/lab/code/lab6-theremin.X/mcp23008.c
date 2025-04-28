@@ -20,6 +20,8 @@
 #define JOYSTICK_LEFT (1 << 1)
 #define JOYSTICK_RIGHT (1 << 3)
 #define JOYSTICK_PRESSED (1 << 4)
+#define LEFT_SWITCH_PRESSED (1 << 7)
+#define RIGHT_SWITCH_PRESSED (1 << 5)
 
 static uint8_t write_data[2] = {0, 0};
 static volatile uint8_t joystick_read = 0;
@@ -44,7 +46,7 @@ void mcp23008_init(void)
     write_data[0] = MCP23008_REG_IODIR; /* select direction register */
     write_data[1] = 0x00; /* set all LEDs as output */
     TWI0_Write(ADDR_IOEX1, write_data, 2);
-    while (TWI0_IsBusy());
+    while (TWI0_IsBusy());            
     mcp23008_write_leds(0);
     
     /* Timer initialization for timeout */
@@ -92,7 +94,7 @@ bool mcp23008_is_joystick_up(void)
         {
             ioex2_state |= JOYSTICK_UP; /* set input flag to prevent retrig */
         }
-        else if (read_timer() < JOYSTICK_TIMEOUT)
+        else if (read_timer() < IOEX2_TIMEOUT)
         {
             return false;
         }
@@ -113,7 +115,7 @@ bool mcp23008_is_joystick_down(void)
         {
             ioex2_state |= JOYSTICK_DOWN; /* set input flag to prevent retrig */
         }
-        else if (read_timer() < JOYSTICK_TIMEOUT)
+        else if (read_timer() < IOEX2_TIMEOUT)
         {
             return false;
         }
@@ -134,7 +136,7 @@ bool mcp23008_is_joystick_left(void)
         {
             ioex2_state |= JOYSTICK_LEFT; /* set input flag to prevent retrig */
         }
-        else if (read_timer() < JOYSTICK_TIMEOUT)
+        else if (read_timer() < IOEX2_TIMEOUT)
         {
             return false;
         }
@@ -155,7 +157,48 @@ bool mcp23008_is_joystick_right(void)
         {
             ioex2_state |= JOYSTICK_RIGHT; /* set input flag to prevent retrig */
         }
-        else if (read_timer() < JOYSTICK_TIMEOUT)
+        else if (read_timer() < IOEX2_TIMEOUT)
+        {
+            return false;
+        }
+        
+        clear_timer(); /* reset timeout counter */
+        return true;
+    }
+    
+    return false;
+}
+
+/* returns 1 if joystick is right, returns 0 if joystick is not right or timeout period has not expired */
+bool mcp23008_is_left_switch(void)
+{
+    if (!(joystick_read & LEFT_SWITCH_PRESSED)) /* on input detected */
+    {
+        if (!(ioex2_state & LEFT_SWITCH_PRESSED)) /* never triggered since unpress */
+        {
+            ioex2_state |= LEFT_SWITCH_PRESSED; /* set input flag to prevent retrig */
+        }
+        else if (read_timer() < IOEX2_TIMEOUT)
+        {
+            return false;
+        }
+        
+        clear_timer(); /* reset timeout counter */
+        return true;
+    }
+    
+    return false;
+}
+
+bool mcp23008_is_right_switch(void)
+{
+    if (!(joystick_read & RIGHT_SWITCH_PRESSED)) /* on input detected */
+    {
+        if (!(ioex2_state & RIGHT_SWITCH_PRESSED)) /* never triggered since unpress */
+        {
+            ioex2_state |= RIGHT_SWITCH_PRESSED; /* set input flag to prevent retrig */
+        }
+        else if (read_timer() < IOEX2_TIMEOUT)
         {
             return false;
         }
@@ -176,7 +219,7 @@ bool mcp23008_is_joystick_pressed(void)
         {
             ioex2_state |= JOYSTICK_PRESSED; /* set input flag to prevent retrig */
         }
-        else if (read_timer() < JOYSTICK_TIMEOUT)
+        else if (read_timer() < IOEX2_TIMEOUT)
         {
             return false;
         }
