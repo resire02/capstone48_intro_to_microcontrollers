@@ -3,11 +3,16 @@
 
 static volatile uint32_t timer = 0UL;
 
-void timer_callback()
+void timer_callback(void)
 {
     cli();
     timer++;
     sei();
+}
+
+void timer_init()
+{
+    Timer0.TimeoutCallbackRegister(timer_callback);
 }
 
 void clear_timer()

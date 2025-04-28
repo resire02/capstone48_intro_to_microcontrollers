@@ -9,7 +9,7 @@
 extern "C" {
 #endif
     
-void timer_callback();
+void timer_init(void);
 void clear_timer();
 uint32_t read_timer();
 

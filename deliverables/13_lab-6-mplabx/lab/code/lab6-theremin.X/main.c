@@ -54,21 +54,27 @@ int main(void) {
     pwm_init();
     vcnl_init();
     mcp23008_init();
-    joystick_init();
+    //joystick_init();
     int current_scale_index = 0;
-
+    
     // Simulated duty cycle
     float duty_cycle = 0.50f;
 
     while (1) {
         // Simulated joystick input for testing
-        bool joystick_right_pressed = joystick_right();
-        bool joystick_left_pressed = joystick_left();
-        if (joystick_right_pressed) {
+        if (mcp23008_is_joystick_right()) 
+        {
             current_scale_index = (current_scale_index + 1) % num_scales;
-        } else if (joystick_left_pressed) {
+            sprintf(uart_str, "Switching to next scale...\r\n");
+            UART_WriteString(uart_str);
+        } 
+        else if (mcp23008_is_joystick_left()) 
+        {
             current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
+            sprintf(uart_str, "Switching to previous scale...\r\n");
+            UART_WriteString(uart_str);
         }
+        
         // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
 
         // Print scale index to UART
