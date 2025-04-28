@@ -89,11 +89,11 @@ int main(void) {
                     break;
                 case 0b11111110:
                     sprintf(uart_str,"Up joystick pressed \r\n");
-                    if (current_divisor > 0.25); current_divisor = current_divisor / 2.0;
+                    if (current_divisor > 0.25) current_divisor = current_divisor / 2.0;
                     break;
                 case 0b11111011:
                     sprintf(uart_str,"Down joystick pressed \r\n");
-                    if (current_divisor < 8.0); current_divisor = current_divisor * 2.0;
+                    if (current_divisor < 8.0) current_divisor = current_divisor * 2.0;
                     break;
             }
             UART_WriteString(uart_str);
