@@ -43,8 +43,8 @@ void mcp23008_init(void)
     /* LED initialization */
     write_data[0] = MCP23008_REG_IODIR; /* select direction register */
     write_data[1] = 0x00; /* set all LEDs as output */
-    while (TWI0_IsBusy());
     TWI0_Write(ADDR_IOEX1, write_data, 2);
+    while (TWI0_IsBusy());
     mcp23008_write_leds(0);
     
     /* Timer initialization for timeout */
