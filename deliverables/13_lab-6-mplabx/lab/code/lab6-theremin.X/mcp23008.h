@@ -21,7 +21,7 @@ void mcp23008_init(void);
 void mcp23008_write_leds(unsigned char state);
 
 /* reads joystick values */
-void mcp23008_read_joystick(void);
+void mcp23008_read_ioex2(void);
 
 /* returns 1 if joystick is up, returns 0 if joystick is not up or timeout period has not expired */
 bool mcp23008_is_joystick_up(void);
@@ -38,9 +38,14 @@ bool mcp23008_is_joystick_right(void);
 /* returns 1 if joystick is pressed, returns 0 if joystick is not pressesd or timeout period has not expired */
 bool mcp23008_is_joystick_pressed(void);
 
-bool mcp23008_is_left_switch(void);
+/* returns 1 if sw1 is pressed, reutrns 0 if sw1 is not pressed or timeout period has not expired */
+bool mcp23008_is_sw1_pressed();
 
-bool mcp23008_is_right_switch(void);
+/* returns 1 if sw2is pressed, reutrns 0 if sw2 is not pressed or timeout period has not expired */
+bool mcp23008_is_sw2_pressed();
+
+/* returns 1 if sw2 is pressed, reutrns 0 if sw2 is not pressed or timeout period has not expired */
+bool mcp23008_is_sw3_pressed();
 
 //extern volatile unsigned char joystick_debug;
 

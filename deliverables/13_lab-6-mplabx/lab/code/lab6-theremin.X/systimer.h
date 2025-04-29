@@ -10,8 +10,10 @@ extern "C" {
 #endif
     
 void timer_init(void);
-void clear_timer();
-uint32_t read_timer();
+void clear_timer1();
+uint32_t read_timer1();
+void clear_timer2();
+uint32_t read_timer2();
 
 #ifdef	__cplusplus
 }

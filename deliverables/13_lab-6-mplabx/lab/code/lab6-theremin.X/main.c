@@ -45,7 +45,7 @@
 #include "mcp23008.h"
 
 void UART_WriteString(const char *message);
-void read_sensor_and_play(int scale_index, float duty_cycle);
+void read_sensor_and_play(int scale_index, float duty_cycle, float gate);
 char uart_str[80];
 float current_divisor = 1.0;
 
@@ -56,58 +56,71 @@ int main(void) {
     mcp23008_init();
 
     int current_scale_index = 0;
+    uint32_t curr_gate = 0;
 
     // Simulated duty cycle
     float duty_cycle = 0.50f;
 
     while (1) {
         // WARNING: Ensure you connect a jumper cable from pin PD1 to the AMP IN for the audio output to work correctly!
-        mcp23008_read_joystick();
+        mcp23008_read_ioex2();
+        
+        // handle joystick inputs
         if (mcp23008_is_joystick_left())
         {
-//            sprintf(uart_str,"Left joystick pressed \r\n");
-//            UART_WriteString(uart_str);
             current_scale_index = (current_scale_index - 1 + num_scales) % num_scales;
         }
         else if (mcp23008_is_joystick_right())
         {
-//            sprintf(uart_str,"Right joystick pressed \r\n");
-//            UART_WriteString(uart_str);
             current_scale_index = (current_scale_index + 1) % num_scales;
         }
         else if (mcp23008_is_joystick_up())
         {
-//            sprintf(uart_str,"Up joystick pressed \r\n");
-//            UART_WriteString(uart_str);
             if (current_divisor > 0.25) current_divisor /= 2.0;
         }
         else if (mcp23008_is_joystick_down())
         {
-//            sprintf(uart_str,"Down joystick pressed \r\n");
-//            UART_WriteString(uart_str);
             if (current_divisor < 8.0) current_divisor *= 2.0;
         }
-        
-        else if (mcp23008_is_left_switch())
+        else if (mcp23008_is_joystick_pressed())
         {
-            if (duty_cycle != 0.50f) duty_cycle = 0.50;
+            switch (curr_gate)
+            {
+                case 0:
+                    curr_gate = 50; break;
+                case 50:
+                    curr_gate = 100; break;
+                case 100:
+                    curr_gate = 250; break;
+                case 250:
+                    curr_gate = 500; break;
+                case 500:
+                    curr_gate = 0; break;
+            }
+            clear_timer2();
         }
         
-        else if (mcp23008_is_right_switch())
+        if (mcp23008_is_sw1_pressed())
         {
-            if (duty_cycle != 0.05f) duty_cycle = 0.05;
+            duty_cycle = 0.50;
         }
-        
-        // Print scale index to UART
-//        sprintf(uart_str, "Current scale: %d \r\n", current_scale_index);
-//        UART_WriteString(uart_str);
+        else if (mcp23008_is_sw2_pressed())
+        {
+            duty_cycle = 0.25;
+        }
+        else if (mcp23008_is_sw3_pressed())
+        {
+            duty_cycle = 0.05;
+        }
 
         // Read sensor and set theremin to chosen scale and duty cycle
-        read_sensor_and_play(current_scale_index, duty_cycle);
+        read_sensor_and_play(current_scale_index, duty_cycle, curr_gate);
     }
 }
 
-void read_sensor_and_play(int scale_index, float duty_cycle) {
+void read_sensor_and_play(int scale_index, float duty_cycle, float gate) {
+    static bool gate_on = false;
+    
     // Initialize variable for proximity reading
     uint16_t proximity = 0;
 
@@ -131,8 +144,24 @@ void read_sensor_and_play(int scale_index, float duty_cycle) {
     mcp23008_write_leds(1 << (7 - index < 0 ? 0 : 7 - index));
     
     // Play the tone corresponding to the calculated index in the chosen scale.
-    pwm_play_tone(chosen_scale.notes[index] / current_divisor, duty_cycle);
-
+    if (gate != 0)
+    {
+        if (gate_on) 
+            pwm_play_tone(0, duty_cycle);
+        else 
+            pwm_play_tone(chosen_scale.notes[index] / current_divisor, duty_cycle);
+        
+        if (read_timer2() > gate)
+        {
+            gate_on = !gate_on;
+            clear_timer2();
+        }
+    }
+    else
+    {
+        pwm_play_tone(chosen_scale.notes[index] / current_divisor, duty_cycle);
+    }
+    
     // Print value to UART
 //    sprintf(uart_str, "Frequency: %f \r\n", chosen_scale.notes[index]);
 //    UART_WriteString(uart_str);
