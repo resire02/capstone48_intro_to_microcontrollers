@@ -1,6 +1,6 @@
 /* 
  * File:   mcp23008.h
- * Author: 
+ * Author: Felix Leong
  *
  * Created on April 27, 2025, 3:07 PM
  */
