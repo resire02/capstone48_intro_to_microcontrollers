@@ -1,3 +1,9 @@
+/*
+ * File:   pwm.c
+ * Author: Gonzalo Allendes
+ *
+ * Created on 20 de abril de 2025, 16:48
+ */
 #include "mcc_generated_files/system/system.h"
 #include "pwm.h"
 

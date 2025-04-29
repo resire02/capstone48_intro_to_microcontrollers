@@ -1,3 +1,9 @@
+/*
+ * File:   scales.c
+ * Author: Gonzalo Allendes
+ *
+ * Created on 24 de abril de 2025, 10:44
+ */
 #include "scales.h"
 #include "pwm_notes.h"
 #include <xc.h>
