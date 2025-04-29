@@ -29,7 +29,7 @@ bool prev_jIn = false;
 void doorBellLoop() {
   bool jIn = !doorBell.digitalRead(4);
   if (jIn && !prev_jIn) { // Joystick pressed (rising edge)
-      Serial.println("Ringing bell!");
+      Serial.println("Pushing bell!");
       analogWrite(SPEAKER_PIN, 128); // Write a PWM value (adjust for your desired tone)
   } else if (!jIn && prev_jIn) { // Joystick released (falling edge)
       Serial.println("Bell released!");

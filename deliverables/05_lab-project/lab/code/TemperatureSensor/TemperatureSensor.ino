@@ -21,6 +21,7 @@ void setup() {
   Wire.begin(); // Initialize I²C communication
   Serial.swap(3);
   Serial.begin(115200); // Initialize serial communication
+  while (!Serial);
 
   // Initialize RGB pins
   pinMode(RED_PIN, OUTPUT);
