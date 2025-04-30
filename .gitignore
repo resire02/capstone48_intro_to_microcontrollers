@@ -20,7 +20,7 @@
 **/[Cc]ode/**/queuelogs
 
 # IntelliJ IDEA files
-.idea/**
+**/.idea/**
 
 # MPLAB X IDE build files
 **/Lab/**/*.d
