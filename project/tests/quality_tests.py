@@ -13,7 +13,7 @@ def run_cpplint_on_ino_files(root_dir, output_path='./cpplint_raw.txt'):
             for fname in filenames:
                 if fname.startswith('Base_Example'):
                     continue
-                if fname.endswith('.ino'):
+                if fname.endswith(('.ino')):
                     full_path = os.path.join(dirpath, fname)
                     clean_path = os.path.normpath(full_path).replace(os.sep, '/')
 
@@ -24,17 +24,16 @@ def run_cpplint_on_ino_files(root_dir, output_path='./cpplint_raw.txt'):
 
                     # Run cpplint
                     result = subprocess.run(['cpplint', tmp_path], capture_output=True, text=True)
-
-                    # Replace temp path with original path in the report
-                    processed_output = re.sub(re.escape(tmp_path), clean_path, result.stderr)
-
-                    # Write results to .txt file
-                    report.write(f"Linting {clean_path} (as .cpp)\n")
-                    report.write(processed_output)
-                    report.write("\n" + "="*80 + "\n")
+                    result = re.sub(re.escape(tmp_path), clean_path, result.stderr)
 
                     # Delete temp file
                     os.unlink(tmp_path)
+
+                    # Replace temp path with original path in the report
+                    report.write(f"Linting {clean_path} (as .cpp)\n")
+                    report.write(result)
+                    report.write("\n" + "="*80 + "\n")
+
 
 def run_cppcheck_on_c_files(root_dir, output_txt='./cppcheck_raw.txt'):
     exclude_dirs = ['01_getting-started', '02_lab-1', '03_lab-2', '04_lab-3','05_lab-project', '06_revision', 'mcc_generated_files']
