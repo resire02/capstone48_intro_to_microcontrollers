@@ -1,12 +1,29 @@
 .idea
 
 .vscode/
+# Visual Studio Code local configuration files
+.vscode/settings.json
 
-# python env files
+# Python Virtual Environments
 **/.venv/
 
-# python log files
+# Log files
 **/*.log
+
+# MPLAB X IDE build artifacts
+**/[Cc]ode/**/.generated_files
+**/[Cc]ode/**/build
+**/[Cc]ode/**/debug
+**/[Cc]ode/**/dist
+**/[Cc]ode/**/motorbench
+**/[Cc]ode/**/nbproject/Makefile-*
+**/[Cc]ode/**/nbproject/Package-*
+**/[Cc]ode/**/nbproject/private
+**/[Cc]ode/**/defmplabxtrace.log*
+**/[Cc]ode/**/queuelogs
+
+# IntelliJ IDEA files
+**/.idea/**
 
 # MPLAB X IDE build files
 **/Lab/**/*.d
@@ -38,5 +55,4 @@
 **/Lab/**/nbproject/Makefile-*
 **/Lab/**/disassembly/
 **/Lab/**/.generated_files/
-**/Lab/**/mcc_generated_files/
 **/Lab/**/debug/
