@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MPLABX: Getting Started</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manuals about the basics of microcontrollers"/>
+    <link rel="stylesheet" href="../globals.css">
+</head>
+
+<body>
+    <header class="page-header">
+            <div class="page-title">
+                <img src="../images/128px-Microchip_Technology_logo.svg" />
+                <a href="index.html" style="text-decoration: none;color:black;">
+                    <h1>Introduction to Microcontrollers</h1>
+                </a>
+            </div>
+            <div class="page-subheader">
+                <ul>
+                    <li>
+                        <strong>Arduino</strong>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_0.html">Lab 0</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_1.html">Lab 1</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_2.html">Lab 2</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_3.html">Lab 3</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_4_project_requirements.html">Lab 4</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_4_project_solution.html">Lab 4 Solution</a>
+                    </li>
+                    <li>
+                        <strong>MPLAB X IDE</strong>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_0.html">Lab 0</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_1.html">Lab 1</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_2.html">Lab 2</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_3.html">Lab 3</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_4.html">Lab 4</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_5.html">Lab 5</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_6.html">Lab 6</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+    <main>
+        <h1 class="lab-header">Getting Started</h1>
+        <section>
+            <h2 class="section-header-title">Required Materials</h2>
+            <p>
+            <ul class="bullet-list">
+                <li>MP LAB X IDE and Compiler</li>
+                <li>Curiosity Nano AVR64DD32 board</li>
+                <li>USB to connect board to computer</li>
+            </ul>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Learning Objective</h2>
+            <p>
+            <ol class="bullet-list">
+                <li>Using MCC Melody</li>
+                <li>Viewing pin configurations</li>
+                <li>Configuring and using the UART</li>
+                <li>Configuring and using the on board timers</li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">UART and Timer explanation</h2>
+            <p>
+                The UART is the on board serialization tool used to write data from the microcontroller back to the
+                connected device. This functions very similarly to how it did in the Arduino based microcontroller lab
+                course, but with a few setup differences that we will explore in the setup section.
+                <br>
+                <br>
+                The Timer(s) on board allow us a way to perform methods at a certain “step” or timeout (defined in
+                milliseconds). These provide callback registers for the microcontroller to call back to after each time
+                the timer ticks, which will be a very useful tool going forward.
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Setting Up UART and Timer</h2>
+            <p>
+                In this lab, we will create a new project in MPLAB X IDE and configure essential peripherals using MPLAB
+                Code Configurator (MCC). The objective is to set up and initialize UART for serial communication and
+                configure a timer to generate periodic interrupts that will trigger an interrupt handler. By following
+                these steps, you will gain hands-on experience with configuring microcontroller peripherals in a
+                development environment.
+
+            <ol>
+                <li><b>Creating the Project</b>
+                    <ul>
+                        <li>Open MPLAB X IDE</li>
+                        <li>Navigate to <b>File → New Project → Application Project(s) → Next.</b></li>
+                        <li>Select <b>AVR64DD32</b> as the target device → <b>Next.</b></li>
+                        <li>Choose <b>xc8</b> as the compiler → <b>Next.</b></li>
+                        <li>Name the project <b>mplab_lab1 → Finish.</b></li>
+                    </ul>
+                </li>
+                <li><b>Configuring UART</b>
+                    <ul>
+                        <li>Click the <b>MCC</b> icon to open the <b>MPLAB Code Configurator</b> (covered in Lab 0).
+                            This will launch
+                            the <b>Application Builder.</b></li>
+                        <li>In the <b>Resource Management</b> tab:</b>
+                            <ul>
+                                <li>Under <b>Device Resources</b>, expand <b>Drivers.</b>
+                                </li>
+                                <li>Locate <b>UART</b> and select <b>UART Example.</b>
+                                </li>
+                                <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p1.png">
+                            </ul>
+                        </li>
+                        <li>
+                            In the <b>Application Builder</b>, click the gear icon next to <b>UART Example.</b>
+                            <img src="../images/mplabx_lab1/UART_TIMER_SETUP_extra.png">
+                        </li>
+                        <li>
+                            Under the <b>UART Example</b> tab, set:
+                            <ul>
+                                <li>
+                                    <b>Example Selection:</b> UART Write String
+                                </li>
+                                <li>
+                                    <b>Example Implementation:</b> Polled
+                                </li>
+                                <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p2.png">
+                            </ul>
+                        </li>
+                        <li>
+                            Back in <b>Device Resources:</b>
+                            <ul>
+                                <li>
+                                    Select <b>UART.</b>
+                                </li>
+                                <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p3.png">
+                                <li>
+                                    Click <b>&lt;Add Dependency&gt;</b> for the new <b>UART Application Builder</b>
+                                    component.
+                                </li>
+                                <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p4.png">
+                            </ul>
+                        </li>
+                        <li>
+                            Click the gear icon and choose USART0 under Dependency Selector. The USART acts as an
+                            interface between the UART and the bare metal. We picked USART0 because it is mapped to
+                            ports 4 and 5, which are connected to the onboard debugger on the Curiosity Nano.
+
+                            <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p5.png">
+                        </li>
+                        <li>
+                            In the Configuration Settings, set:
+                            <ul>
+                                <li>
+                                    <b>Custom Name:</b> UART
+                                </li>
+                                <li>
+                                    <b>Requested Baudrate:</b> 115200
+                                </li>
+                                <li>
+                                    Keep the remaining settings at default.
+                                </li>
+                                <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p6.png">
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Configuring the Timer
+                    <ul>
+                        <li>
+                            Under <b>Device Resources</b>, select <b>Timer</b>
+                        </li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p7.png">
+                        <li>
+                            Click on the <b>gear icon</b> next to <b>&lt;Add Dependency&gt;.</b>
+                        </li>
+                        <li>
+                            Under <b>Dependency Selector</b>, select <b>TCB0.</b>
+                        </li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p8.png">
+                        <li>
+                            Keep the default settings - 1 millisecond is sufficient as our timer clock frequency.
+                        </li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p9.png">
+                        <li>
+                            At this point, your <b>Application Builder diagram</b> should reflect these configurations.
+                        </li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p10.png">
+                        <li>
+                            Before generating the code, ensure to set the following configurations are set by pressing
+                            the gear icon next to each System component:
+                            <ul>
+                                <li>
+                                    <b>CLKCTRL:</b> Default settings are applied.
+                                </li>
+                                <li>
+                                    <b>Interrupt Manager:</b> Global interrupts are enabled to allow interrupt-driven
+                                    events.
+                                </li>
+                                <li>
+                                    <b>Configuration Bits:</b> These bits define the personality of the microcontroller
+                                    at startup.
+                                    <ul>
+                                        <li>
+                                            <b>Reset Pin Configuration</b>: Set to <b>Reset mode.</b>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <b>Pin Configuration (pictured below):</b>
+                                    <ul>
+                                        <li>
+                                            <b>USART</b>: Open the <b>Pin Grid View</b> to assign <b>pins 4 and 5</b>
+                                            under PORTD to USART
+                                            for serial communication. When a pin is assigned to a peripheral, a <b>green
+                                                lock icon</b> appears on it, indicating that the pin is successfully
+                                            acquired.
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p11.png">
+                    </ul>
+                </li>
+                <li><b>Generate Code</b>
+                    <ul>
+                        <li>Under <b>Resource Management [MCC]</b>, click on <b>Generate</b>. This will create a main.c
+                            file and a
+                            directory named <b>MCC Generated Files</b> under <b>Source Files.</b> This directory
+                            contains all the
+                            automatically generated code for the components selected in the <b>Application Builder.</b>
+                        </li>
+                        <li>☢️ <b>Warning</b>: Do not store or modify your source code inside the "<b>MCC Generated
+                                Files</b>" folder.
+                            This directory is managed by the <b>MPLAB Code Configurator (MCC)</b>, and any changes made
+                            manually will be overwritten the next time code is generated.</li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p12.png">
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p13.png">
+                        <li>In main.c, we import the generated code using the directive:</li>
+                        <pre><code class="'language-c">
+#include "mcc_generated_files/system/system.h"
+                         </code></pre>
+
+                        <li>To initialize the configured peripherals, we call:</li>
+                        <pre><code class="'language-c">
+SYSTEM_Initialize();
+                         </code></pre>
+                        <li>A quick <b>Ctrl + B</b> (or <b>Right-click → Navigate → Go to Declaration/Definition</b>)
+                            over
+                            SYSTEM_Initialize() will take you to its function definition in system.c. Here, you can see
+                            how each selected component is initialized.</li>
+                        <img src="../images/mplabx_lab1/UART_TIMER_SETUP_p14.png">
+                    </ul>
+                </li>
+            </ol>
+            </p>
+        </section>
+        <section>
+            <h2 class="section-header-title">Main.c</h2>
+            <p>
+                Now that the project is configured, we will demonstrate how to implement blocking vs non-blocking
+                operations using timer callbacks and atomic operations. The following code is written in
+                <b>mplab_lab1/Source Files/main.c.</b>
+            <ol>
+                <li>
+                    For this lab, we will need to import the following libraries:
+                    <ul>
+                        <li>
+                            <b>mcc_generated_files/system/system.h</b> – required to interact with project dependencies
+                            (peripherals) from Device Resources
+                        </li>
+                        <li>
+                            <b>string.h</b> – utility library for working with sequences of characters (strings)
+                        </li>
+                        <li>
+                            <b>stdio.h</b> – library for working with sources of data (streams). We will use
+                            <b>sprintf()</b> for printing numeric values to the console.
+                        </li>
+                        <li>
+                            <b>util/delay.h</b> – imported to use <b>_delay_ms()</b> function (see Lab 0)
+                        </li>
+                        <pre><code class="'language-c">
+#include "mcc_generated_files/system/system.h"
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;util/delay.h&gt;
+                                                         </code></pre>
+
+                    </ul>
+                </li>
+                <br>
+                <li>
+                    Projects in MPLAB X IDE are coded in the C programming language, which preprocesses files from top
+                    to bottom, meaning the compiler will fail to find the definition of functions called in main that
+                    are defined after the main function. To solve this problem, we define the <b>function prototypes</b>
+                    before
+                    the main function.
+                    <pre><code class="'language-c">
+void UART_WriteString(const char *message);
+uint32_t read_timer(void);
+void clear_timer(void);
+void tcb_softtimer(void);
+void non_blocking(void);
+void blocking(void);
+void blink_led(void);
+                                                                                 </code></pre>
+                </li>
+                <br>
+                <li>
+                    We define a timer variable for keeping track of our timer. The <b>volatile</b> keyword means that
+                    the value
+                    can change when reading it. This is used to indicate that more than one thread can modify the
+                    variable. We will also define an fixed length array of characters to be used as a buffer for sending
+                    data through the UART.
+                    <pre><code class="'language-c">
+volatile uint32_t timer = 0;
+char uart_string[80];
+                    </code></pre>
+                </li>
+                <br>
+                <li>
+                    Here is the main function of the project, let's walk through what each line does:
+                    <pre><code class="'language-c">
+int main(void)
+{
+	SYSTEM_Initialize();
+	PORTF_set_pin_level(5, 1);
+	UART_WriteString("Program is starting...\r\n");
+    
+	_delay_ms(1000);
+    
+	Timer0.TimeoutCallbackRegister(tcb_softtimer);
+	clear_timer();
+    
+	while(1)
+	{
+    	      non_blocking();
+	}
+}
+                    </code></pre>
+                    <ul>
+                        <li>
+                            First, we initialize project dependencies through SYSTEM_Initialize(). This sets up the
+                            UART, TCB0 Timer, and other resources needed by the project
+                            <pre><code class="'language-c">
+SYSTEM_Initialize();
+                            </code></pre>
+                        </li>
+                        <li>
+                            We set PORTF_5 (pin 25, onboard debugger LED) to a value of 1 (high). This functionally
+                            turns off the LED (remember that the AVR64DD32 is active-low)
+                            <pre><code class="'language-c">
+PORTF_set_pin_level(5, 1);
+                            </code></pre>
+                        </li>
+                        <li>
+                            We write a startup message to the UART. “\r\n” is the Windows standard line terminator for
+                            console output just like how sentences with terminated with periods
+                            <pre><code class="'language-c">
+UART_WriteString("Program is starting...\r\n");
+                            </code></pre>
+                        </li>
+                        <li>
+                            Wait 1 second for internal microcontroller processes such as oscillator stabilization and
+                            power-on reset to finish
+                            <pre><code class="'language-c">
+_delay_ms(1000);
+                            </code></pre>
+                        </li>
+                        <li>
+                            Register a function to Timer0 callback. A callback is a function that is passed into a
+                            process to be called at a later time when the process has completed. The process in this
+                            instance is a timer finishing its cycle (every 1ms as set in the Application Builder)
+                            <pre><code class="'language-c">
+Timer0.TimeoutCallbackRegister(tcb_softtimer);
+                            </code></pre>
+                        </li>
+                        <li>
+                            Clear the timer value so it starts at 0 when we enter the main loop
+                            <pre><code class="'language-c">
+clear_timer();
+                            </code></pre>
+                        </li>
+                        <li>
+                            In the infinite loop, we call the <b>non_blocking()</b> function.
+                            <pre><code class="'language-c">
+while(1)
+{
+    non_blocking();
+}
+                            </code></pre>
+                        </li>
+                    </ul>
+                    
+                    ❓Fact: Notice how the main function has a return type of “int”, yet we never explicitly return a
+                    value. This is because the C compiler automatically inserts a “return 0;” at the end of the main
+                    function if
+                    there is not a return statement present.
+                </li>
+                <br>
+                <li>
+                    In this project, we have a timer that can be accessed via <b>read_timer()</b>, incremented via
+                    <b>tcb_softtimer()</b>, and modified via <b>clear_timer()</b>. When we are reading the value, it is
+                    possible for another thread
+                    to clear or increment the value while we are reading. This is called a <b>race condition</b> since
+                    we do not know if we are reading the original value or the modified value.
+
+                    In order to avoid a race condition, we need to implement both <b>read_timer()</b>,
+                    <b>tcb_softtimer()</b>, and <b>clear_timer()</b> as atomic functions. An <b>atomic</b> function is
+                    an operation that cannot be
+                    interrupted by another thread and is guaranteed to fully execute. In order to make a function
+                    atomic, we will use
+                    the <b>cli()</b> and <b>sei()</b> functions from the <b>interrupt.h</b> library:
+
+                    <ul>
+                        <li>
+                            After the main function, we define the <b>read_timer()</b> and <b>clear_timer()</b>
+                            functions. The <b>cli()</b>
+                            function disables all interrupts and the <b>sei()</b> function re-enables all interrupts.
+                            <pre><code class="'language-c">
+uint32_t read_timer(void)
+{
+	uint32_t timer_val;
+	cli();
+	timer_val = timer;
+	sei();
+	return timer_val;
+}
+
+void clear_timer(void)
+{
+	cli();
+	timer = 0;
+	sei();
+}
+
+void tcb_softtimer(void)
+{
+	cli();
+	timer++;
+	sei();
+}
+                                                            </code></pre>
+                        </li>
+                    </ul>
+                </li>
+                <br>
+                <li>
+                    This is the definition of our <b>blocking()</b> function. In this function, we do the following:
+                    <ul>
+                        <li>
+                            Define a static variable called loop_count and set it to zero. Remember that static means
+                            that the value is persistent after every function call.
+                        </li>
+                        <li>
+                            Increment the loop_count variable.
+                        </li>
+                        <li>
+                            Print the value of loop_count to the string buffer, then write the string buffer to the
+                            UART.
+                        </li>
+                        <li>
+                            Blink the LED then wait for a second.
+                        </li>
+                        <pre><code class="'language-c">
+void blocking(void)
+{
+    static unsigned int loop_count = 0;
+    loop_count++;
+    sprintf(uart_string, "Loop count: %u\r\n", loop_count);
+    UART_WriteString(uart_string);
+    blink_led();
+    _delay_ms(1000);
+}
+                        </code></pre>
+
+                        As previously mentioned, a callback is a function that is passed into a process to be called at
+                        a later time when the process has completed. In this project, we are using the Timer0 callback
+                        register to increment our timer variable at the end of each clock cycle. This effectively allows
+                        us to time our functions calls without blocking our main execution cycle, since every cycle is
+                        roughly 1 millisecond.
+                    </ul>
+                </li>
+                <br>
+                <li>
+                    This is the definition of our <b>non_blocking()</b> function called in the infinite while loop in
+                    main.
+                    While <b>non_blocking()</b> and <b>blocking()</b> are functionally the same, there is one main
+                    difference: We wrap
+                    the functionality in an if statement that uses <b>read_timer()</b> to check if a second has elapsed.
+
+                    <pre><code class="'language-c">
+void non_blocking(void)
+{
+	static unsigned int loop_count = 0;
+    
+	if (read_timer() > 1001)
+	{
+    	    loop_count++;
+    	    sprintf(uart_string, "Loop count: %u\r\n", loop_count);
+          	UART_WriteString(uart_string);
+          	blink_led();
+	}
+}
+                    </code></pre>
+
+                    Notice how we did not use _delay_ms() in the above code, this makes it a non-blocking function since
+                    it did not suspend (or pause) the main execution flow. In essence, a non-blocking function allows
+                    the program to continue while it does its operations in the background and a blocking function
+                    blocks the program from continuing until the function is done.
+                </li>
+                <br>
+                <li>
+                    The <b>blink_led</b> function is implemented as a blocking function. However, instead of using the
+                    <b>_delay_ms()</b> function, we utilize a while loop to repeatedly check the timer until a second
+                    has
+                    elapsed.
+
+                    <pre><code class="'language-c">
+void blink_led(void)
+{
+	clear_timer();
+	PORTF.OUT &= ~(1 &lt;&lt; 5);
+	while (read_timer() &lt; 1000);
+	PORTF.OUT |= (1 &lt;&lt; 5);
+	clear_timer();
+}
+                                            </code></pre>
+                </li>
+                <br>
+                <li>
+                    <b>UART_WriteString()</b> is a utility method generated by the UART_Example Device Resource that can
+                    be
+                    found under <b>Source Files 🠖 MCC Generated Files 🠖 examples 🠖 UART_Example 🠖
+                        uart_example.c.</b> The
+                    function writes a string through the UART using a polling implementation (ie. continuously checking
+                    if the UART is ready)
+                    <ul>
+                        <li>
+                            Add the following <b>UART_WriteString()</b> definition to your code.
+                        </li>
+                        <pre><code class="'language-c">
+void UART_WriteString(const char *message)
+{
+	for(int i = 0; i &lt; (int)strlen(message); i++)
+	{
+    	      while(!UART0.IsTxReady())
+          	{
+             	 
+          	}
+    	      (void) UART0.Write(message[i]);
+	}
+}
+                        </code></pre>
+
+                        ❓<b>Fact</b>: Notice how the UART Write call is preceded with a void cast. This is used to tell
+                        the
+                        compiler that we are not using the return value of UART0.Write. MPLAB generated code tends to
+                        put void casts on all function calls.
+                    </ul>
+                </li>
+                <br>
+                <li>
+                    Save changes made to main.c by pressing Ctrl + S or by navigating to the top left of MPLAB and
+                    clicking on File ➡ Save
+                </li>
+                <br>
+                <li>
+                    Click the Build for Debugging Main Project button
+                    <img src="../images/mplabx_lab1/build_project_icon.png">
+                    on the toolbar to build the project. Then, click on the Make and Program Device Main Project button
+                    <img src="../images/mplabx_lab1/upload_project_icon.png">
+                    to send the program to the board.
+
+                </li>
+                <br>
+                <li>
+                    Navigate to Window ➡ Debugging ➡ Data Visualizer. We will use Data Visualizer to read the UART
+                    output.
+                    <img src="../images/mplabx_lab1/where_to_find_data_visualizer.png" style="height: 600px;">
+                </li>
+                <br>
+                <li>
+                    Under the Terminal sub window on the right, select the AVR64DD32 COM X option under Source.
+                    <img src="../images/mplabx_lab1/choose_source.png">
+                </li>
+                <br>
+                <li>
+                    Click on the settings icon next to the Source dropdown and set the baud rate to 115200, it should be
+                    the same value as Requested Baudrate in UART0 in Application Builder.
+                    <img src="../images/mplabx_lab1/configure_baud_rate.png">
+                </li>
+                <br>
+                <li>
+                    Press the Start Capturing button
+                    <img src="../images/mplabx_lab1/start_recording.png">
+                    and you should start seeing text show up in the terminal.
+                    <img src="../images/mplabx_lab1/terminal_output.png">
+                </li>
+                <br>
+                <li>
+                    To restart the program, press the <b>Hold in Reset</b> button on the toolbar
+                    <img src="../images/mplabx_lab1/restart_program.png">
+                </li>
+            </ol>
+
+            By using timers and callbacks, we are able to implement timing for our functions without pausing the main
+            execution loop.
+            </p>
+        </section>
+    </main>
+    <footer class="footer">
+        <a href="mplabx_lab_0.html">
+            Back
+        </a>
+        <a href="mplabx_lab_2.html">
+            Next
+        </a>
+    </footer>
+</body>
+
+</html>

@@ -23,14 +23,34 @@ section {
 
 .page-header {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1%;
+}
+
+.page-header > * {
+    border-radius: 6px;
+}
+
+.page-title {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    background-color: #cc242b;
-    color: #ffffff;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: x-large;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    gap: 2em;
+    background: linear-gradient(to right, #cc242b, #ff4b4b, 70%, #fff);
+    padding: 12px;
+}
+
+.page-subheader {
+    background: linear-gradient(to right, #6DC24C, #51fc7e, 70%, #fff);
+    padding: 6px 12px 6px 12px;
+}
+
+.page-subheader > ul {
+    list-style: none;
+    gap: 0.5em;
+    display: inline-flex;
+    padding: 0;
 }
 
 .lab-header {
@@ -44,6 +64,10 @@ section {
 
 .bullet-list li {
     font-size: large;
+}
+
+img {
+    max-width: 50%;
 }
 
 .footer {

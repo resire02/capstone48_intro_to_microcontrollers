@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MPLABX: I²C Peripherals</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Manuals about the basics of microcontrollers"/>
+        <link rel="stylesheet" href="../globals.css">
+    </head>
+<body>
+        <header class="page-header">
+            <div class="page-title">
+                <img src="../images/128px-Microchip_Technology_logo.svg" />
+                <a href="index.html" style="text-decoration: none;color:black;">
+                    <h1>Introduction to Microcontrollers</h1>
+                </a>
+            </div>
+            <div class="page-subheader">
+                <ul>
+                    <li>
+                        <strong>Arduino</strong>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_0.html">Lab 0</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_1.html">Lab 1</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_2.html">Lab 2</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_3.html">Lab 3</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_4_project_requirements.html">Lab 4</a>
+                    </li>
+                    <li>
+                        <a href="../pages/arduino_lab_4_project_solution.html">Lab 4 Solution</a>
+                    </li>
+                    <li>
+                        <strong>MPLAB X IDE</strong>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_0.html">Lab 0</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_1.html">Lab 1</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_2.html">Lab 2</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_3.html">Lab 3</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_4.html">Lab 4</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_5.html">Lab 5</a>
+                    </li>
+                    <li>
+                        <a href="../pages/mplabx_lab_6.html">Lab 6</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <main>
+            <h1 class="lab-header">Sensor Integration Lab</h1>
+            
+            <section>
+                <h2 class="section-header-title">Project Setup</h2>
+                <p>
+                    This section will briefly describe how to set up the project resources for this lab.
+                </p>
+                <ol class="bullet-list">
+                    <li>In the top left corner of MPLAB X IDE, click on File → New Project. Select Microchip Embedded and Application Project(s) then click on Next. Ensure that the device is set to AVR64DD32 and the tool is set to the Curiosity Nano then click Next. Select the latest XC8 compiler and click Next. Type "mplab_lab4" for the Project Name and click Finish.</li>
+                    
+                    <li>On the MPLAB X IDE toolbar, click on the MCC icon to open the Code Configurator. Using the Device Resources tab, add the following resources:
+                        <ul class="bullet-list">
+                            <li>UART – set to USART0 and change the Baudrate to 115200</li>
+                            <li>UART Example – select UART Write String and set it to Polled</li>
+                            <li>Timer – set the timer to TCB0</li>
+                            <li>I2C_Host – leave everything as default</li>
+                        </ul>
+                        <img img src="../images/mplabx_lab4/setup.png" alt="MPLAB X IDE setup">
+                    </li>
+
+                    <li>Click on the settings icon next to the Interrupt Manager, then enable Global Interrupt Enable.</li>
+                    
+                    <li>In the Pin Grid View, lock TWI0 SCL & SDA for Port A pins 2 & 3 and lock USART0 RXD & TXD for Port D pins 4 & 5.
+                        <img img src="../images/mplabx_lab4/pin_view.png" alt="Pin Grid View">
+                    </li>
+                    
+                    <li>In the Project Resources Tab, click on Generate to create the system resource files.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">Programming the VEML3328 and VCNL4200</h2>
+                <p>
+                    This section will walk through the programming section of the lab.
+                </p>
+
+                <h3>Writing the VEML3328 Driver</h3>
+                <ol class="bullet-list">
+                    <li>In the Projects tab, right click on Header Files then click New → C Header File.
+                        <img img src="../images/mplabx_lab4/make_c_header_file.png" alt="Creating C Header File">
+                    </li>
+                    
+                    <li>In the File Name field, type "veml3328". Leave all other fields as default. Then click Finish to create the header file.
+                        <img img src="../images/mplabx_lab4/specify_name_and_finish.png" alt="Specifying file name">
+                    </li>
+                    
+                    <li>In the veml3328.h file, add the following function declarations:
+                        <pre><code>#ifndef VEML3328_H
+#define VEML3328_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void veml_init();
+void veml_read_colors(uint16_t* color);
+void veml_read_brightness(uint16_t* brightness);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* VEML3328_H */</code></pre>
+                    </li>
+                    
+                    <li>Create the veml3328.c file and implement the functions:
+                        <pre><code>#include "mcc_generated_files/system/system.h"
+#include <xc.h>
+
+#define VEML_I2C_ADDR 0x10
+#define VEML_CLR_CMD_REG 0x04
+#define VEML_RED_CMD_REG 0x05
+#define VEML_GRN_CMD_REG 0x06
+#define VEML_BLU_CMD_REG 0x07
+#define VEML_IFR_CMD_REG 0X08
+
+static uint8_t read_data[2] = { 0x00, 0x00 };
+
+void veml_init()
+{
+    static uint8_t write_data[3] = { 0x00, 0x00, 0x00 };
+    while(TWI0_IsBusy());
+    TWI0_Write(VEML_I2C_ADDR, write_data, 3);
+}
+
+void veml_read_colors(uint16_t* color)
+{
+    static uint8_t write_cmd;
+
+    write_cmd = VEML_RED_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    color[0] = (read_data[1] << 8) | read_data[0];
+
+    write_cmd = VEML_GRN_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    color[1] = (read_data[1] << 8) | read_data[0];
+
+    write_cmd = VEML_BLU_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    color[2] = (read_data[1] << 8) | read_data[0];
+}
+
+void veml_read_brightness(uint16_t* brightness)
+{
+    static uint8_t write_cmd;
+    
+    write_cmd = VEML_CLR_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    brightness[0] = (read_data[1] << 8) | read_data[0];
+    
+    write_cmd = VEML_IFR_CMD_REG;
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VEML_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    brightness[1] = (read_data[1] << 8) | read_data[0];
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h3>Writing the VCNL4200 Driver</h3>
+                <ol class="bullet-list">
+                    <li>Create vcnl4200.h:
+                        <pre><code>#ifndef VCNL4200_H
+#define VCNL4200_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void vcnl_init();
+uint16_t vncl_read_ps();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* VCNL4200_H */</code></pre>
+                    </li>
+                    
+                    <li>Implement vcnl4200.c:
+                        <pre><code>#include "mcc_generated_files/system/system.h"
+#include <xc.h>
+
+#define VNCL_I2C_ADDR 0x51
+#define VNCL_PS_CONF1_CONF2_REG 0x03
+#define VNCL_DATA_PS_REG 0x08
+
+static uint8_t read_data[2] = { 0x00, 0x00 };
+
+void vcnl_init()
+{
+    static uint8_t write_data[3] = { VNCL_PS_CONF1_CONF2_REG, 0x06, 0x00};
+    while(TWI0_IsBusy());
+    TWI0_Write(VNCL_I2C_ADDR, write_data, 3);
+}
+
+uint16_t vncl_read_ps()
+{
+    static uint8_t write_cmd = VNCL_DATA_PS_REG;
+
+    while(TWI0_IsBusy());
+    TWI0_WriteRead(VNCL_I2C_ADDR, &write_cmd, 1, read_data, 2);
+    return (read_data[1] << 8) | read_data[0];
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h3>Writing the MCP23008 Driver</h3>
+                <ol class="bullet-list">
+                    <li>Create mcp23008.h:
+                        <pre><code>#ifndef MCP23008_H
+#define MCP23008_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define MCP_LED_CHUNK_SIZE 512UL
+
+void mcp_leds_init();
+void mcp_write_leds(uint8_t val);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* MCP23008_H */</code></pre>
+                    </li>
+                    
+                    <li>Implement mcp23008.c:
+                        <pre><code>#include "mcc_generated_files/system/system.h"
+#include <xc.h>
+
+#define MCP_LEDS_ADDR 0x25
+#define MCP_LEDS_IO_REG 0x09
+
+void mcp_leds_init()
+{
+    static uint8_t write_data[2] = { 0x00, 0x00 };
+    while(TWI0_IsBusy());
+    TWI0_Write(MCP_LEDS_ADDR, write_data, 2);
+}
+
+void mcp_write_leds(uint8_t val)
+{
+    static uint8_t write_data[2] = { MCP_LEDS_IO_REG, 0x00 };
+    write_data[1] = ~val;
+    while(TWI0_IsBusy());
+    TWI0_Write(MCP_LEDS_ADDR, write_data, 2);
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h3>Writing the Timer Driver</h3>
+                <ol class="bullet-list">
+                    <li>Create systimer.h:
+                        <pre><code>#ifndef SYSTIMER_H
+#define SYSTIMER_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+void timer_callback();
+void clear_timer();
+uint32_t read_timer();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* SYSTIMER_H */</code></pre>
+                    </li>
+                    
+                    <li>Implement systimer.c:
+                        <pre><code>#include "mcc_generated_files/system/system.h"
+#include <xc.h>
+
+static volatile uint32_t timer = 0UL;
+
+void timer_callback()
+{
+    cli();
+    timer++;
+    sei();
+}
+
+void clear_timer()
+{
+    cli();
+    timer = 0;
+    sei();
+}
+
+uint32_t read_timer()
+{
+    uint32_t val;
+    cli();
+    val = timer;
+    sei();
+    return val;
+}</code></pre>
+                    </li>
+                </ol>
+
+                <h3>Writing Main.c</h3>
+                <pre><code>#include "mcc_generated_files/system/system.h"
+#include <string.h>
+#include <stdio.h>
+#include "systimer.h"
+#include "vcnl4200.h"
+#include "mcp23008.h"
+#include "veml3328.h"
+
+#define PROXIMITY_THRESHOLD 100
+void UART_WriteString(const char *message);
+char uart_str[80];
+
+int main(void)
+{
+    SYSTEM_Initialize();
+    Timer0.TimeoutCallbackRegister(timer_callback);
+    vcnl_init();
+    mcp_leds_init();
+    veml_init();
+
+    UART_WriteString("MPLAB X Lab 4\n\r");
+    clear_timer();
+    while(read_timer() < 100);
+    
+    uint16_t proximity = 0;
+    uint8_t led = 0, write_led = 0, i;
+    uint16_t color[3] = { 0x00, 0x00, 0x00 };
+    uint16_t light[2] = { 0x00, 0x00 };
+    
+    while(1)
+    {
+        proximity = vncl_read_ps();
+        led = (uint8_t) (proximity / MCP_LED_CHUNK_SIZE);
+
+        write_led = proximity > PROXIMITY_THRESHOLD ? 0x80 : 0x00;
+        for (i = 0; i < led; i++)
+        {
+            write_led >>= 1;
+            write_led |= 0x80;
+        }
+        mcp_write_leds(write_led);
+
+        if (read_timer() > 100)
+        {
+            clear_timer();
+            veml_read_colors(color);
+            veml_read_brightness(light);
+            sprintf(uart_str, "R: %u\tG: %u\tB: %u\tBRT: %u\tIFR: %u\n\r", color[0], color[1], color[2], light[0], light[1]);
+            UART_WriteString(uart_str);
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section>
+                <h2 class="section-header-title">Running the Lab</h2>
+                <ol class="bullet-list">
+                    <li>Press the build button <img src="../images/mplabx_lab4/build.png" alt="Build button"> to compile and build the program.</li>
+                    
+                    <li>Navigate to the top toolbar and click Window → Debugging → Data Visualizer.
+                        <img src="../images/mplabx_lab4/where_to_find_window.png" alt="Data Visualizer location">
+                    </li>
+                    
+                    <li>For the Curiosity Nano port, change the baudrate to 115200 if it isn't set already, then click on the terminal icon to connect the port to the terminal.</li>
+                    
+                    <li>Click the debug button <img src="../images/mplabx_lab4/debug.png" alt="Debug button"> to start the project.</li>
+                </ol>
+                
+                <p>
+                    The terminal output should start printing out the sensor values. When you move your hand close to the proximity sensor, you should see the LEDs light up!
+                    <img src="../images/mplabx_lab4/terminal_output.png" alt="Terminal output">
+                </p>
+            </section>
+        </main>
+        <footer class="footer">
+            <a href="mplabx_lab_3.html">
+                Back
+            </a>
+            <a href="mplabx_lab_5.html">
+                Next
+            </a>
+        </footer>
+    </body>
+</html>

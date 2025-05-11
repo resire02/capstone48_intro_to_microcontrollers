@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/debug/lab3_adc_differential.X.debug.elf">                 
+    <memory name="program">              
+      <units>bytes</units>                 
+      <length>65536</length>                 
+      <used>6048</used>                     
+      <free>59488</free>                     
+    </memory>                              
+    <memory name="data">                 
+      <units>bytes</units>                 
+      <length>8192</length>                 
+      <used>147</used>                     
+      <free>8045</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
